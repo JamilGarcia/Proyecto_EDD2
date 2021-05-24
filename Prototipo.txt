@@ -1,0 +1,3 @@
+{Nombre:Cedula,Tipo:String,Restriccion:15,EsLlave:true}
+{Nombre:Nombre,Tipo:String,Restriccion:13,EsLlave:false}
+{Nombre:Edad,Tipo:Int,Restriccion:0a100,EsLlave:false}
