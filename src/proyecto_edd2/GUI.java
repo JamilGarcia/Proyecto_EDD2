@@ -33,7 +33,7 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
         jl_nombre_archivo.setVisible(false);
         //Cargar Archivos a la lista de archivos
-        File directoryPath = new File("C:\\Users\\dalva\\Documents\\Unitec\\2021\\Q2 2021\\Estructura de Datos 2\\ProyectoED2");
+        File directoryPath = new File("/Users/miguel/Documents/UNITEC/2 Año/Trimestre 8/Estructura de Datos 2/Proyecto/Proyecto_EDD2");
         //List text files only
         File[] files = directoryPath.listFiles(new FilenameFilter() {
             @Override
@@ -59,19 +59,14 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jd_crearCampo = new javax.swing.JDialog();
-        jLabelCampo = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        jP_crearCampo = new javax.swing.JPanel();
+        jl_CrearCampo = new javax.swing.JLabel();
+        jl_NombredeCampo = new javax.swing.JLabel();
         jt_nombreCampo = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        jl_TipodeDato = new javax.swing.JLabel();
         cb_tipoCampo = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        js_valorMinimo = new javax.swing.JSpinner();
-        jLabel7 = new javax.swing.JLabel();
-        js_maximoValor = new javax.swing.JSpinner();
-        jLabel8 = new javax.swing.JLabel();
+        jl_Longitud = new javax.swing.JLabel();
         js_longitud = new javax.swing.JSpinner();
-        jLabel9 = new javax.swing.JLabel();
         jb_crearCampo = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jr_llaveSi = new javax.swing.JRadioButton();
@@ -101,8 +96,10 @@ public class GUI extends javax.swing.JFrame {
         B_Listar_Campo = new javax.swing.JButton();
         B_Mod_Campo = new javax.swing.JButton();
         B_Borrar_Campo = new javax.swing.JButton();
+        jP_tabla_ListarCampos = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_ListarCampos = new javax.swing.JTable();
+        jl_tituloCampos = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         B_Intro_Regis = new javax.swing.JButton();
         B_Modi_Regis = new javax.swing.JButton();
@@ -118,37 +115,18 @@ public class GUI extends javax.swing.JFrame {
 
         jd_crearCampo.setTitle("Crear Campo");
 
-        jLabelCampo.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabelCampo.setText("Crear Campo");
+        jl_CrearCampo.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jl_CrearCampo.setText("Crear Campo");
 
-        jLabel3.setText("Nombre de campo:");
+        jl_NombredeCampo.setText("Nombre de campo:");
 
-        jLabel4.setText("Tipo de dato:");
+        jl_TipodeDato.setText("Tipo de dato:");
 
-        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "String", "Int", "Double", "Float", "Char", " " }));
-        cb_tipoCampo.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cb_tipoCampoItemStateChanged(evt);
-            }
-        });
+        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-----", "String", "Int", "Double", "Float", "Char", " " }));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setText("Restricciones");
+        jl_Longitud.setText("Longitud:");
 
-        jLabel6.setText("Rango:");
-
-        js_valorMinimo.setModel(new javax.swing.SpinnerNumberModel());
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("a");
-
-        js_maximoValor.setModel(new javax.swing.SpinnerNumberModel(10, null, null, 1));
-
-        jLabel8.setText("Longitud:");
-
-        js_longitud.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-
-        jLabel9.setText("Importante: si el valor de la longitud es igual a 0 se entendera que no hay restriccion de longitud para String.");
+        js_longitud.setModel(new javax.swing.SpinnerNumberModel(0, 0, 30, 1));
 
         jb_crearCampo.setText("Crear Campo");
         jb_crearCampo.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -172,95 +150,87 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout jP_crearCampoLayout = new javax.swing.GroupLayout(jP_crearCampo);
+        jP_crearCampo.setLayout(jP_crearCampoLayout);
+        jP_crearCampoLayout.setHorizontalGroup(
+            jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jl_NombredeCampo)
+                            .addComponent(jl_TipodeDato))
+                        .addGap(18, 18, 18)
+                        .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(87, 87, 87)
+                        .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                                .addComponent(jl_Longitud)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(18, 18, 18)
+                                .addComponent(jr_llaveSi)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jr_llaveNo))))
+                    .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                        .addGap(184, 184, 184)
+                        .addComponent(jb_crearCampo)
+                        .addGap(54, 54, 54)
+                        .addComponent(jb_modCampo)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_crearCampoLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jl_CrearCampo)
+                .addGap(248, 248, 248))
+        );
+        jP_crearCampoLayout.setVerticalGroup(
+            jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_crearCampoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jl_CrearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jl_NombredeCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jl_Longitud)
+                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jP_crearCampoLayout.createSequentialGroup()
+                        .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jl_TipodeDato)
+                            .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54)
+                        .addGroup(jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jb_modCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jP_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel10)
+                        .addComponent(jr_llaveSi)
+                        .addComponent(jr_llaveNo)))
+                .addGap(27, 27, 27))
+        );
+
         javax.swing.GroupLayout jd_crearCampoLayout = new javax.swing.GroupLayout(jd_crearCampo.getContentPane());
         jd_crearCampo.getContentPane().setLayout(jd_crearCampoLayout);
         jd_crearCampoLayout.setHorizontalGroup(
             jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
-                        .addComponent(jLabelCampo)
-                        .addGap(263, 263, 263))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(256, 256, 256))))
             .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(js_valorMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(js_maximoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel8))
-                                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel10)
-                                            .addComponent(jLabel3))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                                .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(59, 59, 59)
-                                                .addComponent(jLabel4))
-                                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                                .addComponent(jr_llaveSi)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jr_llaveNo)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                        .addGap(224, 224, 224)
-                        .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jb_modCampo)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jP_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jd_crearCampoLayout.setVerticalGroup(
             jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabelCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jr_llaveSi)
-                    .addComponent(jr_llaveNo))
-                .addGap(10, 10, 10)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(js_valorMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(js_maximoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jb_modCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
+                .addContainerGap()
+                .addComponent(jP_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Archivos");
@@ -443,7 +413,7 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Campos", "Tipo de Dato", "Restriccion", "Es llave primaria"
+                "Nombre", "Tipo de Dato", "Longitud", "Es llave primaria"
             }
         ) {
             Class[] types = new Class [] {
@@ -463,6 +433,29 @@ public class GUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(table_ListarCampos);
 
+        jl_tituloCampos.setText("Campo");
+
+        javax.swing.GroupLayout jP_tabla_ListarCamposLayout = new javax.swing.GroupLayout(jP_tabla_ListarCampos);
+        jP_tabla_ListarCampos.setLayout(jP_tabla_ListarCamposLayout);
+        jP_tabla_ListarCamposLayout.setHorizontalGroup(
+            jP_tabla_ListarCamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_tabla_ListarCamposLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jP_tabla_ListarCamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jl_tituloCampos))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+        jP_tabla_ListarCamposLayout.setVerticalGroup(
+            jP_tabla_ListarCamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_tabla_ListarCamposLayout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addComponent(jl_tituloCampos)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
+        );
+
         javax.swing.GroupLayout jp_CamposLayout = new javax.swing.GroupLayout(jp_Campos);
         jp_Campos.setLayout(jp_CamposLayout);
         jp_CamposLayout.setHorizontalGroup(
@@ -474,27 +467,30 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(B_Mod_Campo)
                     .addComponent(B_Listar_Campo)
                     .addComponent(B_Crear_Campo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(439, Short.MAX_VALUE))
+            .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_CamposLayout.createSequentialGroup()
+                    .addContainerGap(199, Short.MAX_VALUE)
+                    .addComponent(jP_tabla_ListarCampos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
         jp_CamposLayout.setVerticalGroup(
             jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp_CamposLayout.createSequentialGroup()
-                .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp_CamposLayout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(B_Crear_Campo)
-                        .addGap(47, 47, 47)
-                        .addComponent(B_Listar_Campo)
-                        .addGap(47, 47, 47)
-                        .addComponent(B_Mod_Campo)
-                        .addGap(47, 47, 47)
-                        .addComponent(B_Borrar_Campo))
-                    .addGroup(jp_CamposLayout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(B_Crear_Campo)
+                .addGap(47, 47, 47)
+                .addComponent(B_Listar_Campo)
+                .addGap(47, 47, 47)
+                .addComponent(B_Mod_Campo)
+                .addGap(44, 44, 44)
+                .addComponent(B_Borrar_Campo)
+                .addContainerGap(236, Short.MAX_VALUE))
+            .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_CamposLayout.createSequentialGroup()
+                    .addContainerGap(9, Short.MAX_VALUE)
+                    .addComponent(jP_tabla_ListarCampos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(207, Short.MAX_VALUE)))
         );
 
         jTP_Menus.addTab("Campos", jp_Campos);
@@ -607,12 +603,12 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(46, 46, 46)
                         .addComponent(jTP_Menus, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(102, 102, 102)
                     .addComponent(jl_nombre_archivo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(565, Short.MAX_VALUE)))
+                    .addContainerGap(500, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -621,19 +617,21 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(40, 40, 40)
                 .addComponent(jTP_Menus, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(69, 69, 69)
                     .addComponent(jl_nombre_archivo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(655, Short.MAX_VALUE)))
+                    .addContainerGap(589, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -646,54 +644,26 @@ public class GUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 801, Short.MAX_VALUE)
+            .addGap(0, 709, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 756, Short.MAX_VALUE)
+            .addGap(0, 686, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cb_tipoCampoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_tipoCampoItemStateChanged
-
-        DefaultComboBoxModel modelo = (DefaultComboBoxModel) cb_tipoCampo.getModel();
-
-        if (evt.getStateChange() == 1) {
-
-            int indexSeleccion = cb_tipoCampo.getSelectedIndex();
-            String objeto = (String) cb_tipoCampo.getSelectedItem();
-
-            if (objeto.equals("String")) {
-                js_maximoValor.setEnabled(false);
-                js_valorMinimo.setEnabled(false);
-                js_longitud.setEnabled(true);
-
-            } else if (objeto.equals("Char")) {
-                js_maximoValor.setEnabled(false);
-                js_valorMinimo.setEnabled(false);
-                js_longitud.setEnabled(false);
-
-            } else if (objeto.equals("Int") || objeto.equals("Double")
-                    || objeto.equals("Float")) {
-
-                js_maximoValor.setEnabled(true);
-                js_valorMinimo.setEnabled(true);
-                js_longitud.setEnabled(false);
-            }
-        }
-    }//GEN-LAST:event_cb_tipoCampoItemStateChanged
 
     private void B_Crear_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Crear_CampoMouseClicked
         jt_nombreCampo.setEnabled(true);
@@ -710,7 +680,14 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Crear_CampoMouseClicked
 
     private void B_Listar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_CampoMouseClicked
-
+        
+        if(archivo_actual.getLista_campos().isEmpty()){
+            JOptionPane.showMessageDialog(jp_Campos, "No existe ningun campo en este archivo.");
+        } else {
+            jP_tabla_ListarCampos.setVisible(true);
+            refrescarTabla();
+        }
+        /*
         Scanner sc;
         ArrayList<String> buffer = new ArrayList();
         try {
@@ -804,7 +781,7 @@ public class GUI extends javax.swing.JFrame {
             flag++;
         }
         
-        table_ListarCampos.setModel(modelo);
+        table_ListarCampos.setModel(modelo);*/
         JOptionPane.showMessageDialog(this, "Se cargaron los campos exitosamente");
 
 
@@ -819,13 +796,13 @@ public class GUI extends javax.swing.JFrame {
             if (!"Char".equals(tipoDato)) {
 
                 if (tipoDato.equals("String")) {
-                    js_maximoValor.setEnabled(false);
-                    js_valorMinimo.setEnabled(false);
+                    //js_maximoValor.setEnabled(false);
+                    //js_valorMinimo.setEnabled(false);
                     js_longitud.setEnabled(true);
 
                 } else {
-                    js_maximoValor.setEnabled(true);
-                    js_valorMinimo.setEnabled(true);
+                    //js_maximoValor.setEnabled(true);
+                    //js_valorMinimo.setEnabled(true);
                     js_longitud.setEnabled(false);
                 }
 
@@ -837,7 +814,7 @@ public class GUI extends javax.swing.JFrame {
                 jr_llaveNo.setEnabled(false);
                 jr_llaveSi.setEnabled(false);
 
-                jLabelCampo.setText("Editar Campo");
+                jl_CrearCampo.setText("Editar Campo");
 
                 jd_crearCampo.setModal(true);
                 jd_crearCampo.pack();
@@ -940,6 +917,7 @@ public class GUI extends javax.swing.JFrame {
             archivo_actual.setGuardado(false);
             jl_nombre_archivo.setVisible(true);
             jd_abrirArchivo.dispose();
+            //Leer campos y agregarlos a la lista de campos del archivo
         }
     }//GEN-LAST:event_jb_abrirArchivoActionPerformed
 
@@ -1148,6 +1126,8 @@ public class GUI extends javax.swing.JFrame {
             jl_nombre_archivo.setVisible(false);
             JOptionPane.showMessageDialog(jP_menuArchivo, "Se ha cerrado el archivo correctamente."
                     + "", "Cerrar Archivo", JOptionPane.DEFAULT_OPTION);
+            //Ocultar tabla
+            jP_tabla_ListarCampos.setVisible(false);
         }
     }//GEN-LAST:event_B_Cerrar_ArchActionPerformed
 
@@ -1199,14 +1179,156 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jP_menuArchivo, "No hay archivos en el sistema.\n"
                     + "Debe abrir o crear un nuevo archivo para acceder al resto de funciones.");
         }
+        
+        if(archivo_actual != null){
+            jP_tabla_ListarCampos.setVisible(false);
+        }
     }//GEN-LAST:event_jTP_MenusStateChanged
 
     private void jb_crearCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_crearCampoMouseClicked
+        
+        boolean confirmar_crearCampo = false;
+        boolean continuar_addCampo = true;
+        Campo nuevoCampo = new Campo();
+        
+        //El usuario puede agregar los campo que desee
+        while(continuar_addCampo){
+            //Validar entradas de datos
+            //Validar nombre de campo
+            if (jt_nombreCampo.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(jd_crearCampo, "!No puede dejar en blanco el nombre del campo!");
+                confirmar_crearCampo = false;
+            }  else {
+                confirmar_crearCampo = true;
+                nuevoCampo.setNombre_Campo(jt_nombreCampo.getText());
+            }
+        
+            //Validar Tipo de Dato
+            if(cb_tipoCampo.getSelectedIndex()  == 0){
+                JOptionPane.showMessageDialog(jd_crearCampo, "Debe elegir el tipo del dato.");
+                confirmar_crearCampo = false;
+            } else {
+                int opcion = cb_tipoCampo.getSelectedIndex();
+                //Agregar el tipo de dato que selecciono el usuario
+                switch(opcion){
+                    case 1:
+                        //Eligio String
+                        nuevoCampo.setTipo_dato("string");
+                        break;
+                    case 2:
+                        //Eligio Int
+                        nuevoCampo.setTipo_dato("int");
+                        break;
+                    case 3:
+                        //Eligio Double
+                        nuevoCampo.setTipo_dato("double");
+                        break;
+                    case 4:
+                        //Eligio Float
+                        nuevoCampo.setTipo_dato("float");
+                        break;
+                    case 5:
+                        //Eligio Chat
+                        nuevoCampo.setTipo_dato("char");
+                        break;
+                    default:
+                }
+                confirmar_crearCampo = true;
+            }
+            
+            //Validar Longitud
+            if((int) js_longitud.getValue() == 0 || (int) js_longitud.getValue() > 30){
+                JOptionPane.showMessageDialog(jd_crearCampo,"La longitud del campo debe ser mayor a 0.");
+                confirmar_crearCampo = false;
+            } else {
+                confirmar_crearCampo = true;
+                nuevoCampo.setLongitud((int)js_longitud.getValue());
+            }
+            
+            //Validar Si es llave primaria
+            //Recuperamos la eleccion de marcar como llave primaria
+            boolean esllavePrimaria = false;
+            
+            if(!jr_llaveNo.isSelected() && !jr_llaveSi.isSelected() ){
+                //No selecciono sobre la opcion si el campo es llave primaria
+                JOptionPane.showMessageDialog(jd_crearCampo,"Debe elegir si el campo es una llave primaria o no.");
+            }
 
-        if (jt_nombreCampo.getText().isBlank()) {
-            JOptionPane.showMessageDialog(jd_crearCampo, "No puede dejar en blanco el nombre del campo!");
+            if (jr_llaveSi.isSelected()) {
+                esllavePrimaria = true;
+            }  else {
+                esllavePrimaria = false;
+            }
 
-        } else {
+            //Busqueda para verificar que no haya otra llave primaria
+            if(archivo_actual.getLista_campos().isEmpty()){
+                //La lista de campos esta vacia 
+                if(esllavePrimaria){
+                    //eligio el campo como llave primaria
+                    nuevoCampo.setEsLlavePrimaria(true);
+                } else{
+                    //do nothing, no eligio el campo como llave primaria
+                }
+            }  else {
+                //La lista de campos no esta vacia
+                //Recorrer la lista y verificar que otro campo no sea una llave primaria
+                boolean confirm_LlaveP = true;
+                if(esllavePrimaria){
+                    for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                        if (archivo_actual.getLista_campos().get(i).isEsLlavePrimaria() == true) {
+                            confirm_LlaveP = false;
+                            break;
+                        }
+                    }
+                    //Mostrar mensaje que ya existe otra una llave primaria
+                    if(!confirm_LlaveP){
+                        JOptionPane.showMessageDialog(jd_crearCampo,"Otro campo ya es una llave primaria en este archivo.");
+                        confirmar_crearCampo = false;
+                    } else {
+                        nuevoCampo.setEsLlavePrimaria(true);
+                        confirmar_crearCampo = true;
+                    }
+                }
+                
+            }
+            
+            //Ultima verificacion
+            if(nuevoCampo.getNombre_Campo() == null || nuevoCampo.getTipo_dato() == null || 
+                    nuevoCampo.getLongitud() == 0){
+             confirmar_crearCampo = false;   
+            }
+            //Crear campo
+            if(confirmar_crearCampo){
+                archivo_actual.getLista_campos().add(nuevoCampo);
+                JOptionPane.showMessageDialog(jd_crearCampo,"Se creo el campo exitosamente!");
+                //Preguntar al usuario si quiere ingresar otro campo
+                int opcion_seguir = JOptionPane.showConfirmDialog(jd_crearCampo,"¿Desea crear otro campo?", 
+                    "Crear Campo",JOptionPane.YES_NO_OPTION);
+            
+                archivo_actual.setGuardado(false);
+                if(opcion_seguir == 0){
+                    //Selecciono SI el usuario
+                    continuar_addCampo = true;
+                } else {
+                    //Selecciono NO el usuario
+                    continuar_addCampo = false;
+                    jt_nombreCampo.setText("");
+                    cb_tipoCampo.setSelectedIndex(0);
+                    js_longitud.setValue(0);
+                    jr_llaveNo.setSelected(false);
+                    jr_llaveSi.setSelected(false);
+                }
+            
+            } else {
+                //No ingreso todos los datos correctamente
+                continuar_addCampo = false;
+            }
+        }// fin while
+        
+        
+        /*
+        
+        else {
             DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
             String restriccion = "";
 
@@ -1251,7 +1373,7 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jd_crearCampo, "Se ha guardado exitosamente el campo en la tabla");
             jd_crearCampo.setVisible(false);
 
-        }
+        }*/
     }//GEN-LAST:event_jb_crearCampoMouseClicked
 
     private void jb_modCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_modCampoMouseClicked
@@ -1266,8 +1388,8 @@ public class GUI extends javax.swing.JFrame {
             nuevaRestriccion = Integer.toString((int) js_longitud.getValue());
 
         } else {
-            nuevaRestriccion = Integer.toString((int) js_valorMinimo.getValue());
-            nuevaRestriccion += " a " + Integer.toString((int) js_maximoValor.getValue());
+            //nuevaRestriccion = Integer.toString((int) js_valorMinimo.getValue());
+            //nuevaRestriccion += " a " + Integer.toString((int) js_maximoValor.getValue());
         }
 
         modelo.setValueAt(nuevaRestriccion, table_ListarCampos.getSelectedRow(), 2);
@@ -1336,15 +1458,9 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabelCampo;
+    private javax.swing.JPanel jP_crearCampo;
     private javax.swing.JPanel jP_menuArchivo;
+    private javax.swing.JPanel jP_tabla_ListarCampos;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
@@ -1361,13 +1477,16 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton jb_salirAbrirArchivo;
     private javax.swing.JDialog jd_abrirArchivo;
     private javax.swing.JDialog jd_crearCampo;
+    private javax.swing.JLabel jl_CrearCampo;
+    private javax.swing.JLabel jl_Longitud;
+    private javax.swing.JLabel jl_NombredeCampo;
+    private javax.swing.JLabel jl_TipodeDato;
     private javax.swing.JLabel jl_nombre_archivo;
+    private javax.swing.JLabel jl_tituloCampos;
     private javax.swing.JPanel jp_Campos;
     private javax.swing.JRadioButton jr_llaveNo;
     private javax.swing.JRadioButton jr_llaveSi;
     private javax.swing.JSpinner js_longitud;
-    private javax.swing.JSpinner js_maximoValor;
-    private javax.swing.JSpinner js_valorMinimo;
     private javax.swing.JTextField jt_nombreCampo;
     private javax.swing.JTable table_ListarCampos;
     // End of variables declaration//GEN-END:variables
@@ -1375,8 +1494,6 @@ public class GUI extends javax.swing.JFrame {
     //Variables locales
     DefaultMutableTreeNode nodo_seleccionado = null;
 
-    //para campos
-    ArrayList<Campo> listaCampos = new ArrayList();
 
     public void refrescarJTree() {
         DefaultTreeModel m = (DefaultTreeModel) jT_Archivos.getModel();
@@ -1393,6 +1510,24 @@ public class GUI extends javax.swing.JFrame {
         }
         m.reload();
     }
+    
+    public void refrescarTabla(){
+
+        table_ListarCampos.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Nombre", "Tipo de Dato", "Longitud", "Es llave Primaria"
+                }
+        ));
+
+        DefaultTableModel model = (DefaultTableModel) table_ListarCampos.getModel();
+
+        for (Campo c : archivo_actual.getLista_campos()) {
+            Object[] obj = {c.getNombre_Campo(), c.getTipo_dato(), Integer.toString(c.getLongitud()), c.isEsLlavePrimaria()};
+            model.addRow(obj);
+        }
+        table_ListarCampos.setModel(model);
+    }
 
     public void escribirArchivo() {
         FileWriter fw = null;
@@ -1404,24 +1539,25 @@ public class GUI extends javax.swing.JFrame {
 
             //Escribir la definicion de los campos y registros
             //Escritura de los campos en metadata
-            String nombre, tipo, restriccion, esllave;
-            for (int i = 0; i < table_ListarCampos.getRowCount(); i++) {
-                nombre = (String) table_ListarCampos.getValueAt(i, 0);
-                tipo = (String) table_ListarCampos.getValueAt(i, 1);
-                restriccion = (String) table_ListarCampos.getValueAt(i, 2);
-
-                if ((boolean) table_ListarCampos.getValueAt(i, 3)) {
-                    esllave = "true";
-                } else {
-                    esllave = "false";
+            String nombre, tipo, longitud, esllave;
+            if(archivo_actual.getLista_campos().isEmpty()){
+                //do nothing 
+            } else {
+                for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                    Campo temp = archivo_actual.getLista_campos().get(i);
+                    nombre = temp.getNombre_Campo();
+                    tipo = temp.getTipo_dato();
+                    longitud = Integer.toString(temp.getLongitud());
+                    if(temp.isEsLlavePrimaria()){
+                        esllave = "true";
+                    } else {
+                        esllave = "false";
+                    }
+                    
+                    bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
+                        + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
+                    bw.write("\n");     
                 }
-
-                restriccion = restriccion.replace(" ", "");
-
-                bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
-                        + ",Restriccion:" + restriccion + ",EsLlave:" + esllave + "}");
-
-                bw.write("\n");
             }
 
             bw.flush();

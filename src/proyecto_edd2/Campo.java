@@ -1,60 +1,52 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package proyecto_edd2;
 
-/**
- *
- * @author dalva
- */
 public class Campo {
 
-    private String nombreCampo;
-    private String restriccion;
-    private boolean esNumero;
-    private boolean esLlavePrimaria;
+    private String nombre_Campo;
+    private String tipo_dato;
+    private int longitud = 0;
+    private boolean esLlavePrimaria = false;
 
     public Campo() {
     }
 
-    public Campo(String nombreCampo, String restriccion, boolean esNumero, boolean esLlavePrimaria) {
-        this.nombreCampo = nombreCampo;
-        this.restriccion = restriccion;
-        this.esNumero = esNumero;
+    public Campo(String nombre_Campo, String tipo_dato, int longitud) {
+        this.nombre_Campo = nombre_Campo;
+        this.tipo_dato = tipo_dato;
+        this.longitud = longitud;
+    }
+    
+    //Nombre de Campo
+    public String getNombre_Campo() {
+        return nombre_Campo;
+    }
+    public void setNombre_Campo(String nombre_Campo) {
+        this.nombre_Campo = nombre_Campo;
+    }
+
+    //Tipo de Dato
+    public String getTipo_dato() {
+        return tipo_dato;
+    }
+    public void setTipo_dato(String tipo_dato) {
+        this.tipo_dato = tipo_dato;
+    }
+
+    //Longitud
+    public int getLongitud() {
+        return longitud;
+    }
+    public void setLongitud(int longitud) {
+        this.longitud = longitud;
+    }
+
+    //Es Llave Primaria
+    public boolean isEsLlavePrimaria() {
+        return esLlavePrimaria;
+    }
+    public void setEsLlavePrimaria(boolean esLlavePrimaria) {
         this.esLlavePrimaria = esLlavePrimaria;
     }
-
-
-    public String getNombreCampo() {
-        return nombreCampo;
-    }
-
-    public void setNombreCampo(String nombreCampo) {
-        this.nombreCampo = nombreCampo;
-    }
-
-    public String getRestriccion() {
-        return restriccion;
-    }
-
-    public void setRestriccion(String restriccion) {
-        this.restriccion = restriccion;
-    }
-
-    public boolean isEsNumero() {
-        return esNumero;
-    }
-
-    public void setEsNumero(boolean esNumero) {
-        this.esNumero = esNumero;
-    }
-
-    @Override
-    public String toString() {
-        return "Campo: " + "nombreCampo: " + nombreCampo + " restriccion: " + restriccion + " esNumero=" + esNumero;
-    }
-
     
 }
