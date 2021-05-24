@@ -8,12 +8,15 @@ package proyecto_edd2;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -25,25 +28,25 @@ public class GUI extends javax.swing.JFrame {
 
     ArrayList<Archivo> Lista_Archivos = new ArrayList();
     Archivo archivo_actual;// Objeto para identificar archivo actual
-    
+
     public GUI() {
         initComponents();
-         jl_nombre_archivo.setVisible(false); 
+        jl_nombre_archivo.setVisible(false);
         //Cargar Archivos a la lista de archivos
-        File directoryPath = new File("");
+        File directoryPath = new File("C:\\Users\\dalva\\Documents\\Unitec\\2021\\Q2 2021\\Estructura de Datos 2\\ProyectoED2");
         //List text files only
-	File[] files=directoryPath.listFiles(new FilenameFilter() {
+        File[] files = directoryPath.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-		return name.endsWith(".txt");
+                return name.endsWith(".txt");
             }
-	});
-        
-	for (File file : files) {
+        });
+
+        for (File file : files) {
             Archivo archivo_temp = new Archivo(file.getAbsolutePath());
-            Lista_Archivos.add(archivo_temp);  
+            Lista_Archivos.add(archivo_temp);
             Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).setNombre_archivo(file.getName());//Asignar los nombres de archivo
-	}
+        }
     }
 
     /**
@@ -70,6 +73,10 @@ public class GUI extends javax.swing.JFrame {
         js_longitud = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
         jb_crearCampo = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jr_llaveSi = new javax.swing.JRadioButton();
+        jr_llaveNo = new javax.swing.JRadioButton();
+        jb_modCampo = new javax.swing.JButton();
         jd_abrirArchivo = new javax.swing.JDialog();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -77,12 +84,19 @@ public class GUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jb_abrirArchivo = new javax.swing.JButton();
         jb_salirAbrirArchivo = new javax.swing.JButton();
+        BgLlavePrimaria = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jl_nombre_archivo = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTP_Menus = new javax.swing.JTabbedPane();
-        jPanel4 = new javax.swing.JPanel();
+        jP_menuArchivo = new javax.swing.JPanel();
+        B_Nuevo_Arch = new javax.swing.JButton();
+        B_Abrir_Arch = new javax.swing.JButton();
+        B_Salvar_Arch = new javax.swing.JButton();
+        B_Cerrar_Arch = new javax.swing.JButton();
+        B_Salir = new javax.swing.JButton();
+        jp_Campos = new javax.swing.JPanel();
         B_Crear_Campo = new javax.swing.JButton();
         B_Listar_Campo = new javax.swing.JButton();
         B_Mod_Campo = new javax.swing.JButton();
@@ -101,12 +115,6 @@ public class GUI extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         B_Crear_Arch = new javax.swing.JButton();
         B_ReIndex_Arch = new javax.swing.JButton();
-        jP_menuArchivo = new javax.swing.JPanel();
-        B_Nuevo_Arch = new javax.swing.JButton();
-        B_Abrir_Arch = new javax.swing.JButton();
-        B_Salvar_Arch = new javax.swing.JButton();
-        B_Cerrar_Arch = new javax.swing.JButton();
-        B_Salir = new javax.swing.JButton();
 
         jd_crearCampo.setTitle("Crear Campo");
 
@@ -143,38 +151,31 @@ public class GUI extends javax.swing.JFrame {
         jLabel9.setText("Importante: si el valor de la longitud es igual a 0 se entendera que no hay restriccion de longitud para String.");
 
         jb_crearCampo.setText("Crear Campo");
+        jb_crearCampo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_crearCampoMouseClicked(evt);
+            }
+        });
+
+        jLabel10.setText("Es llave primaria:");
+
+        BgLlavePrimaria.add(jr_llaveSi);
+        jr_llaveSi.setText("Si ");
+
+        BgLlavePrimaria.add(jr_llaveNo);
+        jr_llaveNo.setText("No");
+
+        jb_modCampo.setText("Modificar Campo");
+        jb_modCampo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_modCampoMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jd_crearCampoLayout = new javax.swing.GroupLayout(jd_crearCampo.getContentPane());
         jd_crearCampo.getContentPane().setLayout(jd_crearCampoLayout);
         jd_crearCampoLayout.setHorizontalGroup(
             jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(js_valorMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(js_maximoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8))
-                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(59, 59, 59)
-                                .addComponent(jLabel4)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(52, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,10 +184,49 @@ public class GUI extends javax.swing.JFrame {
                         .addGap(263, 263, 263))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(259, 259, 259))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_crearCampoLayout.createSequentialGroup()
+                        .addGap(256, 256, 256))))
+            .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(js_valorMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(js_maximoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel8))
+                                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel3))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                                                .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(59, 59, 59)
+                                                .addComponent(jLabel4))
+                                            .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                                                .addComponent(jr_llaveSi)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jr_llaveNo)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jd_crearCampoLayout.createSequentialGroup()
+                        .addGap(224, 224, 224)
                         .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(284, 284, 284))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jb_modCampo)))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         jd_crearCampoLayout.setVerticalGroup(
             jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,21 +239,28 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(jt_nombreCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(cb_tipoCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
+                .addGap(33, 33, 33)
+                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jr_llaveSi)
+                    .addComponent(jr_llaveNo))
+                .addGap(10, 10, 10)
                 .addComponent(jLabel5)
-                .addGap(42, 42, 42)
+                .addGap(18, 18, 18)
                 .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(js_valorMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(js_maximoValor, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(js_longitud, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(jd_crearCampoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jb_crearCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jb_modCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Archivos");
@@ -288,13 +335,80 @@ public class GUI extends javax.swing.JFrame {
         jl_nombre_archivo.setText("jlabel");
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel2.setText("Standar File Manager");
+        jLabel2.setText("Standard File Manager");
 
         jTP_Menus.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jTP_MenusStateChanged(evt);
             }
         });
+
+        B_Nuevo_Arch.setText("Nuevo Archivo");
+        B_Nuevo_Arch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_Nuevo_ArchActionPerformed(evt);
+            }
+        });
+
+        B_Abrir_Arch.setText("Abrir Archivo");
+        B_Abrir_Arch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_Abrir_ArchActionPerformed(evt);
+            }
+        });
+
+        B_Salvar_Arch.setText("Salvar Archivo");
+        B_Salvar_Arch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_Salvar_ArchActionPerformed(evt);
+            }
+        });
+
+        B_Cerrar_Arch.setText("Cerrar Archivo");
+        B_Cerrar_Arch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_Cerrar_ArchActionPerformed(evt);
+            }
+        });
+
+        B_Salir.setText("Salir");
+        B_Salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_SalirActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jP_menuArchivoLayout = new javax.swing.GroupLayout(jP_menuArchivo);
+        jP_menuArchivo.setLayout(jP_menuArchivoLayout);
+        jP_menuArchivoLayout.setHorizontalGroup(
+            jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_menuArchivoLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(497, Short.MAX_VALUE))
+        );
+        jP_menuArchivoLayout.setVerticalGroup(
+            jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_menuArchivoLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(B_Nuevo_Arch)
+                .addGap(44, 44, 44)
+                .addComponent(B_Abrir_Arch)
+                .addGap(42, 42, 42)
+                .addComponent(B_Salvar_Arch)
+                .addGap(37, 37, 37)
+                .addComponent(B_Cerrar_Arch)
+                .addGap(37, 37, 37)
+                .addComponent(B_Salir)
+                .addContainerGap(226, Short.MAX_VALUE))
+        );
+
+        jTP_Menus.addTab("Archivo", jP_menuArchivo);
 
         B_Crear_Campo.setText("Crear Campo");
         B_Crear_Campo.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -303,7 +417,7 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        B_Listar_Campo.setText("Listar Campo");
+        B_Listar_Campo.setText("Listar Campos");
         B_Listar_Campo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 B_Listar_CampoMouseClicked(evt);
@@ -329,14 +443,14 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Campos", "Tipo de Dato", "Restriccion"
+                "Campos", "Tipo de Dato", "Restriccion", "Es llave primaria"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -349,13 +463,13 @@ public class GUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(table_ListarCampos);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout jp_CamposLayout = new javax.swing.GroupLayout(jp_Campos);
+        jp_Campos.setLayout(jp_CamposLayout);
+        jp_CamposLayout.setHorizontalGroup(
+            jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp_CamposLayout.createSequentialGroup()
                 .addGap(41, 41, 41)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(B_Borrar_Campo)
                     .addComponent(B_Mod_Campo)
                     .addComponent(B_Listar_Campo)
@@ -364,11 +478,11 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+        jp_CamposLayout.setVerticalGroup(
+            jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp_CamposLayout.createSequentialGroup()
+                .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jp_CamposLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(B_Crear_Campo)
                         .addGap(47, 47, 47)
@@ -377,13 +491,13 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(B_Mod_Campo)
                         .addGap(47, 47, 47)
                         .addComponent(B_Borrar_Campo))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(jp_CamposLayout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(257, Short.MAX_VALUE))
         );
 
-        jTP_Menus.addTab("Campos", jPanel4);
+        jTP_Menus.addTab("Campos", jp_Campos);
 
         B_Intro_Regis.setText("Introducir Registros");
 
@@ -467,7 +581,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(B_ReIndex_Arch)
                     .addComponent(B_Crear_Arch))
-                .addContainerGap(470, Short.MAX_VALUE))
+                .addContainerGap(474, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -481,73 +595,6 @@ public class GUI extends javax.swing.JFrame {
 
         jTP_Menus.addTab("Indices", jPanel6);
 
-        B_Nuevo_Arch.setText("Nuevo Archivo");
-        B_Nuevo_Arch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_Nuevo_ArchActionPerformed(evt);
-            }
-        });
-
-        B_Abrir_Arch.setText("Abrir Archivo");
-        B_Abrir_Arch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_Abrir_ArchActionPerformed(evt);
-            }
-        });
-
-        B_Salvar_Arch.setText("Salvar Archivo");
-        B_Salvar_Arch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_Salvar_ArchActionPerformed(evt);
-            }
-        });
-
-        B_Cerrar_Arch.setText("Cerrar Archivo");
-        B_Cerrar_Arch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_Cerrar_ArchActionPerformed(evt);
-            }
-        });
-
-        B_Salir.setText("Salir");
-        B_Salir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_SalirActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jP_menuArchivoLayout = new javax.swing.GroupLayout(jP_menuArchivo);
-        jP_menuArchivo.setLayout(jP_menuArchivoLayout);
-        jP_menuArchivoLayout.setHorizontalGroup(
-            jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jP_menuArchivoLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(494, Short.MAX_VALUE))
-        );
-        jP_menuArchivoLayout.setVerticalGroup(
-            jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jP_menuArchivoLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(B_Nuevo_Arch)
-                .addGap(44, 44, 44)
-                .addComponent(B_Abrir_Arch)
-                .addGap(42, 42, 42)
-                .addComponent(B_Salvar_Arch)
-                .addGap(37, 37, 37)
-                .addComponent(B_Cerrar_Arch)
-                .addGap(37, 37, 37)
-                .addComponent(B_Salir)
-                .addContainerGap(217, Short.MAX_VALUE))
-        );
-
-        jTP_Menus.addTab("Archivo", jP_menuArchivo);
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -558,9 +605,9 @@ public class GUI extends javax.swing.JFrame {
                         .addGap(263, 263, 263)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
+                        .addGap(46, 46, 46)
                         .addComponent(jTP_Menus, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(102, 102, 102)
@@ -572,9 +619,9 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel2)
-                .addGap(45, 45, 45)
+                .addGap(40, 40, 40)
                 .addComponent(jTP_Menus, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(69, 69, 69)
@@ -639,8 +686,7 @@ public class GUI extends javax.swing.JFrame {
                 js_longitud.setEnabled(false);
 
             } else if (objeto.equals("Int") || objeto.equals("Double")
-                    || objeto.equals("Float") || objeto.contains("Short")
-                    || objeto.contains("Long")) {
+                    || objeto.equals("Float")) {
 
                 js_maximoValor.setEnabled(true);
                 js_valorMinimo.setEnabled(true);
@@ -652,6 +698,10 @@ public class GUI extends javax.swing.JFrame {
     private void B_Crear_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Crear_CampoMouseClicked
         jt_nombreCampo.setEnabled(true);
         cb_tipoCampo.setEnabled(true);
+        jb_crearCampo.setEnabled(true);
+        jr_llaveNo.setEnabled(true);
+        jr_llaveSi.setEnabled(true);
+        jb_modCampo.setEnabled(false);
 
         jd_crearCampo.setModal(true);
         jd_crearCampo.pack();
@@ -660,23 +710,141 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Crear_CampoMouseClicked
 
     private void B_Listar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_CampoMouseClicked
-        // TODO Listar campos obtenidos de la metadata
+
+        Scanner sc;
+        ArrayList<String> buffer = new ArrayList();
+        try {
+
+            sc = new Scanner(archivo_actual.getArchivo());
+
+            while (sc.hasNext()) {
+                String cadena = sc.next();
+                cadena = cadena.substring(1, cadena.length() - 1);
+                buffer.add(cadena);
+
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        Scanner parse;
+        ArrayList<String> tokens = new ArrayList();
+
+        for (int i = 0; i < buffer.size(); i++) {
+            String var = buffer.get(i);
+            parse = new Scanner(var);
+
+            parse.useDelimiter(",");
+
+            while (parse.hasNext()) {
+                tokens.add(parse.next());
+            }
+
+            parse.reset();
+
+        }
+
+        //Elementos para cargar en table
+        DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
+
+        buffer.clear();
+
+        for (int i = 0; i < tokens.size(); i++) {
+            parse = new Scanner(tokens.get(i));
+
+            parse.useDelimiter(":");
+
+            while (parse.hasNext()) {
+                parse.next();
+                buffer.add(parse.next());
+                
+             
+            }
+        }
+
+        int index = buffer.size() / 4;
+        String nombre = "";
+        String tipo = "";
+        String restriccion = "";
+        String esLlave = "";
+
+        int flag = 0;
+        int secondaryFlag = 0;
+
+        while(flag < index){
+            
+            nombre = buffer.get(secondaryFlag);
+            secondaryFlag++;
+            
+            tipo = buffer.get(secondaryFlag);
+            secondaryFlag++;
+            
+            restriccion = buffer.get(secondaryFlag);
+            secondaryFlag++;
+            
+            esLlave = buffer.get(secondaryFlag);
+            secondaryFlag++;
+            
+            boolean key = false;
+            
+            if(esLlave.equals("true")){
+                key = true;
+            }
+            
+            Object [] newRow = {
+                nombre,
+                tipo,
+                restriccion,
+                key
+            };
+            
+            modelo.addRow(newRow);
+            
+            flag++;
+        }
+        
+        table_ListarCampos.setModel(modelo);
+        JOptionPane.showMessageDialog(this, "Se cargaron los campos exitosamente");
+
+
     }//GEN-LAST:event_B_Listar_CampoMouseClicked
 
     private void B_Mod_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Mod_CampoMouseClicked
         if (table_ListarCampos.getSelectedRow() != -1) {
 
-            //conseguir los datos de la table del campo
-            jt_nombreCampo.setEnabled(false);
-            cb_tipoCampo.setEnabled(false);
+            String tipoDato = (String) table_ListarCampos.
+                    getValueAt(table_ListarCampos.getSelectedRow(), 1);
 
-            jLabelCampo.setText("Editar Campo");
+            if (!"Char".equals(tipoDato)) {
 
-            jd_crearCampo.setModal(true);
-            jd_crearCampo.pack();
-            jd_crearCampo.setLocationRelativeTo(this);
-            jd_crearCampo.setVisible(true);
-         
+                if (tipoDato.equals("String")) {
+                    js_maximoValor.setEnabled(false);
+                    js_valorMinimo.setEnabled(false);
+                    js_longitud.setEnabled(true);
+
+                } else {
+                    js_maximoValor.setEnabled(true);
+                    js_valorMinimo.setEnabled(true);
+                    js_longitud.setEnabled(false);
+                }
+
+                //conseguir los datos de la table del campo
+                jt_nombreCampo.setEnabled(false);
+                cb_tipoCampo.setEnabled(false);
+                jb_crearCampo.setEnabled(false);
+                jb_modCampo.setEnabled(true);
+                jr_llaveNo.setEnabled(false);
+                jr_llaveSi.setEnabled(false);
+
+                jLabelCampo.setText("Editar Campo");
+
+                jd_crearCampo.setModal(true);
+                jd_crearCampo.pack();
+                jd_crearCampo.setLocationRelativeTo(this);
+                jd_crearCampo.setVisible(true);
+            }
+
         } else {
 
             JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
@@ -684,11 +852,15 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Mod_CampoMouseClicked
 
     private void B_Borrar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Borrar_CampoMouseClicked
-        
+
         if (table_ListarCampos.getSelectedRow() != -1) {
 
-            //procedemos a eliminarlo de la table
-            //procedemos a eliminarlo de la lista de Metadata
+            DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
+            int index = table_ListarCampos.getSelectedRow();
+            modelo.removeRow(index);
+
+            JOptionPane.showMessageDialog(this, "El campo se ha eliminado de la tabla correctamente");
+
         } else {
 
             JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
@@ -698,7 +870,7 @@ public class GUI extends javax.swing.JFrame {
     private void jT_ArchivosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jT_ArchivosMouseClicked
         // TODO add your handling code here:
 
-        if(evt.getClickCount() < 1){
+        if (evt.getClickCount() < 1) {
             nodo_seleccionado = null;
         } else {
             nodo_seleccionado = (DefaultMutableTreeNode) jT_Archivos.getSelectionPath().getLastPathComponent();
@@ -710,46 +882,46 @@ public class GUI extends javax.swing.JFrame {
 
         boolean confirm_open = false;
 
-        if(nodo_seleccionado == null ){
+        if (nodo_seleccionado == null) {
             JOptionPane.showMessageDialog(jd_abrirArchivo, "No se ha seleccionado ningun archivo.");
             confirm_open = false;
-        }  else if(nodo_seleccionado == jT_Archivos.getModel().getRoot()){
+        } else if (nodo_seleccionado == jT_Archivos.getModel().getRoot()) {
             JOptionPane.showMessageDialog(jd_abrirArchivo, "No se puede seleccionar la raiz de los archivos");
             confirm_open = false;
-        }  else if(nodo_seleccionado.getUserObject() == archivo_actual){
+        } else if (nodo_seleccionado.getUserObject() == archivo_actual) {
             JOptionPane.showMessageDialog(jd_abrirArchivo, "El archivo seleccionado ya esta abierto.");
-        }else {
+        } else {
             //Se selecciono un archivo
-            if(archivo_actual == null){
+            if (archivo_actual == null) {
                 //No hay otro archivo abierto
                 confirm_open = true;
             } else {
                 //Hay un archivo abierto
-                int resultado =  JOptionPane.showConfirmDialog(jP_menuArchivo, "El archivo '" + archivo_actual.getNombre_archivo()
-                    + "' esta abierto\n¿Desea guardarlo para cerrarlo?", "Abrir Archivo",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if(resultado == 0){
+                int resultado = JOptionPane.showConfirmDialog(jP_menuArchivo, "El archivo '" + archivo_actual.getNombre_archivo()
+                        + "' esta abierto\n¿Desea guardarlo para cerrarlo?", "Abrir Archivo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (resultado == 0) {
                     //Ingresa SI el usuario
                     //Llevar a opcion de salvar archivo
-                    if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                    if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                         //Primera ves que se guarda un nuevo archivo
                         B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                     } else {//Ya existia el archivo
                         escribirArchivo();
-                        JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo " + archivo_actual.getNombre_archivo()+ " se ha guardado exitosamente!");
+                        JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                         JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo: " + archivo_actual.getNombre_archivo() + " se ha cerrado correctamente!");
                     }
 
                     confirm_open = true;
                 } else {
                     //Ingresa NO el usuario
-                    if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                    if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                         //si el archivo no se ha guardado antes e ingreso NO, Se pierden los datos
                         Lista_Archivos.remove(archivo_actual);
                         refrescarJTree();
                         archivo_actual = null;
                     }
                     //El archivo abierto no se guardara antes que de abrir uno nuevo
-                    if(archivo_actual == null){
+                    if (archivo_actual == null) {
                         JOptionPane.showMessageDialog(jd_abrirArchivo, "No se guardo el ' nuevo archivo ' .");
                     } else {
                         JOptionPane.showMessageDialog(jd_abrirArchivo, "No se guardo el archivo: " + archivo_actual.getNombre_archivo());
@@ -760,10 +932,10 @@ public class GUI extends javax.swing.JFrame {
             }
         }
 
-        if(confirm_open){
+        if (confirm_open) {
             archivo_actual = null;
             archivo_actual = (Archivo) nodo_seleccionado.getUserObject();
-            JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo " + archivo_actual.getNombre_archivo() +" se ha abierto exitosamente!");
+            JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha abierto exitosamente!");
             jl_nombre_archivo.setText(archivo_actual.getNombre_archivo());
             archivo_actual.setGuardado(false);
             jl_nombre_archivo.setVisible(true);
@@ -779,16 +951,16 @@ public class GUI extends javax.swing.JFrame {
     private void B_Nuevo_ArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_Nuevo_ArchActionPerformed
         //Creacion de un nuevo archivo vacio
         //Verificacion si hay un archivo abierto
-        if(archivo_actual == null){
+        if (archivo_actual == null) {
             //do nothing
         } else {
             //Hay un archivo abierto, preguntar si lo quiere guardar para cerrarlo
-            int resultado_guardar =  JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual\n¿Desea guardarlo?"
-                + "", "Salir",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int resultado_guardar = JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual\n¿Desea guardarlo?"
+                    + "", "Salir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             //Llevar a metodo salvar archivo 
-            if(resultado_guardar == 0){
+            if (resultado_guardar == 0) {
                 //Selecciono SI
-                if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                     //Es la primera vez que se guarda el archivo
                     B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                 } else {
@@ -797,23 +969,23 @@ public class GUI extends javax.swing.JFrame {
                 }
             } else {
                 //Selecciono NO
-                if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                     Lista_Archivos.remove(archivo_actual);
                 }
                 JOptionPane.showMessageDialog(jP_menuArchivo, "No se guardo el archivo: '" + archivo_actual.getNombre_archivo() + "'.");
                 archivo_actual = null;
-                
+
             }
         }
-            
+
         JOptionPane.showMessageDialog(jP_menuArchivo, "cargando...");
         Archivo archivo_nuevo = new Archivo("./nuevo_archivo.txt");
         Lista_Archivos.add(archivo_nuevo);
         archivo_actual = archivo_nuevo;
-        JOptionPane.showMessageDialog(jP_menuArchivo, "Se ha creado el  archivo exitosamente", 
-            "nuevo archivo", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(jP_menuArchivo, "Se ha creado el  archivo exitosamente",
+                "nuevo archivo", JOptionPane.INFORMATION_MESSAGE);
         //Agregar el nombre del documento en la pantalla principal
-        jl_nombre_archivo.setText(archivo_actual.getNombre_archivo()); 
+        jl_nombre_archivo.setText(archivo_actual.getNombre_archivo());
         jl_nombre_archivo.setVisible(true);
         //Refrescar JTree Archivos
         refrescarJTree();
@@ -821,8 +993,8 @@ public class GUI extends javax.swing.JFrame {
 
     private void B_Abrir_ArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_Abrir_ArchActionPerformed
         //Metodo abrir un archivo
-        if(Lista_Archivos.isEmpty()){
-            JOptionPane.showMessageDialog(jP_menuArchivo, "No hay ningun archivo en el sistema.", 
+        if (Lista_Archivos.isEmpty()) {
+            JOptionPane.showMessageDialog(jP_menuArchivo, "No hay ningun archivo en el sistema.",
                     "Advertencia Abrir Archivo", JOptionPane.WARNING_MESSAGE);
         } else {
             nodo_seleccionado = null;
@@ -836,51 +1008,53 @@ public class GUI extends javax.swing.JFrame {
 
     private void B_Salvar_ArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_Salvar_ArchActionPerformed
         //Metodo salvar archivo
-        String nombre_archivo = null ;
+        String nombre_archivo = null;
         boolean confirm_name = false;
         boolean confirm_save = false;
-        
-        if(archivo_actual != null){
+
+        if (archivo_actual != null) {
             //Revisar si el archivo ya esta guardado
-            if(archivo_actual.isGuardado()){
-                JOptionPane.showMessageDialog(jP_menuArchivo, "El archivo: '" + archivo_actual.getNombre_archivo() 
+            if (archivo_actual.isGuardado()) {
+                JOptionPane.showMessageDialog(jP_menuArchivo, "El archivo: '" + archivo_actual.getNombre_archivo()
                         + "' ya esta guardado.");
             } else {
                 //El archivo no esta guardado
                 //Revisar si el archivo ya tiene un nombre guardado
-                if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                     //No tiene un nombre guardado, significando salvar por 1era vez el archivo
-                    while(!confirm_name){
-                        nombre_archivo = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el nombre del archivo: ", 
-                        "Salvar Archivo", JOptionPane.DEFAULT_OPTION); 
-                    
-                        if(nombre_archivo != null){
-                        //El usuario ingreso el nombre del archivo
+                    while (!confirm_name) {
+                        nombre_archivo = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el nombre del archivo: ",
+                                "Salvar Archivo", JOptionPane.DEFAULT_OPTION);
+
+                        if (nombre_archivo != null) {
+                            //El usuario ingreso el nombre del archivo
                             //No se puede utilizar el nombre "nuevo documento" ya que es el nombre base
-                            if(nombre_archivo.equals("nuevo archivo")){
+                            if (nombre_archivo.equals("nuevo archivo")) {
                                 JOptionPane.showMessageDialog(jP_menuArchivo, "No se puede utilizar el nombre 'nuevo archivo\n'"
-                                    + "por decision del desarrolador.");
-                            }  else { confirm_name = true;}
-                            
-                            if(confirm_name){
+                                        + "por decision del desarrolador.");
+                            } else {
+                                confirm_name = true;
+                            }
+
+                            if (confirm_name) {
                                 //Si pasa la primera validacion puede ir a la segunda validacion
                                 //Revisar validaciones para el nombre
-                                if(nombre_archivo.contains(".")){
-                                //El archivo no puede llevar un punto
-                                    JOptionPane.showMessageDialog(jP_menuArchivo, "El Archivo no puede incluir un '.'", 
-                                    "Advertencia", JOptionPane.WARNING_MESSAGE);
-                                    confirm_name = false; 
+                                if (nombre_archivo.contains(".")) {
+                                    //El archivo no puede llevar un punto
+                                    JOptionPane.showMessageDialog(jP_menuArchivo, "El Archivo no puede incluir un '.'",
+                                            "Advertencia", JOptionPane.WARNING_MESSAGE);
+                                    confirm_name = false;
                                 } else {
                                     confirm_name = true;
-                                }    
-                                if(confirm_name){
+                                }
+                                if (confirm_name) {
                                     //Revisar que el nombre no sea igual a otro archivo
                                     nombre_archivo = nombre_archivo + ".txt";
                                     for (int i = 0; i < Lista_Archivos.size(); i++) {
-                                        if(nombre_archivo.equals(Lista_Archivos.get(i).getNombre_archivo())){
+                                        if (nombre_archivo.equals(Lista_Archivos.get(i).getNombre_archivo())) {
                                             //El nombre se repite
-                                            JOptionPane.showMessageDialog(jP_menuArchivo, "El nombre "+ nombre_archivo +" ya esta siendo "
-                                                + "utilizado para otro archivo","Advertencia", JOptionPane.WARNING_MESSAGE);
+                                            JOptionPane.showMessageDialog(jP_menuArchivo, "El nombre " + nombre_archivo + " ya esta siendo "
+                                                    + "utilizado para otro archivo", "Advertencia", JOptionPane.WARNING_MESSAGE);
                                             confirm_name = false;
                                             break;
                                         } else {
@@ -890,22 +1064,22 @@ public class GUI extends javax.swing.JFrame {
                                 }
                             }
                             //Confirmacion de dato
-                            if(confirm_name){
+                            if (confirm_name) {
                                 archivo_actual.setNombre_archivo(nombre_archivo);
-                                archivo_actual.setArchivo( "./"+nombre_archivo);
+                                archivo_actual.setArchivo("./" + nombre_archivo);
                                 confirm_save = true;
                             }
                         } else {
                             //do nothing, eligio la opcion cancelar
-                        confirm_name = true;
-                        confirm_save =  false;
+                            confirm_name = true;
+                            confirm_save = false;
                         }
-                    }    
+                    }
                 } else {
                     //El archivo ya tiene nombre propio y se ha guardado minimo 1 vez
-                    int opcion_save = JOptionPane.showConfirmDialog(jP_menuArchivo, "¿Desea guardar el archivo " 
+                    int opcion_save = JOptionPane.showConfirmDialog(jP_menuArchivo, "¿Desea guardar el archivo "
                             + archivo_actual.getNombre_archivo() + "?", "Salvar Archivo", JOptionPane.YES_NO_OPTION);
-                    if(opcion_save == 0){
+                    if (opcion_save == 0) {
                         //Selecciono SI el usuario
                         confirm_save = true;
                     } else {
@@ -914,19 +1088,20 @@ public class GUI extends javax.swing.JFrame {
                     }
                 }
                 //Guardar si se ha confirmado por medio de las validaciones
-                if(confirm_save == true){
+                if (confirm_save == true) {
                     //Escribir el archivo
-                    escribirArchivo(); 
+                    escribirArchivo();
                     JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo se ha guardado exitosamente!");
                     archivo_actual.setGuardado(true);
                     //Refrescar JTree
                     refrescarJTree();
-                } else {/*No se guarda el programa, do nothing*/}
+                } else {/*No se guarda el programa, do nothing*/
+                }
             }
-              
+
         } else {
             //No hay un archivo siendo utilizado
-            JOptionPane.showMessageDialog(jP_menuArchivo, "No se esta utilizando ningun archivo.\n", "Advertencia", 
+            JOptionPane.showMessageDialog(jP_menuArchivo, "No se esta utilizando ningun archivo.\n", "Advertencia",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_B_Salvar_ArchActionPerformed
@@ -934,95 +1109,172 @@ public class GUI extends javax.swing.JFrame {
     private void B_Cerrar_ArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_Cerrar_ArchActionPerformed
         //Metodo cerrar archivo
         boolean confirm_cerrar = false;
-        if(archivo_actual != null){
+        if (archivo_actual != null) {
             //Hay un archivo abierto
-            if(!archivo_actual.isGuardado()){
+            if (!archivo_actual.isGuardado()) {
                 //Archivo no esta guardado
-                int resultado =  JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual\n¿Desea guardarlo?"
-                + "", "Cerrar Archivo",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if(resultado == 0){
+                int resultado = JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual\n¿Desea guardarlo?"
+                        + "", "Cerrar Archivo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (resultado == 0) {
                     //Ingresa SI el usuario
                     //Verificar si el archivo es nuevo o si ya ha sido utilizado y guardado antes
-                    if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                    if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                         B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                     } else {
                         //Solo se guarda el archivo ya existente
                         escribirArchivo();
-                        JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo()+ " se ha guardado exitosamente!");
+                        JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                     }
-                    
+
                     confirm_cerrar = true;
                 } else {
                     //Ingresa NO el usuario 
                     JOptionPane.showMessageDialog(jP_menuArchivo, "No se guardaron los datos del archivo: " + archivo_actual.getNombre_archivo() + " .",
-                        "Cerrar Archivo", JOptionPane.DEFAULT_OPTION); 
+                            "Cerrar Archivo", JOptionPane.DEFAULT_OPTION);
                     confirm_cerrar = true;
-                } 
+                }
             } else {
                 //Archivo esta guardado
                 confirm_cerrar = true;
-            } 
+            }
         } else {
             //No hay un archivo abierto por el momento
             JOptionPane.showMessageDialog(jP_menuArchivo, "No hay ningun archivo abierto actualmente."
                     + "\nNo puede hacer uso de esta función.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
         //Cerrar Archivo
-        if(confirm_cerrar){
+        if (confirm_cerrar) {
             archivo_actual = null;
             jl_nombre_archivo.setVisible(false);
             JOptionPane.showMessageDialog(jP_menuArchivo, "Se ha cerrado el archivo correctamente."
-                            + "", "Cerrar Archivo", JOptionPane.DEFAULT_OPTION); 
+                    + "", "Cerrar Archivo", JOptionPane.DEFAULT_OPTION);
         }
     }//GEN-LAST:event_B_Cerrar_ArchActionPerformed
 
     private void B_SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_SalirActionPerformed
-                //Metodo salir
+        //Metodo salir
         boolean confirmar_salir = false;
-        if(archivo_actual != null && !archivo_actual.isGuardado()){
+        if (archivo_actual != null && !archivo_actual.isGuardado()) {
             //Se esta usando un archivo y no esta guardado
-            int resultado =  JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual: " +archivo_actual.getNombre_archivo() + "\n¿Desea guardarlo?"
-                + "", "Salir",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if(resultado == 0){
+            int resultado = JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual: " + archivo_actual.getNombre_archivo() + "\n¿Desea guardarlo?"
+                    + "", "Salir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (resultado == 0) {
                 //Ingresa SI el usuario
                 //Verificar si el archivo es nuevo o si ya ha sido guardado, llevar a opcion de salvar archivo
-                if(archivo_actual.getNombre_archivo().equals("nuevo archivo")){
+                if (archivo_actual.getNombre_archivo().equals("nuevo archivo")) {
                     B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                 } else {
                     //El archivo no es nuevo
-                    JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo()+ " se ha guardado exitosamente!");
-                    JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo: " + archivo_actual.getNombre_archivo() + " se ha cerrado correctamente!"); 
+                    JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
+                    JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo: " + archivo_actual.getNombre_archivo() + " se ha cerrado correctamente!");
                     escribirArchivo();
                     archivo_actual = null;
                 }
                 confirmar_salir = true;
             } else {
                 //Ingresa NO el usuario
-                confirmar_salir = true;   
-            } 
-        } else { confirmar_salir = true;}
-    
-        if(confirmar_salir){
-            int resultado_salir =  JOptionPane.showConfirmDialog(jP_menuArchivo, "¿Esta seguro de salir?"
-                + "", "Salir",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if(resultado_salir == 0){ // Ingreso SI el usuario
+                confirmar_salir = true;
+            }
+        } else {
+            confirmar_salir = true;
+        }
+
+        if (confirmar_salir) {
+            int resultado_salir = JOptionPane.showConfirmDialog(jP_menuArchivo, "¿Esta seguro de salir?"
+                    + "", "Salir", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (resultado_salir == 0) { // Ingreso SI el usuario
                 JOptionPane.showMessageDialog(jP_menuArchivo, "Hasta Luego.", "Salir", JOptionPane.PLAIN_MESSAGE);
-                System.exit(0); 
+                System.exit(0);
             } else {//Ingreso NO el usuario
                 //do nothing
-            }    
+            }
         }
     }//GEN-LAST:event_B_SalirActionPerformed
 
     private void jTP_MenusStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTP_MenusStateChanged
         //Cambio de Tab
         int indice_menu = jTP_Menus.getSelectedIndex();
-        if(archivo_actual == null && indice_menu > 0){
+        if (archivo_actual == null && indice_menu > 0) {
             jTP_Menus.setSelectedIndex(0);
             JOptionPane.showMessageDialog(jP_menuArchivo, "No hay archivos en el sistema.\n"
-                    + "Debe abrir o crear un nueco archivo para acceder al resto de funciones."); 
+                    + "Debe abrir o crear un nuevo archivo para acceder al resto de funciones.");
         }
     }//GEN-LAST:event_jTP_MenusStateChanged
+
+    private void jb_crearCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_crearCampoMouseClicked
+
+        if (jt_nombreCampo.getText().isBlank()) {
+            JOptionPane.showMessageDialog(jd_crearCampo, "No puede dejar en blanco el nombre del campo!");
+
+        } else {
+            DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
+            String restriccion = "";
+
+            //Recuperamos la restriccion de acuerdo del tipo de dato
+            if (((String) cb_tipoCampo.getSelectedItem()).equals("String")) {
+                restriccion = Integer.toString((int) js_longitud.getValue());
+
+            } else if (((String) cb_tipoCampo.getSelectedItem()).equals("Int")
+                    || ((String) cb_tipoCampo.getSelectedItem()).equals("Double")
+                    || ((String) cb_tipoCampo.getSelectedItem()).equals("Float")) {
+
+                restriccion += Integer.toString((int) js_valorMinimo.getValue());
+                restriccion += " a " + Integer.toString((int) js_maximoValor.getValue());
+            }
+
+            //Recuperamos la eleccion de marcar como llave primaria
+            boolean esllave = false;
+
+            if (jr_llaveSi.isSelected()) {
+                esllave = true;
+            }
+
+            //Busqueda para verificar que no haya otra llave primaria
+            for (int i = 0; i < table_ListarCampos.getRowCount(); i++) {
+
+                if ((boolean) modelo.getValueAt(i, 3).equals(true)) {
+                    esllave = false;
+                    break;
+                }
+            }
+
+            Object newRow[] = {
+                jt_nombreCampo.getText(),
+                (String) cb_tipoCampo.getSelectedItem(),
+                restriccion,
+                esllave
+            };
+
+            modelo.insertRow(table_ListarCampos.getRowCount(), newRow);
+            table_ListarCampos.setModel(modelo);
+
+            JOptionPane.showMessageDialog(jd_crearCampo, "Se ha guardado exitosamente el campo en la tabla");
+            jd_crearCampo.setVisible(false);
+
+        }
+    }//GEN-LAST:event_jb_crearCampoMouseClicked
+
+    private void jb_modCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_modCampoMouseClicked
+        DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
+
+        String tipoDato = (String) table_ListarCampos.
+                getValueAt(table_ListarCampos.getSelectedRow(), 1);
+
+        String nuevaRestriccion = "";
+
+        if (tipoDato.equals("String")) {
+            nuevaRestriccion = Integer.toString((int) js_longitud.getValue());
+
+        } else {
+            nuevaRestriccion = Integer.toString((int) js_valorMinimo.getValue());
+            nuevaRestriccion += " a " + Integer.toString((int) js_maximoValor.getValue());
+        }
+
+        modelo.setValueAt(nuevaRestriccion, table_ListarCampos.getSelectedRow(), 2);
+
+        JOptionPane.showMessageDialog(jd_crearCampo, "Se modifico el campo exitosamente");
+        jd_crearCampo.setVisible(false);
+    }//GEN-LAST:event_jb_modCampoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1079,8 +1331,10 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton B_ReIndex_Arch;
     private javax.swing.JButton B_Salir;
     private javax.swing.JButton B_Salvar_Arch;
+    private javax.swing.ButtonGroup BgLlavePrimaria;
     private javax.swing.JComboBox<String> cb_tipoCampo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1093,7 +1347,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JPanel jP_menuArchivo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -1104,49 +1357,76 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTree jT_Archivos;
     private javax.swing.JButton jb_abrirArchivo;
     private javax.swing.JButton jb_crearCampo;
+    private javax.swing.JButton jb_modCampo;
     private javax.swing.JButton jb_salirAbrirArchivo;
     private javax.swing.JDialog jd_abrirArchivo;
     private javax.swing.JDialog jd_crearCampo;
     private javax.swing.JLabel jl_nombre_archivo;
+    private javax.swing.JPanel jp_Campos;
+    private javax.swing.JRadioButton jr_llaveNo;
+    private javax.swing.JRadioButton jr_llaveSi;
     private javax.swing.JSpinner js_longitud;
     private javax.swing.JSpinner js_maximoValor;
     private javax.swing.JSpinner js_valorMinimo;
     private javax.swing.JTextField jt_nombreCampo;
     private javax.swing.JTable table_ListarCampos;
     // End of variables declaration//GEN-END:variables
-    
+
+    //Variables locales
     DefaultMutableTreeNode nodo_seleccionado = null;
-    
-    public void refrescarJTree(){
+
+    //para campos
+    ArrayList<Campo> listaCampos = new ArrayList();
+
+    public void refrescarJTree() {
         DefaultTreeModel m = (DefaultTreeModel) jT_Archivos.getModel();
-        DefaultMutableTreeNode raiz= (DefaultMutableTreeNode) m.getRoot();
+        DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) m.getRoot();
         DefaultMutableTreeNode nodo_archivo;
-        
+
         //Dejar limpio el arbol al actualizar
         raiz.removeAllChildren();
         m.reload();
-        
-        
+
         for (int i = 0; i < Lista_Archivos.size(); i++) {
             nodo_archivo = new DefaultMutableTreeNode(Lista_Archivos.get(i));
             raiz.add(nodo_archivo);
         }
         m.reload();
     }
-    
-    public void escribirArchivo(){
+
+    public void escribirArchivo() {
         FileWriter fw = null;
         BufferedWriter bw = null;
         //Aplicar el nuevo nombre dado  
         try {
             fw = new FileWriter(archivo_actual.getArchivo(), false);
             bw = new BufferedWriter(fw);
-            
+
             //Escribir la definicion de los campos y registros
-            
+            //Escritura de los campos en metadata
+            String nombre, tipo, restriccion, esllave;
+            for (int i = 0; i < table_ListarCampos.getRowCount(); i++) {
+                nombre = (String) table_ListarCampos.getValueAt(i, 0);
+                tipo = (String) table_ListarCampos.getValueAt(i, 1);
+                restriccion = (String) table_ListarCampos.getValueAt(i, 2);
+
+                if ((boolean) table_ListarCampos.getValueAt(i, 3)) {
+                    esllave = "true";
+                } else {
+                    esllave = "false";
+                }
+
+                restriccion = restriccion.replace(" ", "");
+
+                bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
+                        + ",Restriccion:" + restriccion + ",EsLlave:" + esllave + "}");
+
+                bw.write("\n");
+            }
+
             bw.flush();
         } catch (Exception ex) {
-            
+
         } finally {
             try {
                 bw.close();
@@ -1154,6 +1434,7 @@ public class GUI extends javax.swing.JFrame {
             } catch (IOException e) {
             }
         }
-        
+
     }
+
 }
