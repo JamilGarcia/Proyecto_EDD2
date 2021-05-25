@@ -1,3 +1,3 @@
-{Nombre:Cedula,Tipo:string,Longitud:13,EsLlave:true}
+{Nombre:Cedula,Tipo:string,Longitud:15,EsLlave:true}
 {Nombre:Nombre,Tipo:string,Longitud:20,EsLlave:false}
 {Nombre:Edad,Tipo:int,Longitud:3,EsLlave:false}
