@@ -145,7 +145,7 @@
                     <StringItem index="3" value="Double"/>
                     <StringItem index="4" value="Float"/>
                     <StringItem index="5" value="Char"/>
-                    <StringItem index="6" value=" "/>
+                    <StringItem index="6" value=""/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -550,7 +550,7 @@
                                   <Component id="B_Listar_Campo" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="B_Crear_Campo" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="439" max="32767" attributes="0"/>
+                              <EmptySpace pref="489" max="32767" attributes="0"/>
                           </Group>
                           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
@@ -572,7 +572,7 @@
                               <Component id="B_Mod_Campo" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                               <Component id="B_Borrar_Campo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="236" max="32767" attributes="0"/>
+                              <EmptySpace pref="277" max="32767" attributes="0"/>
                           </Group>
                           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">

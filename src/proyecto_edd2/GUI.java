@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -33,7 +34,7 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
         jl_nombre_archivo.setVisible(false);
         //Cargar Archivos a la lista de archivos
-        File directoryPath = new File("/Users/miguel/Documents/UNITEC/2 Año/Trimestre 8/Estructura de Datos 2/Proyecto/Proyecto_EDD2");
+        File directoryPath = new File("./");
         //List text files only
         File[] files = directoryPath.listFiles(new FilenameFilter() {
             @Override
@@ -122,7 +123,7 @@ public class GUI extends javax.swing.JFrame {
 
         jl_TipodeDato.setText("Tipo de dato:");
 
-        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-----", "String", "Int", "Double", "Float", "Char", " " }));
+        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-----", "String", "Int", "Double", "Float", "Char", "" }));
 
         jl_Longitud.setText("Longitud:");
 
@@ -467,7 +468,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(B_Mod_Campo)
                     .addComponent(B_Listar_Campo)
                     .addComponent(B_Crear_Campo))
-                .addContainerGap(439, Short.MAX_VALUE))
+                .addContainerGap(489, Short.MAX_VALUE))
             .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_CamposLayout.createSequentialGroup()
                     .addContainerGap(199, Short.MAX_VALUE)
@@ -485,7 +486,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(B_Mod_Campo)
                 .addGap(44, 44, 44)
                 .addComponent(B_Borrar_Campo)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addContainerGap(277, Short.MAX_VALUE))
             .addGroup(jp_CamposLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_CamposLayout.createSequentialGroup()
                     .addContainerGap(9, Short.MAX_VALUE)
@@ -680,109 +681,13 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Crear_CampoMouseClicked
 
     private void B_Listar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_CampoMouseClicked
-        
-        if(archivo_actual.getLista_campos().isEmpty()){
+
+        if (archivo_actual.getLista_campos().isEmpty()) {
             JOptionPane.showMessageDialog(jp_Campos, "No existe ningun campo en este archivo.");
         } else {
             jP_tabla_ListarCampos.setVisible(true);
             refrescarTabla();
         }
-        /*
-        Scanner sc;
-        ArrayList<String> buffer = new ArrayList();
-        try {
-
-            sc = new Scanner(archivo_actual.getArchivo());
-
-            while (sc.hasNext()) {
-                String cadena = sc.next();
-                cadena = cadena.substring(1, cadena.length() - 1);
-                buffer.add(cadena);
-
-            }
-
-        } catch (Exception e) {
-
-        }
-
-        Scanner parse;
-        ArrayList<String> tokens = new ArrayList();
-
-        for (int i = 0; i < buffer.size(); i++) {
-            String var = buffer.get(i);
-            parse = new Scanner(var);
-
-            parse.useDelimiter(",");
-
-            while (parse.hasNext()) {
-                tokens.add(parse.next());
-            }
-
-            parse.reset();
-
-        }
-
-        //Elementos para cargar en table
-        DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
-
-        buffer.clear();
-
-        for (int i = 0; i < tokens.size(); i++) {
-            parse = new Scanner(tokens.get(i));
-
-            parse.useDelimiter(":");
-
-            while (parse.hasNext()) {
-                parse.next();
-                buffer.add(parse.next());
-                
-             
-            }
-        }
-
-        int index = buffer.size() / 4;
-        String nombre = "";
-        String tipo = "";
-        String restriccion = "";
-        String esLlave = "";
-
-        int flag = 0;
-        int secondaryFlag = 0;
-
-        while(flag < index){
-            
-            nombre = buffer.get(secondaryFlag);
-            secondaryFlag++;
-            
-            tipo = buffer.get(secondaryFlag);
-            secondaryFlag++;
-            
-            restriccion = buffer.get(secondaryFlag);
-            secondaryFlag++;
-            
-            esLlave = buffer.get(secondaryFlag);
-            secondaryFlag++;
-            
-            boolean key = false;
-            
-            if(esLlave.equals("true")){
-                key = true;
-            }
-            
-            Object [] newRow = {
-                nombre,
-                tipo,
-                restriccion,
-                key
-            };
-            
-            modelo.addRow(newRow);
-            
-            flag++;
-        }
-        
-        table_ListarCampos.setModel(modelo);*/
-        JOptionPane.showMessageDialog(this, "Se cargaron los campos exitosamente");
 
 
     }//GEN-LAST:event_B_Listar_CampoMouseClicked
@@ -795,16 +700,7 @@ public class GUI extends javax.swing.JFrame {
 
             if (!"Char".equals(tipoDato)) {
 
-                if (tipoDato.equals("String")) {
-                    //js_maximoValor.setEnabled(false);
-                    //js_valorMinimo.setEnabled(false);
-                    js_longitud.setEnabled(true);
-
-                } else {
-                    //js_maximoValor.setEnabled(true);
-                    //js_valorMinimo.setEnabled(true);
-                    js_longitud.setEnabled(false);
-                }
+                js_longitud.setEnabled(true);
 
                 //conseguir los datos de la table del campo
                 jt_nombreCampo.setEnabled(false);
@@ -820,6 +716,7 @@ public class GUI extends javax.swing.JFrame {
                 jd_crearCampo.pack();
                 jd_crearCampo.setLocationRelativeTo(this);
                 jd_crearCampo.setVisible(true);
+
             }
 
         } else {
@@ -835,6 +732,8 @@ public class GUI extends javax.swing.JFrame {
             DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
             int index = table_ListarCampos.getSelectedRow();
             modelo.removeRow(index);
+
+            archivo_actual.getLista_campos().remove(index);
 
             JOptionPane.showMessageDialog(this, "El campo se ha eliminado de la tabla correctamente");
 
@@ -981,7 +880,101 @@ public class GUI extends javax.swing.JFrame {
             jd_abrirArchivo.pack();
             jd_abrirArchivo.setLocationRelativeTo(this);
             jd_abrirArchivo.setVisible(true);
+
+            Scanner sc;
+            ArrayList<String> buffer = new ArrayList();
+            try {
+
+                sc = new Scanner(archivo_actual.getArchivo());
+
+                while (sc.hasNext()) {
+                    String cadena = sc.next();
+                    cadena = cadena.substring(1, cadena.length() - 1);
+                    buffer.add(cadena);
+
+                }
+
+            } catch (Exception e) {
+
+            }
+
+            Scanner parse;
+            ArrayList<String> tokens = new ArrayList();
+
+            for (int i = 0; i < buffer.size(); i++) {
+                String var = buffer.get(i);
+                parse = new Scanner(var);
+
+                parse.useDelimiter(",");
+
+                while (parse.hasNext()) {
+                    tokens.add(parse.next());
+                }
+
+                parse.reset();
+
+            }
+
+            buffer.clear();
+
+            for (int i = 0; i < tokens.size(); i++) {
+                parse = new Scanner(tokens.get(i));
+
+                parse.useDelimiter(":");
+
+                while (parse.hasNext()) {
+                   parse.next();
+                   buffer.add(parse.next());
+
+                }
+            }
+
+            int index = buffer.size() / 4;
+            String nombre = "";
+            String tipo = "";
+            int restriccion = 0;
+            String esLlave = "";
+
+            int flag = 0;
+            int secondaryFlag = 0;
+            
+            archivo_actual.getLista_campos().clear();
+
+            while (flag < index) {
+
+                nombre = buffer.get(secondaryFlag);
+                secondaryFlag++;
+
+                tipo = buffer.get(secondaryFlag);
+                secondaryFlag++;
+
+                restriccion = Integer.parseInt(buffer.get(secondaryFlag));
+                secondaryFlag++;
+
+                esLlave = buffer.get(secondaryFlag);
+                secondaryFlag++;
+
+                Campo campo = new Campo(nombre, tipo, restriccion);
+
+                if (esLlave.equals("true")) {
+                    campo.setEsLlavePrimaria(true);
+                }
+
+                archivo_actual.getLista_campos().add(campo);
+
+                flag++;
+            }
+            
+             table_ListarCampos.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Nombre", "Tipo de Dato", "Longitud", "Es llave Primaria"
+                }
+        ));
+
         }
+        
+        
     }//GEN-LAST:event_B_Abrir_ArchActionPerformed
 
     private void B_Salvar_ArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_Salvar_ArchActionPerformed
@@ -1179,38 +1172,39 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jP_menuArchivo, "No hay archivos en el sistema.\n"
                     + "Debe abrir o crear un nuevo archivo para acceder al resto de funciones.");
         }
-        
-        if(archivo_actual != null){
+
+        if (archivo_actual != null) {
             jP_tabla_ListarCampos.setVisible(false);
         }
     }//GEN-LAST:event_jTP_MenusStateChanged
 
     private void jb_crearCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_crearCampoMouseClicked
-        
+
         boolean confirmar_crearCampo = false;
         boolean continuar_addCampo = true;
         Campo nuevoCampo = new Campo();
-        
+
         //El usuario puede agregar los campo que desee
-        while(continuar_addCampo){
+        while (continuar_addCampo) {
+
             //Validar entradas de datos
             //Validar nombre de campo
             if (jt_nombreCampo.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(jd_crearCampo, "!No puede dejar en blanco el nombre del campo!");
                 confirmar_crearCampo = false;
-            }  else {
+            } else {
                 confirmar_crearCampo = true;
                 nuevoCampo.setNombre_Campo(jt_nombreCampo.getText());
             }
-        
+
             //Validar Tipo de Dato
-            if(cb_tipoCampo.getSelectedIndex()  == 0){
+            if (cb_tipoCampo.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(jd_crearCampo, "Debe elegir el tipo del dato.");
                 confirmar_crearCampo = false;
             } else {
                 int opcion = cb_tipoCampo.getSelectedIndex();
                 //Agregar el tipo de dato que selecciono el usuario
-                switch(opcion){
+                switch (opcion) {
                     case 1:
                         //Eligio String
                         nuevoCampo.setTipo_dato("string");
@@ -1228,52 +1222,52 @@ public class GUI extends javax.swing.JFrame {
                         nuevoCampo.setTipo_dato("float");
                         break;
                     case 5:
-                        //Eligio Chat
+                        //Eligio Char
                         nuevoCampo.setTipo_dato("char");
                         break;
                     default:
                 }
                 confirmar_crearCampo = true;
             }
-            
+
             //Validar Longitud
-            if((int) js_longitud.getValue() == 0 || (int) js_longitud.getValue() > 30){
-                JOptionPane.showMessageDialog(jd_crearCampo,"La longitud del campo debe ser mayor a 0.");
+            if ((int) js_longitud.getValue() == 0 || (int) js_longitud.getValue() > 30) {
+                JOptionPane.showMessageDialog(jd_crearCampo, "La longitud del campo debe ser mayor a 0.");
                 confirmar_crearCampo = false;
             } else {
                 confirmar_crearCampo = true;
-                nuevoCampo.setLongitud((int)js_longitud.getValue());
+                nuevoCampo.setLongitud((int) js_longitud.getValue());
             }
-            
+
             //Validar Si es llave primaria
             //Recuperamos la eleccion de marcar como llave primaria
             boolean esllavePrimaria = false;
-            
-            if(!jr_llaveNo.isSelected() && !jr_llaveSi.isSelected() ){
+
+            if (!jr_llaveNo.isSelected() && !jr_llaveSi.isSelected()) {
                 //No selecciono sobre la opcion si el campo es llave primaria
-                JOptionPane.showMessageDialog(jd_crearCampo,"Debe elegir si el campo es una llave primaria o no.");
+                JOptionPane.showMessageDialog(jd_crearCampo, "Debe elegir si el campo es una llave primaria o no.");
             }
 
             if (jr_llaveSi.isSelected()) {
                 esllavePrimaria = true;
-            }  else {
+            } else {
                 esllavePrimaria = false;
             }
 
             //Busqueda para verificar que no haya otra llave primaria
-            if(archivo_actual.getLista_campos().isEmpty()){
+            if (archivo_actual.getLista_campos().isEmpty()) {
                 //La lista de campos esta vacia 
-                if(esllavePrimaria){
+                if (esllavePrimaria) {
                     //eligio el campo como llave primaria
                     nuevoCampo.setEsLlavePrimaria(true);
-                } else{
+                } else {
                     //do nothing, no eligio el campo como llave primaria
                 }
-            }  else {
+            } else {
                 //La lista de campos no esta vacia
                 //Recorrer la lista y verificar que otro campo no sea una llave primaria
                 boolean confirm_LlaveP = true;
-                if(esllavePrimaria){
+                if (esllavePrimaria) {
                     for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
                         if (archivo_actual.getLista_campos().get(i).isEsLlavePrimaria() == true) {
                             confirm_LlaveP = false;
@@ -1281,36 +1275,51 @@ public class GUI extends javax.swing.JFrame {
                         }
                     }
                     //Mostrar mensaje que ya existe otra una llave primaria
-                    if(!confirm_LlaveP){
-                        JOptionPane.showMessageDialog(jd_crearCampo,"Otro campo ya es una llave primaria en este archivo.");
+                    if (!confirm_LlaveP) {
+                        JOptionPane.showMessageDialog(jd_crearCampo, "Otro campo ya es una llave primaria en este archivo.");
                         confirmar_crearCampo = false;
                     } else {
                         nuevoCampo.setEsLlavePrimaria(true);
                         confirmar_crearCampo = true;
                     }
                 }
-                
+
             }
-            
+
             //Ultima verificacion
-            if(nuevoCampo.getNombre_Campo() == null || nuevoCampo.getTipo_dato() == null || 
-                    nuevoCampo.getLongitud() == 0){
-             confirmar_crearCampo = false;   
+            if (nuevoCampo.getNombre_Campo() == null || nuevoCampo.getTipo_dato() == null
+                    || nuevoCampo.getLongitud() == 0) {
+                confirmar_crearCampo = false;
             }
             //Crear campo
-            if(confirmar_crearCampo){
+            if (confirmar_crearCampo) {
                 archivo_actual.getLista_campos().add(nuevoCampo);
-                JOptionPane.showMessageDialog(jd_crearCampo,"Se creo el campo exitosamente!");
+                JOptionPane.showMessageDialog(jd_crearCampo, "Se creo el campo exitosamente!");
                 //Preguntar al usuario si quiere ingresar otro campo
-                int opcion_seguir = JOptionPane.showConfirmDialog(jd_crearCampo,"¿Desea crear otro campo?", 
-                    "Crear Campo",JOptionPane.YES_NO_OPTION);
-            
+                int opcion_seguir = JOptionPane.showConfirmDialog(jd_crearCampo, "¿Desea crear otro campo?",
+                        "Crear Campo", JOptionPane.YES_NO_OPTION);
+
                 archivo_actual.setGuardado(false);
-                if(opcion_seguir == 0){
+                if (opcion_seguir == 0) {
                     //Selecciono SI el usuario
                     continuar_addCampo = true;
+                    confirmar_crearCampo = false;
+
+                    jd_crearCampo.setVisible(false);
+
+                    jt_nombreCampo.setText("");
+                    cb_tipoCampo.setSelectedIndex(0);
+                    js_longitud.setValue(0);
+                    jr_llaveNo.setSelected(false);
+                    jr_llaveSi.setSelected(false);
+
+                    jd_crearCampo.setVisible(true);
+
                 } else {
                     //Selecciono NO el usuario
+
+                    jd_crearCampo.setVisible(false);
+                    
                     continuar_addCampo = false;
                     jt_nombreCampo.setText("");
                     cb_tipoCampo.setSelectedIndex(0);
@@ -1318,14 +1327,13 @@ public class GUI extends javax.swing.JFrame {
                     jr_llaveNo.setSelected(false);
                     jr_llaveSi.setSelected(false);
                 }
-            
+
             } else {
                 //No ingreso todos los datos correctamente
                 continuar_addCampo = false;
             }
         }// fin while
-        
-        
+
         /*
         
         else {
@@ -1379,20 +1387,14 @@ public class GUI extends javax.swing.JFrame {
     private void jb_modCampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_modCampoMouseClicked
         DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
 
-        String tipoDato = (String) table_ListarCampos.
-                getValueAt(table_ListarCampos.getSelectedRow(), 1);
-
         String nuevaRestriccion = "";
 
-        if (tipoDato.equals("String")) {
-            nuevaRestriccion = Integer.toString((int) js_longitud.getValue());
-
-        } else {
-            //nuevaRestriccion = Integer.toString((int) js_valorMinimo.getValue());
-            //nuevaRestriccion += " a " + Integer.toString((int) js_maximoValor.getValue());
-        }
+        nuevaRestriccion = Integer.toString((int) js_longitud.getValue());
 
         modelo.setValueAt(nuevaRestriccion, table_ListarCampos.getSelectedRow(), 2);
+
+        archivo_actual.getLista_campos().get(table_ListarCampos.getSelectedRow()).setLongitud(Integer.parseInt(nuevaRestriccion));
+        js_longitud.setValue(0);
 
         JOptionPane.showMessageDialog(jd_crearCampo, "Se modifico el campo exitosamente");
         jd_crearCampo.setVisible(false);
@@ -1494,7 +1496,6 @@ public class GUI extends javax.swing.JFrame {
     //Variables locales
     DefaultMutableTreeNode nodo_seleccionado = null;
 
-
     public void refrescarJTree() {
         DefaultTreeModel m = (DefaultTreeModel) jT_Archivos.getModel();
         DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) m.getRoot();
@@ -1510,8 +1511,8 @@ public class GUI extends javax.swing.JFrame {
         }
         m.reload();
     }
-    
-    public void refrescarTabla(){
+
+    public void refrescarTabla() {
 
         table_ListarCampos.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
@@ -1540,7 +1541,7 @@ public class GUI extends javax.swing.JFrame {
             //Escribir la definicion de los campos y registros
             //Escritura de los campos en metadata
             String nombre, tipo, longitud, esllave;
-            if(archivo_actual.getLista_campos().isEmpty()){
+            if (archivo_actual.getLista_campos().isEmpty()) {
                 //do nothing 
             } else {
                 for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
@@ -1548,15 +1549,15 @@ public class GUI extends javax.swing.JFrame {
                     nombre = temp.getNombre_Campo();
                     tipo = temp.getTipo_dato();
                     longitud = Integer.toString(temp.getLongitud());
-                    if(temp.isEsLlavePrimaria()){
+                    if (temp.isEsLlavePrimaria()) {
                         esllave = "true";
                     } else {
                         esllave = "false";
                     }
-                    
+
                     bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
-                        + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
-                    bw.write("\n");     
+                            + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
+                    bw.write("\n");
                 }
             }
 
