@@ -673,8 +673,8 @@ public class GUI extends javax.swing.JFrame {
         jt_nombreCampo.setEnabled(true);
         cb_tipoCampo.setEnabled(true);
         jb_crearCampo.setVisible(true);
-        jr_llaveNo.setEnabled(false);
-        jr_llaveSi.setEnabled(false);
+        jr_llaveNo.setEnabled(true);
+        jr_llaveSi.setEnabled(true);
         jb_modCampo.setVisible(false);
         
 
