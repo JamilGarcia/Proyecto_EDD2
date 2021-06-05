@@ -75,6 +75,7 @@ public class GUI extends javax.swing.JFrame {
         jr_llaveSi = new javax.swing.JRadioButton();
         jr_llaveNo = new javax.swing.JRadioButton();
         jb_modCampo = new javax.swing.JButton();
+        BgLlavePrimaria = new javax.swing.ButtonGroup();
         jd_abrirArchivo = new javax.swing.JDialog();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -82,7 +83,6 @@ public class GUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jb_abrirArchivo = new javax.swing.JButton();
         jb_salirAbrirArchivo = new javax.swing.JButton();
-        BgLlavePrimaria = new javax.swing.ButtonGroup();
         jd_introducirRegistro = new javax.swing.JDialog();
         jLabel3 = new javax.swing.JLabel();
         jl_introRegistro = new javax.swing.JLabel();
@@ -323,9 +323,7 @@ public class GUI extends javax.swing.JFrame {
             .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        jd_introducirRegistro.setMaximumSize(new java.awt.Dimension(260, 210));
         jd_introducirRegistro.setMinimumSize(new java.awt.Dimension(260, 210));
-        jd_introducirRegistro.setPreferredSize(new java.awt.Dimension(260, 210));
         jd_introducirRegistro.setResizable(false);
 
         jLabel3.setText("Introducir Registro");
@@ -367,7 +365,6 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap(70, Short.MAX_VALUE))
         );
 
-        jd_modificarRegistro.setMaximumSize(new java.awt.Dimension(501, 320));
         jd_modificarRegistro.setMinimumSize(new java.awt.Dimension(501, 320));
         jd_modificarRegistro.setResizable(false);
 
@@ -660,19 +657,12 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre", "Tipo De Dato", "Longitud", "Es llave primaria"
+                "Campo 1", "Campo 2", "Campo 3", "Campo 4"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Boolean.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -690,10 +680,10 @@ public class GUI extends javax.swing.JFrame {
         jp_Registro.setLayout(jp_RegistroLayout);
         jp_RegistroLayout.setHorizontalGroup(
             jp_RegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_RegistroLayout.createSequentialGroup()
+            .addGroup(jp_RegistroLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
         );
         jp_RegistroLayout.setVerticalGroup(
             jp_RegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -714,7 +704,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(B_Buscar_Regis)
                     .addComponent(B_Modi_Regis)
                     .addComponent(B_Intro_Regis))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addComponent(jp_Registro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -734,7 +724,7 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(B_Borrar_Regis)
                         .addGap(57, 57, 57)
                         .addComponent(B_Listar_Regis)))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         jTP_Menus.addTab("Registros", jPanel5);
@@ -1410,6 +1400,7 @@ public class GUI extends javax.swing.JFrame {
 
         if (archivo_actual != null) {
             jP_tabla_ListarCampos.setVisible(false);
+            jp_Registro.setVisible(false);
         }
     }//GEN-LAST:event_jTP_MenusStateChanged
 

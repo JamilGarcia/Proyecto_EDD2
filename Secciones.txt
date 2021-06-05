@@ -1,2 +1,0 @@
-{Nombre:Nombre,Tipo:string,Longitud:7,EsLlave:true}
-{Nombre:Año,Tipo:int,Longitud:6,EsLlave:false}
