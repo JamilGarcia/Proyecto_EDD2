@@ -1,0 +1,6 @@
+4
+{Nombre:Cedula,Tipo:string,Longitud:13,EsLlave:true}
+{Nombre:Nombre,Tipo:string,Longitud:15,EsLlave:false}
+{Nombre:Edad,Tipo:int,Longitud:2,EsLlave:false}
+{Nombre:Apellido,Tipo:string,Longitud:15,EsLlave:false}
+Sat Jun 05 16:23:02 CST 2021

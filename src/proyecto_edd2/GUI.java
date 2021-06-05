@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
 import javax.swing.DefaultComboBoxModel;
@@ -1067,19 +1068,24 @@ public class GUI extends javax.swing.JFrame {
             archivo_actual.setGuardado(false);
             jl_nombre_archivo.setVisible(true);
             jd_abrirArchivo.dispose();
+            
             //Leer campos y agregarlos a la lista de campos del archivo
             Scanner sc;
             ArrayList<String> buffer = new ArrayList();
+            int sizeCampos;
             try {
                 sc = new Scanner(archivo_actual.getArchivo());
-                while (sc.hasNext()) {
+                sizeCampos = sc.nextInt();
+                
+                for(int i = 0; i < sizeCampos; i++){
+               
                     String cadena = sc.next();
                     cadena = cadena.substring(1, cadena.length() - 1);
                     buffer.add(cadena);
                 }
             } catch (Exception e) {
             }
-
+            
             Scanner parse;
             ArrayList<String> tokens = new ArrayList();
 
@@ -1972,6 +1978,10 @@ public class GUI extends javax.swing.JFrame {
             if (archivo_actual.getLista_campos().isEmpty()) {
                 //do nothing 
             } else {
+                
+                //imprimir el numero de campos del archivo para su correcta lectura
+                bw.write(archivo_actual.getLista_campos().size() + "\n");
+                
                 for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
                     Campo temp = archivo_actual.getLista_campos().get(i);
                     nombre = temp.getNombre_Campo();
@@ -1987,6 +1997,14 @@ public class GUI extends javax.swing.JFrame {
                             + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
                     bw.write("\n");
                 }
+                
+                //escritura de la ultima fecha de modificacion/apertura
+                Date d = new Date();
+                bw.write(d.toString()+ "\n");
+                
+                //TODO escritura de la cantidad de registros
+                
+                //TODO escribir la punta de reconstruccion availlist
             }
 
             bw.flush();
