@@ -2,6 +2,7 @@ package proyecto_edd2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Archivo {
     
@@ -9,7 +10,8 @@ public class Archivo {
     String nombre_archivo;
     boolean guardado = false;
     ArrayList <Campo> lista_campos = new ArrayList();
-    //Lista doblemente enlazada
+    LinkedList  lista_registros = new LinkedList(); //Lista doblemente enlazada
+    
     
     public Archivo(String path) {
         archivo = new File(path);
