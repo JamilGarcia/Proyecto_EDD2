@@ -1,6 +1,12 @@
 
 package proyecto_edd2;
 
+/*
+Jamil García 11911053
+Daniel Alvarado 12011159
+Miguel Rojas 11941201
+*/
+
 public class ArbolB {
     
     Nodo raiz;
