@@ -10,13 +10,17 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -148,7 +152,7 @@ public class GUI extends javax.swing.JFrame {
 
         jl_TipodeDato.setText("Tipo de dato:");
 
-        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-----", "String", "Int", "Double", "Float", "Char", "" }));
+        cb_tipoCampo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-----", "String", "Int", "Double", "Float", "Char", "Boolean", " " }));
 
         jl_Longitud.setText("Longitud:");
 
@@ -1020,20 +1024,11 @@ public class GUI extends javax.swing.JFrame {
     private void jT_ArchivosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jT_ArchivosMouseClicked
         // TODO add your handling code here:
         
-                //
-        
         if((DefaultMutableTreeNode)  jT_Archivos.getLastSelectedPathComponent() == null){
-            //do nothing
+            nodo_seleccionado = null;
         } else {
             nodo_seleccionado = (DefaultMutableTreeNode) jT_Archivos.getSelectionPath().getLastPathComponent();
         }
-        
-        /*if((DefaultMutableTreeNode) jT_Archivos.getSelectionPath().getLastPathComponent() == null){
-            //do nothing
-            nodo_seleccionado = null;
-        } else {
-             nodo_seleccionado = (DefaultMutableTreeNode) jT_Archivos.getSelectionPath().getLastPathComponent();
-        }*/
 
     }//GEN-LAST:event_jT_ArchivosMouseClicked
 
@@ -1475,7 +1470,7 @@ public class GUI extends javax.swing.JFrame {
             switch (opcion) {
                 case 1:
                     //Eligio String
-                    nuevoCampo.setTipo_dato("string");
+                    nuevoCampo.setTipo_dato("String");
                     break;
                 case 2:
                     //Eligio Int
@@ -1492,6 +1487,10 @@ public class GUI extends javax.swing.JFrame {
                 case 5:
                     //Eligio Char
                     nuevoCampo.setTipo_dato("char");
+                    break;
+                case 6:
+                    //Eligio boolean
+                    nuevoCampo.setTipo_dato("boolean");
                     break;
                 default:
             }
@@ -1577,25 +1576,6 @@ public class GUI extends javax.swing.JFrame {
         jr_llaveSi.setSelected(false);
         jd_crearCampo.dispose();
         //Archivo se debe guardar
-            //Preguntar al usuario si quiere ingresar otro campo
-            /*int opcion_seguir = JOptionPane.showConfirmDialog(jd_crearCampo, "¿Desea crear otro campo?",
-                        "Crear Campo", JOptionPane.YES_NO_OPTION);*/
-
-            /*if (opcion_seguir == 0) {
-                //Selecciono SI el usuario
-                    continuar_addCampo = true;
-                } else {
-                    //Selecciono NO el usuario
-                    
-                    continuar_addCampo = false; 
-                }
-            } else {
-                //No ingreso todos los datos correctamente
-                continuar_addCampo = false;
-            }*/
-        
-        
-        
         
         //}// fin while
         
@@ -1630,7 +1610,7 @@ public class GUI extends javax.swing.JFrame {
             switch (opcion) {
                 case 1:
                     //Eligio String
-                    tipo_mod = "string";
+                    tipo_mod = "String";
                     break;
                 case 2:
                     //Eligio Int
@@ -1832,21 +1812,105 @@ public class GUI extends javax.swing.JFrame {
         
         if(verificar_introducirR){
             int contador_listaCampos = 0;
-            String registro = "";
+            String registro = "", key = "",  porcion_registro = null;
+            boolean verificar_input;
+            
+            //Crear registro
             while(contador_listaCampos < archivo_actual.getLista_campos().size()){
-                registro += JOptionPane.showInputDialog(jP_menuArchivo,"Introducir información para el campo: " 
-                        + archivo_actual.getLista_campos().get(contador_listaCampos));
+                verificar_input = true;
+                Campo campo_temp = archivo_actual.getLista_campos().get(contador_listaCampos);//Variable temporal de Campo
+                String tipo_dato_evaluar = campo_temp.getTipo_dato();
+                
+                //Entrada de dato por campo
+                porcion_registro = JOptionPane.showInputDialog(jP_menuArchivo,"Entrada para el campo: " 
+                        + campo_temp.getNombre_Campo() + "\nTipo de Dato: " + campo_temp.getTipo_dato() 
+                        + "\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: " + campo_temp.isEsLlavePrimaria());
+ 
+                //Validaciones
+                //1. Verificacion que la entrada no este vacia
+                if(porcion_registro == null){
+                    verificar_input = false;
+                    break;
+                } else {
+                    //2.Verificacion no puede poner el delimitador  '|' en el dato
+                    if(porcion_registro.contains("|")){
+                        JOptionPane.showMessageDialog(jP_menuArchivo, "No es permitido utilizar el caracter '|' en este programa.");
+                        verificar_input = false;
+                    }
+                    //3.Verificacion que ingrese el tipo de dato correcto    
+                    if(tipo_dato_evaluar.equals("int")){
+                        
+                        try {
+                            Integer.parseInt(porcion_registro);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, debe ser un int.");
+                            verificar_input = false;
+                        }
+                        
+                    } else if(tipo_dato_evaluar.equals("char")){
+                        if(porcion_registro.length() > 1){
+                            JOptionPane.showMessageDialog(jP_menuArchivo,"Un dato char solo recibe un valor de entrada.");
+                            verificar_input = false;
+                        } 
+                        
+                    } else if(tipo_dato_evaluar.equals("double")){
+                        try {
+                            Double.parseDouble(porcion_registro);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(jP_menuArchivo,"El tipo de dato ingresado es incorrecto, debe ser un double");
+                            verificar_input = false;
+                        }
+                        
+                    } else {/*do nothing*/}
+                    
+                    //4.Verificacion que llene  longitud si es llave primaria
+                    if(campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()){
+                        
+                    }
+                    
+                    
+                }
+
+                
+                //Obtener el valor llave 
+                if(archivo_actual.getLista_campos().get(contador_listaCampos).isEsLlavePrimaria()){
+                    int inicio_llave = registro.lastIndexOf("|");
+                    //Si es el primer campo empieza en 0 pq el valor obtenido es -1 
+                    key = registro.substring(inicio_llave + 1);
+                }
                 registro += "|";
-                //Verificacion que la entrada no este vacia
-                //Verificacion que ingrese el tipo de dato correcto
-                //Verificacion que siga la longitud
-                //Verificacion no puede poner el delimitador en el dato
+                
                 //Verificar que campo donde llave primaria es unica
-                contador_listaCampos ++;
-                //Preguntar si quiere guardar el archivo
-            }
-            //System.out.println(registro);
-        }
+                
+                if(verificar_input){
+                    //Paso todas las validaciones
+                    registro += porcion_registro;
+                    contador_listaCampos ++; 
+                }
+                
+           }
+           //Si logro recorrer los campos correctamente el archivo se puede recorrer 
+           if(contador_listaCampos == archivo_actual.getLista_campos().size() - 1){
+               registro+= "\n";
+            
+                //Escribir registro en el archivo
+                /*try {
+                    RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(),"rw");
+                    raf.seek(raf.length());
+                    long offset = raf.getFilePointer();
+                    raf.writeChars(registro);
+                
+                    //Crear llave para arbol
+                    //Agarrar objeto para llave despues de que este escrito
+                    Llave nueva_llave = new Llave(offset, Integer.parseInt(key));
+                    raf.close();
+                } catch (FileNotFoundException ex) {
+            
+                } catch (IOException ex) {
+                } */
+           }
+            
+        }//fin if  
     }//GEN-LAST:event_B_Intro_RegisMouseClicked
 
     private void b_introducirRegistroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b_introducirRegistroMouseClicked
@@ -1856,7 +1920,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_introducirRegistroMouseClicked
 
     private void B_Buscar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Buscar_RegisMouseClicked
-    String buscar = JOptionPane.showInputDialog(true);
+    //String buscar = JOptionPane.showInputDialog(true);
     // Registro que se buscarà
     }//GEN-LAST:event_B_Buscar_RegisMouseClicked
 

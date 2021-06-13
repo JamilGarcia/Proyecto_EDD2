@@ -1,26 +1,20 @@
 package proyecto_edd2;
 
-/*
-Jamil García 11911053
-Daniel Alvarado 12011159
-Miguel Rojas 11941201
-*/
-
 public class Llave {
 
-    int offset;
+    long offset;
     int llave;
 
-    public Llave(int offset, int llave) {
+    public Llave(long offset, int llave) {
         this.offset = offset;
         this.llave = llave;
     }
 
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public void setOffset(long offset) {
         this.offset = offset;
     }
 
