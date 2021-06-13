@@ -12,11 +12,12 @@ public class Archivo {
     ArrayList <Campo> lista_campos = new ArrayList();
     LinkedList  lista_registros = new LinkedList(); //Lista doblemente enlazada
     
-    
     public Archivo(String path) {
         archivo = new File(path);
         nombre_archivo = "nuevo archivo";
     }
+    
+    
     //Archivo
     public File getArchivo() {
         return archivo;
@@ -41,10 +42,8 @@ public class Archivo {
     public void setGuardado(boolean guardado) {
         this.guardado = guardado;
     }
-    
-    
-    //Lista de Campos
 
+    //Lista de Campos
     public ArrayList<Campo> getLista_campos() {
         return lista_campos;
     }
@@ -52,6 +51,9 @@ public class Archivo {
     public void setLista_campos(ArrayList<Campo> lista_campos) {
         this.lista_campos = lista_campos;
     }
+
+    
+    
     
     
 
