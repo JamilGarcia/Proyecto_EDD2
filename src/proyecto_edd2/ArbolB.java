@@ -13,13 +13,29 @@ public class ArbolB  implements Serializable{
         this.T = T;
         raiz = new Nodo(T);
     }
+
+    public Nodo getRaiz() {
+        return raiz;
+    }
+
+    public void setRaiz(Nodo raiz) {
+        this.raiz = raiz;
+    }
+
+    public int getT() {
+        return T;
+    }
+
+    public void setT(int T) {
+        this.T = T;
+    }
     
-    public boolean buscarLlave(Nodo x, int llave){
+    
+    
+    public Llave buscarLlave(Nodo x, int llave){  
         //Contador utilizado para evaluar indice de llaves y nodos hijo
         int contador = 0;
-        //variable de nodo temporal
         Nodo temp = x;
-        
         //Ciclo while que evalua si el indice es menor al numero de llaves
         //y si la llave es mayor que la llave del indice del contador
                 
@@ -31,17 +47,17 @@ public class ArbolB  implements Serializable{
         //si el contador es menor que el numero de llaves y la llave 
         //del indice es igual a la llave a buscar entonces devuelve true
         if(contador < temp.getNumero_llaves() && llave == temp.getLlaves()[contador].getLlave()){
-            return true;
+            return temp.getLlaves()[contador];
         }
         
         //si en caso el nodo es hoja significa que la llave no existe y devuelve false
         if(temp.isLeaf){
-            return false;
+            return null;
         } else {
             //caso recursivo que evaluara las llaves del hijo del nodo actual
             buscarLlave(x.getHijos()[contador], llave);
         }
-        return false; 
+        return null;
     }
     
     

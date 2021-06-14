@@ -1935,6 +1935,8 @@ public class GUI extends javax.swing.JFrame {
                    btree_nuevo.insert(nueva_llave);
                    escribirArbol(btree_nuevo, nombre_archivo_bin);
                } else {
+                   //Implementacion  availList 
+                   
                    //Ya existe un arbol, Cargar arbol de archivo binario
                    ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
                    btree_cargado.insert(nueva_llave);
@@ -1990,54 +1992,78 @@ public class GUI extends javax.swing.JFrame {
             }
             
             String registro_buscar = "";
-                boolean validar_entrada = false;
-                int contador_true = 0;
-                while(!validar_entrada){
-                    registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo,"Ingrese el dato a buscar mediante el campo: " + campo_primario.getNombre_Campo()
+            int valor_llave = 0;
+            boolean validar_entrada = false;
+            int contador_true = 0;
+            
+            while(!validar_entrada){
+                registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo,"Ingrese el dato a buscar mediante el campo: " + campo_primario.getNombre_Campo()
                                     + "\nLongitud Campo: " + campo_primario.getLongitud());
-                    //0. Validacion entrada null
-                    if(registro_buscar == null){
+                //0. Validacion entrada null
+                if(registro_buscar == null){
                         break;
-                    }
-                    contador_true = 0;
-                    //1.Validación que la entrada sea un numero
-                    try {
-                        int llave_buscar = Integer.parseInt(registro_buscar);
+                }
+                contador_true = 0;
+                //1.Validación que la entrada sea un numero
+                try {
+                    valor_llave = Integer.parseInt(registro_buscar);
 
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado debe ser solo de numeros.");
-                        validar_entrada = false;
-                        contador_true ++;
-                    }                
-                    //2.Validación que cumpla con la longitud
-                    if(registro_buscar.length() != campo_primario.getLongitud() ){
-                        JOptionPane.showMessageDialog(jP_menuArchivo,"La longitud del registro a buscar no es la requerida.");
-                        validar_entrada = false;
-                        contador_true ++;
-                    }
-                    
-                    
-                    
-                    if(contador_true == 0){
-                        validar_entrada = true;
-                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado debe ser solo de numeros.");
+                    validar_entrada = false;
+                    contador_true ++;
+                }                
+                //2.Validación que cumpla con la longitud
+                if(registro_buscar.length() != campo_primario.getLongitud() ){
+                    JOptionPane.showMessageDialog(jP_menuArchivo,"La longitud del registro a buscar no es la requerida.");
+                    validar_entrada = false;
+                    contador_true ++;
                 }
+                    
+                    
+                //Paso todas las validaciones
+                if(contador_true == 0){
+                    validar_entrada = true;
+                    valor_llave = Integer.parseInt(registro_buscar);
+                }
+            }
                 
-                if(validar_entrada){
-                    //Obtener nombre de archivo
-                    int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-                    String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+            if(validar_entrada){
+                //Obtener nombre de archivo
+                int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+                String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+                
+                //Cargar archivo
+                ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
+                
+                Llave llave_buscada = btree_cargado.buscarLlave(btree_cargado.getRaiz(),valor_llave);
+                if(llave_buscada == null){
+                    //no encontro la llave
+                    JOptionPane.showMessageDialog(jP_menuArchivo,"No se encontro el registro buscado.");
+                } else {
+                    
+                    try {
+                        RandomAccessFile raf_buscar = new RandomAccessFile(archivo_actual.getArchivo(),"rw");
+                        
+                        
+                        raf_buscar.seek(llave_buscada.getOffset());
+                        String registro_mostrar = raf_buscar.readLine();
+                        
+                        
+                        registro_mostrar = registro_mostrar.replaceAll("\\s+","");
+                        JOptionPane.showMessageDialog(jP_menuArchivo,"Se encontro el registro exitosamente.\n"
+                            + registro_mostrar);
+                        
+                        raf_buscar.close();
+                    } catch (FileNotFoundException ex) {
+                        
+                    } catch (IOException ex) {
+                       
+                    }
+                    
                 }
+            }
         }
-           
-            
-            
-        
-       
-        
-        
-        
-        
     }//GEN-LAST:event_B_Buscar_RegisMouseClicked
 
     private void B_Modi_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Modi_RegisMouseClicked
