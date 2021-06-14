@@ -1,14 +1,10 @@
 
 package proyecto_edd2;
 
-/*
-Jamil García 11911053
-Daniel Alvarado 12011159
-Miguel Rojas 11941201
-*/
+import java.io.Serializable;
 
 
-public class Nodo {
+public class Nodo implements Serializable{
     
     int numero_llaves;//Numero de llaves almacenadas en el nodo
     Llave llaves [];//Llaves almacenadas en el nodo (orden nodescendente)

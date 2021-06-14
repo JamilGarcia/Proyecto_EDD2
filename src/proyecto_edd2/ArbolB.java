@@ -1,13 +1,9 @@
 
 package proyecto_edd2;
 
-/*
-Jamil García 11911053
-Daniel Alvarado 12011159
-Miguel Rojas 11941201
-*/
+import java.io.Serializable;
 
-public class ArbolB {
+public class ArbolB  implements Serializable{
     
     Nodo raiz;
     int T;// Grado del arbol
@@ -17,7 +13,6 @@ public class ArbolB {
         this.T = T;
         raiz = new Nodo(T);
     }
-    
     
     public boolean buscarLlave(Nodo x, int llave){
         //Contador utilizado para evaluar indice de llaves y nodos hijo
@@ -46,13 +41,11 @@ public class ArbolB {
             //caso recursivo que evaluara las llaves del hijo del nodo actual
             buscarLlave(x.getHijos()[contador], llave);
         }
-        
         return false; 
     }
     
     
     public void insert(Llave llave_env){
-        //variable temporal que almacena la raiz
         Nodo r = raiz;
         
         //evalua si el nodo a realizar la insercion se encuentra lleno
@@ -63,7 +56,6 @@ public class ArbolB {
             s.setIsLeaf(false);
             s.setNumero_llaves(0);
             s.hijos[0] = r;
-            //llamado a la funcion Split
             split(s, 0 ,r);
             //luego de el split se llama a esta funcion para insertar el nodo
             insert_nonFull(s, llave_env);
@@ -76,16 +68,13 @@ public class ArbolB {
     public void insert_nonFull(Nodo x, Llave llave_env){
         int i = x.getNumero_llaves();//Contador con el valor de numero de llaves
         
-        //if donde se evalua si el nodo x es una llave
         if(x.isLeaf){
-            
             //ciclo while que realiza corrimiento de llaves de derecha a izquierda
             //de acuerdo al valor de la llave a insertar
             while(i >= 1 && llave_env.getLlave() < x.getLlaves()[i - 1].getLlave()){
                 x.getLlaves()[i] = x.getLlaves()[i - 1];
                 i--;
             }
-            //insercion de la llave y aumento de contador interno del nodo
             x.getLlaves()[i] = llave_env;
             x.numero_llaves++;
             
@@ -100,7 +89,6 @@ public class ArbolB {
             
             //Evalua si el nodo esta lleno para aplicar split
             if(x.getHijos()[contador_hijo].getNumero_llaves() ==  ( 2 * T - 1)){
-                //split
                 split(x,contador_hijo , x.hijos[0]);
                 
                 //aumenta el contador si la llave en posicion contador hijo
@@ -109,7 +97,6 @@ public class ArbolB {
                     contador_hijo++;
                 }
             }
-            //llamado a metodo recursivo para insertar la llave en un nodo hoja
             insert_nonFull(x.getHijos()[contador_hijo], llave_env);  
         }
     }
@@ -157,5 +144,8 @@ public class ArbolB {
         //aumento en el numero de llaves de x
         x.numero_llaves++;
     }
+    
+    
+    
     
 }

@@ -1,6 +1,8 @@
 package proyecto_edd2;
 
-public class Llave {
+import java.io.Serializable;
+
+public class Llave implements Serializable{
 
     long offset;
     int llave;
