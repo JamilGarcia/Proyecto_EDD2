@@ -52,9 +52,9 @@ public class ArbolB implements Serializable {
             return null;
         } else {
             //caso recursivo que evaluara las llaves del hijo del nodo actual
-            buscarLlave(x.getHijos()[contador], llave);
+            return buscarLlave(x.getHijos()[contador], llave);
         }
-        return null;
+    
     }
 
     public void insert(Llave llave_env) {
@@ -424,4 +424,32 @@ public class ArbolB implements Serializable {
         return false;
     }
 
+    public Nodo searchDeleteNode(Nodo x, int llave) {
+
+        //Contador utilizado para evaluar indice de llaves y nodos hijo
+        int contador = 0;
+        Nodo temp = x;
+        //Ciclo while que evalua si el indice es menor al numero de llaves
+        //y si la llave es mayor que la llave del indice del contador
+
+        while (contador < temp.getNumero_llaves() && llave > temp.getLlaves()[contador].getLlave()) {
+            //incremento al contador
+            contador = contador + 1;
+        }
+
+        //si el contador es menor que el numero de llaves y la llave 
+        //del indice es igual a la llave a buscar entonces devuelve true
+        if (contador < temp.getNumero_llaves() && llave == temp.getLlaves()[contador].getLlave()) {
+            return temp;
+        }
+
+        //si en caso el nodo es hoja significa que la llave no existe y devuelve false
+        if (temp.isLeaf) {
+            return null;
+        } else {
+            //caso recursivo que evaluara las llaves del hijo del nodo actual
+            return searchDeleteNode(x.getHijos()[contador], llave);
+        }
     }
+
+}
