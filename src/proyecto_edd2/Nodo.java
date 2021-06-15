@@ -1,20 +1,18 @@
-
 package proyecto_edd2;
 
 import java.io.Serializable;
 
+public class Nodo implements Serializable {
 
-public class Nodo implements Serializable{
-    
     int numero_llaves;//Numero de llaves almacenadas en el nodo
-    Llave llaves [];//Llaves almacenadas en el nodo (orden nodescendente)
+    Llave llaves[];//Llaves almacenadas en el nodo (orden nodescendente)
     boolean isLeaf; //Verificador si el nodo es hoja o no {nodo interno = false; nodo hoja = true}
     Nodo hijos[]; //Hijos del nodo
 
     public Nodo(int T) {
-       
+
         this.numero_llaves = 0;
-        this.llaves = new Llave[(2*T) - 1];
+        this.llaves = new Llave[(2 * T) - 1];
         this.isLeaf = true;
         this.hijos = new Nodo[2 * T];
     }
@@ -50,10 +48,17 @@ public class Nodo implements Serializable{
     public void setHijos(Nodo[] hijos) {
         this.hijos = hijos;
     }
-    
-    
-    
-    
-    
-    
+
+    public int indice(Llave llave) {
+
+        for (int i = 0; i < llaves.length; i++) {
+
+            if (llaves[i].llave == llave.llave) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 }
