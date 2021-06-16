@@ -33,6 +33,20 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  *
@@ -773,6 +787,11 @@ public class GUI extends javax.swing.JFrame {
         B_Expor_Excel.setText("Expotar Excel");
 
         B_Expo_XML.setText("Exportar XML con Schema");
+        B_Expo_XML.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                B_Expo_XMLMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -2182,6 +2201,63 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         jp_Registro.setVisible(true);
     }//GEN-LAST:event_B_Listar_RegisMouseClicked
+
+    private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
+       try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            DOMImplementation implementation = builder.getDOMImplementation();
+
+            Document documento = implementation.createDocument(null, "Export", null);
+            documento.setXmlVersion("1.0");
+
+            Element Campos = documento.createElement("Campos");
+
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+
+                String NC = archivo_actual.getLista_campos().get(i).getNombre_Campo();
+                String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
+                String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
+                String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
+                //System.out.println("Entra");
+                //Object[] obj = {c.getNombre_Campo(), c.getTipo_dato(), Integer.toString(c.getLongitud()), c.isEsLlavePrimaria()};
+
+                Element NombreCampo = documento.createElement("NombreDelCampo");
+                Text txtNombre = documento.createTextNode(NC);
+                NombreCampo.appendChild(txtNombre);
+                Campos.appendChild(NombreCampo);
+
+                Element TipoDato = documento.createElement("TipoDeDato");
+                Text txtTDato = documento.createTextNode(TD);
+                TipoDato.appendChild(txtTDato);
+                NombreCampo.appendChild(TipoDato);
+
+                Element Longitud = documento.createElement("Longitud");
+                Text txtLong = documento.createTextNode(LG);
+                Longitud.appendChild(txtLong);
+                NombreCampo.appendChild(Longitud);
+
+                Element isKey = documento.createElement("EsLlavePrimaria");
+                Text txtisKey = documento.createTextNode(LP);
+                isKey.appendChild(txtisKey);
+                NombreCampo.appendChild(isKey);
+
+                documento.getDocumentElement().appendChild(Campos);
+
+            }
+            
+            Source source = new DOMSource(documento);
+            Result result = new StreamResult(new File("Export.xml"));
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.transform(source, result);
+
+        } catch (ParserConfigurationException | TransformerException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        JOptionPane.showMessageDialog(this, "Exportado con exito");
+    }//GEN-LAST:event_B_Expo_XMLMouseClicked
 
     /**
      * @param args the command line arguments

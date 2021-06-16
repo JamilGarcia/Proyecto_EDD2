@@ -1106,6 +1106,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Exportar XML con Schema"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="B_Expo_XMLMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
