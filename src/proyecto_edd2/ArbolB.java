@@ -160,18 +160,14 @@ public class ArbolB implements Serializable {
 
         //encuentra el indice de la llave a eliminar adentro del nodo
         int indice = x.indice(llave);
-
         //verifica si el nodo es una hoja
         if (indice != -1) {
-
             if (x.isLeaf) {
-
                 //si el indice de la llave se ubica al final al reemplaza con un valor nulo
                 if (indice == x.getLlaves().length - 1) {
                     x.getLlaves()[indice] = null;
                     x.setNumero_llaves(x.getNumero_llaves() - 1);
                     return true;
-
                 } else {
 
                     //si el valor esta dentro del arreglo hace un corrimiento
@@ -179,23 +175,18 @@ public class ArbolB implements Serializable {
                     for (int j = indice; j < x.getLlaves().length - 1; j++) {
                         x.getLlaves()[j] = x.getLlaves()[j + 1];
                     }
-
                     x.setNumero_llaves(x.getNumero_llaves() - 1);
                     return true;
                 }
-
             }
 
             //caso # 2
             if (!x.isLeaf) {
-
                 //Caso donde hijo predecesor tiene T llaves
                 //declaracion de un nuevo nodo
                 Nodo predecesor = x.hijos[indice];
-
                 //declaracion de llave predecesora
                 Llave llavePredecesora;
-
                 //valida que el nodo tenga arriba del minimo de llaves
                 if (predecesor.getNumero_llaves() >= T) {
 
@@ -248,7 +239,6 @@ public class ArbolB implements Serializable {
                     //llamada recursiva a la funcion eliminar
                     eliminar(sucesor, llaveSucesora);
                     x.llaves[indice] = llaveSucesora;
-
                 }
 
                 //Caso #3 Merges y mas
@@ -417,32 +407,26 @@ public class ArbolB implements Serializable {
                     return true;
 
                 }
-
             }
         }
-
         return false;
     }
 
     public Nodo searchDeleteNode(Nodo x, int llave) {
-
         //Contador utilizado para evaluar indice de llaves y nodos hijo
         int contador = 0;
         Nodo temp = x;
         //Ciclo while que evalua si el indice es menor al numero de llaves
         //y si la llave es mayor que la llave del indice del contador
-
         while (contador < temp.getNumero_llaves() && llave > temp.getLlaves()[contador].getLlave()) {
             //incremento al contador
             contador = contador + 1;
         }
-
         //si el contador es menor que el numero de llaves y la llave 
         //del indice es igual a la llave a buscar entonces devuelve true
         if (contador < temp.getNumero_llaves() && llave == temp.getLlaves()[contador].getLlave()) {
             return temp;
         }
-
         //si en caso el nodo es hoja significa que la llave no existe y devuelve false
         if (temp.isLeaf) {
             return null;

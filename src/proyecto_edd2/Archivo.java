@@ -10,7 +10,7 @@ public class Archivo {
     String nombre_archivo;
     boolean guardado = false;
     ArrayList <Campo> lista_campos = new ArrayList();
-    LinkedList  lista_registros = new LinkedList(); //Lista doblemente enlazada
+    LinkedList  avail_list = new LinkedList(); //Lista doblemente enlazada
     
     public Archivo(String path) {
         archivo = new File(path);
@@ -52,11 +52,14 @@ public class Archivo {
         this.lista_campos = lista_campos;
     }
 
-    
-    
-    
-    
+    public LinkedList getAvail_list() {
+        return avail_list;
+    }
 
+    public void setAvail_list(LinkedList avail_list) {
+        this.avail_list = avail_list;
+    }
+    
     @Override
     public String toString() {
         return nombre_archivo;
