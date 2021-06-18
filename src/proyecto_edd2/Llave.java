@@ -27,6 +27,11 @@ public class Llave implements Serializable{
     public void setLlave(int llave) {
         this.llave = llave;
     }
+
+    @Override
+    public String toString() {
+        return "Llave: " + "offset= " + offset + ", llave= " + llave;
+    }
     
     
 }

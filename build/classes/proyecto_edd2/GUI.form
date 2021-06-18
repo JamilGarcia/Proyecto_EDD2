@@ -508,6 +508,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Standard File Manager"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -654,12 +655,15 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="B_Salir" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="B_Nuevo_Arch" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="B_Abrir_Arch" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="B_Salvar_Arch" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="B_Cerrar_Arch" alignment="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jb_RegistrosPruebas" min="-2" pref="108" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="B_Salir" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="B_Nuevo_Arch" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="B_Abrir_Arch" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="B_Salvar_Arch" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="B_Cerrar_Arch" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace pref="497" max="32767" attributes="0"/>
                           </Group>
@@ -676,9 +680,11 @@
                               <Component id="B_Salvar_Arch" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                               <Component id="B_Cerrar_Arch" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="jb_RegistrosPruebas" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               <Component id="B_Salir" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="226" max="32767" attributes="0"/>
+                              <EmptySpace pref="172" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -722,6 +728,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="B_SalirActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jb_RegistrosPruebas">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Crear Pruebas"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jb_RegistrosPruebasMouseClicked"/>
                       </Events>
                     </Component>
                   </SubComponents>

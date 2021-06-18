@@ -54,7 +54,7 @@ public class ArbolB implements Serializable {
             //caso recursivo que evaluara las llaves del hijo del nodo actual
             return buscarLlave(x.getHijos()[contador], llave);
         }
-    
+
     }
 
     public void insert(Llave llave_env) {
@@ -78,9 +78,12 @@ public class ArbolB implements Serializable {
     }
 
     public void insert_nonFull(Nodo x, Llave llave_env) {
-        int i = x.getNumero_llaves();//Contador con el valor de numero de llaves
-
+        //int i = x.getNumero_llaves();//Contador con el valor de numero de llaves
+        int i = 0;
+        
         if (x.isLeaf) {
+            
+            i = x.getNumero_llaves(); 
             //ciclo while que realiza corrimiento de llaves de derecha a izquierda
             //de acuerdo al valor de la llave a insertar
             while (i >= 1 && llave_env.getLlave() < x.getLlaves()[i - 1].getLlave()) {
@@ -92,24 +95,34 @@ public class ArbolB implements Serializable {
 
         } else {
             //Buscar posicion del hijo de un nodo interno
-            int contador_hijo = 0;
+            //int contador_hijo = 0;
 
             //ciclo while que posiciona el contador en el array para realizar la insercion
-            while (contador_hijo < x.getNumero_llaves() && llave_env.getLlave() > x.getLlaves()[contador_hijo].getLlave()) {
-                contador_hijo++;
-            }
+//            while (contador_hijo < x.getNumero_llaves() && llave_env.getLlave() > x.getLlaves()[contador_hijo].getLlave()) {
+//                System.out.println(x.getLlaves()[contador_hijo].getLlave());
+//                System.out.println(contador_hijo);
+//                System.out.println(x.getNumero_llaves());
+//                System.out.println(x.getHijos().length);
+//                contador_hijo++;
+//            }
 
+            for (i = x.getNumero_llaves()-1; i >= 0 && llave_env.getLlave()< x.getLlaves()[i].getLlave(); i--) {
+                //ciclo que mueve a i
+            }
+            
+            i++;
+            
             //Evalua si el nodo esta lleno para aplicar split
-            if (x.getHijos()[contador_hijo].getNumero_llaves() == (2 * T - 1)) {
-                split(x, contador_hijo, x.hijos[0]);
+            if (x.getHijos()[i].getNumero_llaves() == (2 * T - 1)) {
+                split(x, i, x.hijos[i]);
 
                 //aumenta el contador si la llave en posicion contador hijo
                 //es menor a la llave a insertar
-                if (llave_env.getLlave() > x.getLlaves()[contador_hijo].getLlave()) {
-                    contador_hijo++;
+                if (llave_env.getLlave() > x.getLlaves()[i].getLlave()) {
+                    i++;
                 }
             }
-            insert_nonFull(x.getHijos()[contador_hijo], llave_env);
+            insert_nonFull(x.getHijos()[i], llave_env);
         }
     }
 
@@ -137,7 +150,7 @@ public class ArbolB implements Serializable {
 
         //ciclo for que realiza corrimientos de llaves izquierda a derecha
         //de acuerdo al numero de llaves en el nodo x
-        for (int j = x.getNumero_llaves(); j > i; j--) {
+        for (int j = x.getNumero_llaves(); j >= (i+1); j--) {
             x.hijos[j + 1] = x.hijos[j];
         }
 
@@ -146,7 +159,7 @@ public class ArbolB implements Serializable {
 
         //ciclo for que realiza corrimiento de llaves de izquierda a derecha
         //de acuerdo al numero de llaves en x
-        for (int j = x.getNumero_llaves(); j > i; j--) {
+        for (int j = x.getNumero_llaves()-1; j >= i; j--) {
             x.llaves[(j + 1)] = x.llaves[j];
         }
 

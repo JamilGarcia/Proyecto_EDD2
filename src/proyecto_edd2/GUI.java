@@ -24,8 +24,11 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -119,6 +122,7 @@ public class GUI extends javax.swing.JFrame {
         B_Salvar_Arch = new javax.swing.JButton();
         B_Cerrar_Arch = new javax.swing.JButton();
         B_Salir = new javax.swing.JButton();
+        jb_RegistrosPruebas = new javax.swing.JButton();
         jp_Campos = new javax.swing.JPanel();
         B_Crear_Campo = new javax.swing.JButton();
         B_Listar_Campo = new javax.swing.JButton();
@@ -469,6 +473,7 @@ public class GUI extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Standard File Manager");
 
         jl_nombre_archivo.setText("jlabel");
 
@@ -516,18 +521,27 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        jb_RegistrosPruebas.setText("Crear Pruebas");
+        jb_RegistrosPruebas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_RegistrosPruebasMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jP_menuArchivoLayout = new javax.swing.GroupLayout(jP_menuArchivo);
         jP_menuArchivo.setLayout(jP_menuArchivoLayout);
         jP_menuArchivoLayout.setHorizontalGroup(
             jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_menuArchivoLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jb_RegistrosPruebas, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(497, Short.MAX_VALUE))
         );
         jP_menuArchivoLayout.setVerticalGroup(
@@ -541,9 +555,11 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(B_Salvar_Arch)
                 .addGap(37, 37, 37)
                 .addComponent(B_Cerrar_Arch)
-                .addGap(37, 37, 37)
+                .addGap(36, 36, 36)
+                .addComponent(jb_RegistrosPruebas)
+                .addGap(33, 33, 33)
                 .addComponent(B_Salir)
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addContainerGap(172, Short.MAX_VALUE))
         );
 
         jTP_Menus.addTab("Archivo", jP_menuArchivo);
@@ -906,7 +922,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void B_Crear_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Crear_CampoMouseClicked
 
-        if(B_Crear_Campo.isEnabled()){
+        if (B_Crear_Campo.isEnabled()) {
             jt_nombreCampo.setEnabled(true);
             cb_tipoCampo.setEnabled(true);
             jb_crearCampo.setVisible(true);
@@ -921,7 +937,7 @@ public class GUI extends javax.swing.JFrame {
             jd_crearCampo.setLocationRelativeTo(this);
             jd_crearCampo.setVisible(true);
         }
-        
+
     }//GEN-LAST:event_B_Crear_CampoMouseClicked
 
     private void B_Listar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_CampoMouseClicked
@@ -938,8 +954,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void B_Mod_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Mod_CampoMouseClicked
 
-
-        if(B_Mod_Campo.isEnabled()){
+        if (B_Mod_Campo.isEnabled()) {
             if (table_ListarCampos.getSelectedRow() != -1) {
 
                 String tipoDato = (String) table_ListarCampos.getValueAt(table_ListarCampos.getSelectedRow(), 1);
@@ -986,19 +1001,19 @@ public class GUI extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
             }
-        } 
+        }
     }//GEN-LAST:event_B_Mod_CampoMouseClicked
 
     private void B_Borrar_CampoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Borrar_CampoMouseClicked
 
-        if(B_Borrar_Campo.isEnabled()){
+        if (B_Borrar_Campo.isEnabled()) {
             if (table_ListarCampos.getSelectedRow() != -1) {
 
                 DefaultTableModel modelo = (DefaultTableModel) table_ListarCampos.getModel();
                 int index = table_ListarCampos.getSelectedRow();
 
                 int opcion_eliminar = JOptionPane.showConfirmDialog(jp_Campos, "¿Esta seguro que quiere eliminar el campo?",
-                    "Eliminar Campo", JOptionPane.YES_NO_OPTION);
+                        "Eliminar Campo", JOptionPane.YES_NO_OPTION);
                 if (opcion_eliminar == 0) {
                     //Selecciono SI el usuario
                     modelo.removeRow(index);
@@ -1010,7 +1025,7 @@ public class GUI extends javax.swing.JFrame {
                     if (!archivo_actual.isGuardado()) {
                         //Archivo no esta guardado
                         int resultado = JOptionPane.showConfirmDialog(jP_menuArchivo, "No ha guardado el archivo actual\n¿Desea guardarlo?"
-                            + "", "Cerrar Archivo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                                + "", "Cerrar Archivo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                         if (resultado == 0) {
                             //Ingresa SI el usuario
                             //Verificar si el archivo es nuevo o si ya ha sido utilizado y guardado antes
@@ -1033,7 +1048,7 @@ public class GUI extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(jp_Campos, "No se elimino el campo.");
                 }
             } else {
-            JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
+                JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
             }
         }
     }//GEN-LAST:event_B_Borrar_CampoMouseClicked
@@ -1113,14 +1128,13 @@ public class GUI extends javax.swing.JFrame {
             jl_nombre_archivo.setVisible(true);
             jd_abrirArchivo.dispose();
 
-            
             //Verificar numero de registros para habilitar opciones de campos
             int verificar_registro = actualizar_numRegistros(1);
-            if(verificar_registro == 0){
+            if (verificar_registro == 0) {
                 B_Crear_Campo.setEnabled(true);
                 B_Mod_Campo.setEnabled(true);
                 B_Borrar_Campo.setEnabled(true);
-            } else{
+            } else {
                 //Ya existe minimo 1 registro, desabilitar funciones de campos
                 B_Crear_Campo.setEnabled(false);
                 B_Mod_Campo.setEnabled(false);
@@ -1523,8 +1537,8 @@ public class GUI extends javax.swing.JFrame {
 
         }
         //Longitud de un char solo puede ser 1
-        if(nuevoCampo.getTipo_dato().equals("char") && (int)js_longitud.getValue() != 1){
-            JOptionPane.showMessageDialog(jd_crearCampo,"El tipo de dato 'char' solo puede tener una longitud de 1.");
+        if (nuevoCampo.getTipo_dato().equals("char") && (int) js_longitud.getValue() != 1) {
+            JOptionPane.showMessageDialog(jd_crearCampo, "El tipo de dato 'char' solo puede tener una longitud de 1.");
             confirmar_crearCampo = false;
         }
 
@@ -1901,8 +1915,8 @@ public class GUI extends javax.swing.JFrame {
                             }
                         } else {
                             //El dato ingresado no puede estar en null / blanco
-                                if(porcion_registro.equals("")){
-                                JOptionPane.showMessageDialog(jP_menuArchivo,"Debe ingresar alguno dato.");
+                            if (porcion_registro.equals("")) {
+                                JOptionPane.showMessageDialog(jP_menuArchivo, "Debe ingresar alguno dato.");
                                 verificar_input = false;
                                 System.out.println("Hola");
                             }
@@ -1928,28 +1942,27 @@ public class GUI extends javax.swing.JFrame {
                             porcion_registro += " ";
                         }
                     }
-                    
+
                     //7.Verificar que no se repite la llave primaria 
-                    if(campo_temp.isEsLlavePrimaria()){
-                        
-                        ArbolB btree_verificar =  cargarArbol(nombre_archivo_bin);
-                        
-                        if(btree_verificar == null){
+                    if (campo_temp.isEsLlavePrimaria()) {
+
+                        ArbolB btree_verificar = cargarArbol(nombre_archivo_bin);
+
+                        if (btree_verificar == null) {
                             //No existe el arbol, seria la primera insercion, no busca
                         } else {
                             //Exsite el arbol y algun registro
-                            Llave verify_key = btree_verificar.buscarLlave(btree_verificar.getRaiz(),valor_primaryKey);
-                            if(verify_key == null){
+                            Llave verify_key = btree_verificar.buscarLlave(btree_verificar.getRaiz(), valor_primaryKey);
+                            if (verify_key == null) {
                                 //No la encontro puede continuar
                             } else {
                                 //Encontro la llave primaria
                                 verificar_input = false;
-                                JOptionPane.showMessageDialog(jP_menuArchivo,"El dato ingresado para la llave primaria no es valido.\n"
+                                JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado para la llave primaria no es valido.\n"
                                         + "Se encontro que ya existe el valor dentro de los registros.");
                             }
                         }
                     }
-                    
 
                 }
                 //Verificar que campo donde llave primaria es unica
@@ -1997,7 +2010,7 @@ public class GUI extends javax.swing.JFrame {
                 } catch (FileNotFoundException ex) {
 
                 } catch (IOException ex) {
-                } 
+                }
                 //Incrementar el dato de metadata (Numero de Registros)
                 actualizar_numRegistros(3);
                 JOptionPane.showMessageDialog(jP_menuArchivo, "Se agrego el registro exitosamente!\n"
@@ -2082,8 +2095,8 @@ public class GUI extends javax.swing.JFrame {
             if (validar_entrada) {
                 //Obtener nombre de archivo
                 int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-                String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
-
+                String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+                
                 //Cargar archivo
                 ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
 
@@ -2133,10 +2146,10 @@ public class GUI extends javax.swing.JFrame {
     private void B_Borrar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Borrar_RegisMouseClicked
 
         int verificar_num_registro = actualizar_numRegistros(1);
-        if(verificar_num_registro == 0){
-            JOptionPane.showMessageDialog(jP_menuArchivo,"No existe ningun registro.");
+        if (verificar_num_registro == 0) {
+            JOptionPane.showMessageDialog(jP_menuArchivo, "No existe ningun registro.");
         } else {
-            
+
             Campo campo_primario = null;
             //Buscar el campo primario
             for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
@@ -2149,12 +2162,12 @@ public class GUI extends javax.swing.JFrame {
             int llave = 0;
             boolean flag = false;
             int contador = 0;
-        
+
             while (!flag) {
                 primeKey = JOptionPane.showInputDialog(this, "Ingrese la llave primaria del registro a eliminar: ");
                 contador = 0;
-            
-                if(primeKey == null){
+
+                if (primeKey == null) {
                     //do nothing
                     flag = true;
                     contador = 1;
@@ -2178,25 +2191,25 @@ public class GUI extends javax.swing.JFrame {
                     if (contador == 0) {
                         flag = true;
                         llave = Integer.parseInt(primeKey);
-                    }     
-                }   
+                    }
+                }
             }
-            
-            if (flag == true && contador == 0){
+
+            if (flag == true && contador == 0) {
 
                 int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
                 String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
                 //Cargar archivo
                 ArbolB btree_cargado_elim = cargarArbol(nombre_archivo_bin);
                 Llave key = btree_cargado_elim.buscarLlave(btree_cargado_elim.raiz, llave);
-                
+
                 if (key == null) {
                     JOptionPane.showMessageDialog(this, "No se encontro la llave en el arbol.");
                 } else {
                     Nodo nodo = btree_cargado_elim.searchDeleteNode(btree_cargado_elim.getRaiz(), key.getLlave());
                     boolean isRemoved = btree_cargado_elim.eliminar(nodo, key);
-            
-                    if(isRemoved == true){  
+
+                    if (isRemoved == true) {
                         try {
                             RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
                             raf.seek(key.getOffset() + 1);
@@ -2204,24 +2217,23 @@ public class GUI extends javax.swing.JFrame {
                             //String registro = raf.readLine();
                             //System.out.println(raf.getFilePointer());
                             //String registro_eliminado = "*" + registro.substring(1) + "\n";
-                            
+
                             //Mover el seek al inicio de la linea
-                            
                             //raf.writeChars(registro_eliminado);
                             raf.close();
                         } catch (FileNotFoundException ex) {
-                            
+
                         } catch (IOException ex) {
-                            
+
                         }
                     }
-                        //implementacion availist, agregar un nuevo objeto llave
-                int update_num_Records = actualizar_numRegistros(2);
-                //escribirArbol(btree_cargado_elim, nombre_archivo_bin);
-                JOptionPane.showMessageDialog(this, "Se elimino la llave del archivo de registros!");
+                    //implementacion availist, agregar un nuevo objeto llave
+                    int update_num_Records = actualizar_numRegistros(2);
+                    //escribirArbol(btree_cargado_elim, nombre_archivo_bin);
+                    JOptionPane.showMessageDialog(this, "Se elimino la llave del archivo de registros!");
                 }
-            }    
-        }   
+            }
+        }
     }//GEN-LAST:event_B_Borrar_RegisMouseClicked
 
     private void B_Listar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_RegisMouseClicked
@@ -2231,7 +2243,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void cb_tipoCampoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_tipoCampoItemStateChanged
         //Validacion para desabilitar longitud si escoje un char
-        if(cb_tipoCampo.getSelectedIndex() == 5){
+        if (cb_tipoCampo.getSelectedIndex() == 5) {
             js_longitud.setValue(1);
             js_longitud.setEnabled(false);
         } else {
@@ -2239,6 +2251,256 @@ public class GUI extends javax.swing.JFrame {
             js_longitud.setEnabled(true);
         }
     }//GEN-LAST:event_cb_tipoCampoItemStateChanged
+
+    private void jb_RegistrosPruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_RegistrosPruebasMouseClicked
+
+        File archivo = null;
+        File archivo2 = null;
+
+        for (int i = 0; i < 2; i++) {
+
+            if (i == 0) {
+                archivo = new File("./Prueba1.txt");
+                generarRandRegistros(archivo, "Prueba1.bin");
+            } else {
+                archivo2 = new File("./Prueba2.txt");
+                generarRandRegistros(archivo2, "Prueba2.bin");
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
+    }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
+
+    public void generarRandRegistros(File archivo, String nombre) {
+        ArbolB prueba1 = new ArbolB(3);
+
+        //crear campos
+        ArrayList<Campo> campos = new ArrayList();
+
+        Campo c1 = new Campo("Nombre", "String", 10);
+        Campo c2 = new Campo("Apellido", "String", 12);
+        Campo c3 = new Campo("NumId", "Int", 8);
+        Campo c4 = new Campo("Telefono", "Int", 9);
+        Campo c5 = new Campo("Ciudad", "String", 15);
+
+        c1.setEsLlavePrimaria(false);
+        c2.setEsLlavePrimaria(false);
+        c3.setEsLlavePrimaria(true);
+        c4.setEsLlavePrimaria(false);
+        c5.setEsLlavePrimaria(false);
+
+        campos.add(c1);
+        campos.add(c2);
+        campos.add(c3);
+        campos.add(c4);
+        campos.add(c5);
+
+        escribirPruebaCampos(archivo, campos);
+
+        RandomAccessFile raf;
+
+        //Arraylists y arrays para crear los archivos
+        String[] nombres = {"Sophia", "Liam", "Olivia", "Noah", "Riley", "Jackson",
+            "Emma", "Aiden", "Ava", "Elias", "Isabella", "Gonzalo", "Ariela", "Lucas",
+            "Beatriz", "Oliver", "Amalia", "Juan", "Mia", "Mateo", "Layla", "Marco",
+            "Zoe", "Mason", "Camila", "Carlos", "Charlotte", "Karl", "Iliana", "Ethan",
+            "Mila", "Sebastian", "Lily", "James", "Luna", "Michael", "Ana", "Benjamin",
+            "Evelyn", "Logan", "Harper", "Leo", "Liliana", "Luca", "Ela", "Alexander",
+            "Chloe", "Daniel", "Adalyn", "Josiah", "Charlie", "Henry", "Isla", "Jayce",
+            "Ellie", "Julian", "Leah", "Jack", "Nora", "Ryan", "Scarlett", "Jacob",
+            "Maya", "Asher", "Abigail", "Wyatt", "Madison", "William", "Aubrey", "Owen",
+            "Emily", "Gabriel", "Kinsley", "Miles", "Elena", "Lincoln", "Paisely", "Ezra",
+            "Madelyn", "Isaias", "Aurora", "Luke", "Peyton", "Cameron", "Nova", "Caleb",
+            "Emilia", "Isaac", "Hannah", "Carson", "Sarah", "Samuel", "Ariana", "Colton",
+            "Penny", "Maverick", "Lila", "Mathew", "Valeria", "Miguel"};
+
+        ArrayList<String> names = new ArrayList();
+
+        names.addAll(Arrays.asList(nombres));
+
+        String[] apellidos = {"Smith", "Hall", "Stewart", "Price", "Johnson",
+            "Allen", "Sanchez", "Bennett", "William", "Young", "Morris", "Wood",
+            "Jones", "Hernandez", "Rogers", "Barnes", "Brown", "King", "Reed", "Ross",
+            "Davis", "Wright", "Cook", "Henderson", "Miller", "Lopez", "Morgan", "Coleman",
+            "Wilson", "Hill", "Bell", "Jenkins", "Moore", "Scott", "Murphy", "Perry",
+            "Taylor", "Green", "Bailey", "Powell", "Anderson", "Rivera", "Adams", "Long",
+            "Thomas", "Baker", "Cooper", "Patterson", "Jackson", "Gonzales", "Richardson",
+            "Hughes", "White", "Nelson", "Cox", "Flores", "Harris", "Carter", "Howard",
+            "Washington", "Martin", "Mitchell", "Ward", "Butler", "Thompson", "Perez",
+            "Torres", "Simmons", "Garcia", "Roberts", "Peterson", "Foster", "Martinez",
+            "Gray", "Turner", "Rojas", "Robinson", "Philips", "Ramirez", "Bryant",
+            "Clark", "Campbell", "James", "Alexander", "Rodriguez", "Parker", "Watson",
+            "Russell", "Lewis", "Evans", "Brooks", "Griffin", "Lee", "Edwards", "Kelly",
+            "Diaz", "Walker", "Collins", "Sanders", "Hayes"};
+
+        //lista de apellidos
+        ArrayList<String> surenames = new ArrayList();
+        surenames.addAll(Arrays.asList(apellidos));
+
+        //generador de identificaciones
+        ArrayList<String> id = new ArrayList();
+        id.add("8");
+        id.add("1");
+        id.add("2");
+        id.add("3");
+        id.add("4");
+        id.add("5");
+        id.add("6");
+        id.add("7");
+
+        //generador de numeros de telefono
+        ArrayList<String> tel = new ArrayList();
+        tel.add("1");
+        tel.add("2");
+        tel.add("3");
+        tel.add("4");
+        tel.add("5");
+        tel.add("6");
+        tel.add("7");
+        tel.add("8");
+        tel.add("9");
+
+        //ciudades donde viven
+        String[] ciudades = {"NY", "Chicago", "LA", "Houston",
+            "Phoenix", "Philadelphia", "San Antonio", "SD", "Austin", "Forthworth",
+            "Jacksonville", "Columbus", "Charlotte", "Indianapolis", "SF",
+            "Seattle", "Denver", "Washington", "Boston", "El Paso", "Nashville",
+            "Detroit", "Oxnard", "Oklahoma", "Portland", "Memphis", "Louisville",
+            "Milwaukee", "Baltimore", "Albuquerque", "Tucson", "Fresno", "Mesa", "Sacramento",
+            "Atlanta", "Kansas", "Colorado", "Omaha", "Raleigh", "Miami",
+            "Longhorn", "Minneapolis", "Oakland", "Tampa", "Tulsa", "Arlington", "Wichita",
+            "Lafayette", "Bakersfield", "Cleveland", "Anaheim", "Honolulu",
+            "Dallas", "Riverside", "Henderson", "Lexington", "Stockton", "Miami",
+            "Cincinnati", "Pittsburg"};
+
+        ArrayList<String> cities = new ArrayList();
+        cities.addAll(Arrays.asList(ciudades));
+
+        String name, surename, city;
+
+        int randNum = 0;
+        int randCity = 0;
+        int numTel = 0;
+        int numId = 0;
+
+        Random r = new Random();
+        Llave llave;
+
+        try {
+            raf = new RandomAccessFile(archivo, "rw");
+            raf.seek(raf.length());
+
+            long pointer;
+
+            for (int i = 0; i < 5000; i++) {
+                randNum = 0 + r.nextInt(99);
+                randCity = 0 + r.nextInt(60);
+
+                Collections.shuffle(id);
+                Collections.shuffle(tel);
+                Collections.shuffle(names);
+                Collections.shuffle(surenames);
+
+                String var = "";
+                //ciclo que brinda el numero de telefono 
+                for (int j = 0; j < tel.size(); j++) {
+                    var += tel.get(j);
+                }
+                numTel = Integer.parseInt(var);
+                var = "";
+
+                for (int k = 0; k < id.size(); k++) {
+                    var += id.get(k);
+                }
+                numId = Integer.parseInt(var);
+
+                name = names.get(randNum);
+                surename = surenames.get(randNum);
+                city = cities.get(randCity);
+
+                pointer = raf.getFilePointer();
+                llave = new Llave(pointer, numId);
+                
+               // System.out.println(llave);
+
+                raf.writeChars(numId + "|" + fixLength(name, c1.getLongitud()) + "|"
+                        + fixLength(surename, c2.getLongitud()) + "|"
+                        + numTel + "|" + fixLength(city, c5.getLongitud()) + "| \n");
+
+                prueba1.insert(llave);
+            }
+
+            raf.close();
+
+            escribirArbol(prueba1, nombre);
+           
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void escribirPruebaCampos(File archivo, ArrayList<Campo> campos) {
+
+        FileWriter fo = null;
+        BufferedWriter bw = null;
+
+        try {
+
+            String nombre, tipo, longitud, esllave;
+
+            fo = new FileWriter(archivo);
+            bw = new BufferedWriter(fo);
+
+            //imprime el numero de campos
+            bw.write("5 \n");
+
+            for (int i = 0; i < 5; i++) {
+
+                Campo temp = campos.get(i);
+                nombre = temp.getNombre_Campo();
+                tipo = temp.getTipo_dato();
+                longitud = Integer.toString(temp.getLongitud());
+                if (temp.isEsLlavePrimaria()) {
+                    esllave = "true";
+                } else {
+                    esllave = "false";
+                }
+
+                bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
+                        + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
+                bw.write("\n");
+            }
+
+            Date d = new Date();
+            bw.write(d.toString() + "\n");
+
+            bw.write("Numero de Registros:" + "5000");
+            bw.write("\n \n");
+
+            bw.flush();
+
+        } catch (Exception e) {
+
+        }
+
+        try {
+            bw.close();
+            fo.close();
+        } catch (IOException e) {
+
+        }
+    }
+
+    public String fixLength(String registro, int longitud) {
+
+        int length = longitud - registro.length();
+
+        for (int i = 0; i < length; i++) {
+            registro += " ";
+        }
+
+        return registro;
+    }
 
     /**
      * @param args the command line arguments
@@ -2321,6 +2583,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTP_Menus;
     private javax.swing.JTree jT_Archivos;
+    private javax.swing.JButton jb_RegistrosPruebas;
     private javax.swing.JButton jb_abrirArchivo;
     private javax.swing.JButton jb_crearCampo;
     private javax.swing.JButton jb_modCampo;
@@ -2467,12 +2730,12 @@ public class GUI extends javax.swing.JFrame {
         }
     }
 
-    public ArbolB cargarArbol(String nombre_archivo_bin)   {
-        
+    public ArbolB cargarArbol(String nombre_archivo_bin) {
+
         ArbolB btree_temp = null;
-        
+
         File cargar_bin = new File(nombre_archivo_bin);
-     
+
         try {
             if (cargar_bin.exists()) {
                 FileInputStream entrada = new FileInputStream(cargar_bin);
@@ -2480,7 +2743,7 @@ public class GUI extends javax.swing.JFrame {
                 btree_temp = (ArbolB) objeto.readObject();
                 objeto.close();
                 entrada.close();
-            } 
+            }
         } catch (Exception e) {
         }
         return btree_temp;
