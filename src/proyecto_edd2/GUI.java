@@ -1953,9 +1953,10 @@ public class GUI extends javax.swing.JFrame {
                     if (campo_temp.isEsLlavePrimaria()) {
 
                         ArbolB btree_verificar = cargarArbol(nombre_archivo_bin);
-
+                        
                         if (btree_verificar == null) {
                             //No existe el arbol, seria la primera insercion, no busca
+                            
                         } else {
                             //Exsite el arbol y algun registro
                             Llave verify_key = btree_verificar.buscarLlave(btree_verificar.getRaiz(), valor_primaryKey);
@@ -2290,8 +2291,8 @@ public class GUI extends javax.swing.JFrame {
 
         Campo c1 = new Campo("Nombre", "String", 10);
         Campo c2 = new Campo("Apellido", "String", 12);
-        Campo c3 = new Campo("NumId", "Int", 8);
-        Campo c4 = new Campo("Telefono", "Int", 9);
+        Campo c3 = new Campo("NumId", "int", 8);
+        Campo c4 = new Campo("Telefono", "int", 9);
         Campo c5 = new Campo("Ciudad", "String", 15);
 
         c1.setEsLlavePrimaria(false);
