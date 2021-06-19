@@ -1851,7 +1851,8 @@ public class GUI extends javax.swing.JFrame {
 
         //Nombres del archivo bin para cargar el arbol
         int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-        String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+        String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+        System.out.println(nombre_archivo_bin);
         if (verificar_introducirR) {
             int contador_listaCampos = 0, verify_primay_key = 0, valor_primaryKey = 0;
             String registro = "", key = "", porcion_registro = null;
@@ -1867,7 +1868,9 @@ public class GUI extends javax.swing.JFrame {
                 porcion_registro = JOptionPane.showInputDialog(jP_menuArchivo, "Entrada para el campo: "
                         + campo_temp.getNombre_Campo() + "\nTipo de Dato: " + campo_temp.getTipo_dato()
                         + "\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: " + campo_temp.isEsLlavePrimaria());
-
+                
+            
+                
                 //Validaciones
                 //1. Verificacion que la entrada no este vacia
                 if (porcion_registro == null) {
@@ -1938,9 +1941,12 @@ public class GUI extends javax.swing.JFrame {
 
                     //6. Si no es llave primaria y no lleno a la longitud requerida, llenar con espacios en blanco 
                     if (!campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
-                        for (int i = porcion_registro.length(); i < campo_temp.getLongitud(); i++) {
-                            porcion_registro += " ";
-                        }
+//                        for (int i = porcion_registro.length(); i < campo_temp.getLongitud(); i++) {
+//                            porcion_registro += " ";
+//                        }
+//                        System.out.println(porcion_registro.length());
+                        
+                          porcion_registro = fixLength(porcion_registro, campo_temp.getLongitud());
                     }
 
                     //7.Verificar que no se repite la llave primaria 
@@ -2004,6 +2010,11 @@ public class GUI extends javax.swing.JFrame {
 
                         //Ya existe un arbol, Cargar arbol de archivo binario
                         ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
+                        
+                        if(btree_cargado == null){
+                            System.out.println("XD");
+                        }
+                        
                         btree_cargado.insert(nueva_llave);
                         escribirArbol(btree_cargado, nombre_archivo_bin);
                     }
@@ -2261,10 +2272,10 @@ public class GUI extends javax.swing.JFrame {
 
             if (i == 0) {
                 archivo = new File("./Prueba1.txt");
-                generarRandRegistros(archivo, "Prueba1.bin");
+                generarRandRegistros(archivo, "./Prueba1.bin");
             } else {
                 archivo2 = new File("./Prueba2.txt");
-                generarRandRegistros(archivo2, "Prueba2.bin");
+                generarRandRegistros(archivo2, "./Prueba2.bin");
             }
         }
 
@@ -2289,9 +2300,9 @@ public class GUI extends javax.swing.JFrame {
         c4.setEsLlavePrimaria(false);
         c5.setEsLlavePrimaria(false);
 
+        campos.add(c3);
         campos.add(c1);
         campos.add(c2);
-        campos.add(c3);
         campos.add(c4);
         campos.add(c5);
 
@@ -2426,9 +2437,13 @@ public class GUI extends javax.swing.JFrame {
                 raf.writeChars(numId + "|" + fixLength(name, c1.getLongitud()) + "|"
                         + fixLength(surename, c2.getLongitud()) + "|"
                         + numTel + "|" + fixLength(city, c5.getLongitud()) + "| \n");
+                
+                //actualizar_numRegistros(3);
 
                 prueba1.insert(llave);
             }
+            
+       
 
             raf.close();
 
