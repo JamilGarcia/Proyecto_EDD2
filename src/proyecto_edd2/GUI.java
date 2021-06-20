@@ -35,8 +35,28 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  *
@@ -111,6 +131,9 @@ public class GUI extends javax.swing.JFrame {
         tf_modificarRegistro = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jd_buscarRegistro = new javax.swing.JDialog();
+        TablaRegis_NoSeMuestra = new javax.swing.JFrame();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jt_Regis_NM = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jl_nombre_archivo = new javax.swing.JLabel();
@@ -472,6 +495,50 @@ public class GUI extends javax.swing.JFrame {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
+        jt_Regis_NM.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(jt_Regis_NM);
+        if (jt_Regis_NM.getColumnModel().getColumnCount() > 0) {
+            jt_Regis_NM.getColumnModel().getColumn(0).setResizable(false);
+            jt_Regis_NM.getColumnModel().getColumn(1).setResizable(false);
+            jt_Regis_NM.getColumnModel().getColumn(2).setResizable(false);
+            jt_Regis_NM.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        javax.swing.GroupLayout TablaRegis_NoSeMuestraLayout = new javax.swing.GroupLayout(TablaRegis_NoSeMuestra.getContentPane());
+        TablaRegis_NoSeMuestra.getContentPane().setLayout(TablaRegis_NoSeMuestraLayout);
+        TablaRegis_NoSeMuestraLayout.setHorizontalGroup(
+            TablaRegis_NoSeMuestraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TablaRegis_NoSeMuestraLayout.createSequentialGroup()
+                .addGap(82, 82, 82)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(151, Short.MAX_VALUE))
+        );
+        TablaRegis_NoSeMuestraLayout.setVerticalGroup(
+            TablaRegis_NoSeMuestraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TablaRegis_NoSeMuestraLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Standard File Manager");
 
@@ -793,8 +860,18 @@ public class GUI extends javax.swing.JFrame {
         jTP_Menus.addTab("Registros", jPanel5);
 
         B_Expor_Excel.setText("Expotar Excel");
+        B_Expor_Excel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                B_Expor_ExcelMouseClicked(evt);
+            }
+        });
 
         B_Expo_XML.setText("Exportar XML con Schema");
+        B_Expo_XML.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                B_Expo_XMLMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -2283,6 +2360,98 @@ public class GUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
     }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
 
+    private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
+
+        
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            DOMImplementation implementation = builder.getDOMImplementation();
+
+            Document documento = implementation.createDocument(null, "Export", null);
+            documento.setXmlVersion("1.0");
+
+            Element Campos = documento.createElement("Campos");
+
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+
+                String NC = archivo_actual.getLista_campos().get(i).getNombre_Campo();
+                String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
+                String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
+                String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
+                //System.out.println("Entra");
+                //Object[] obj = {c.getNombre_Campo(), c.getTipo_dato(), Integer.toString(c.getLongitud()), c.isEsLlavePrimaria()};
+
+                Element NombreCampo = documento.createElement("NombreDelCampo");
+                Text txtNombre = documento.createTextNode(NC);
+                NombreCampo.appendChild(txtNombre);
+                Campos.appendChild(NombreCampo);
+
+                Element TipoDato = documento.createElement("TipoDeDato");
+                Text txtTDato = documento.createTextNode(TD);
+                TipoDato.appendChild(txtTDato);
+                NombreCampo.appendChild(TipoDato);
+
+                Element Longitud = documento.createElement("Longitud");
+                Text txtLong = documento.createTextNode(LG);
+                Longitud.appendChild(txtLong);
+                NombreCampo.appendChild(Longitud);
+
+                Element isKey = documento.createElement("EsLlavePrimaria");
+                Text txtisKey = documento.createTextNode(LP);
+                isKey.appendChild(txtisKey);
+                NombreCampo.appendChild(isKey);
+
+                documento.getDocumentElement().appendChild(Campos);
+
+            }
+            
+            Source source = new DOMSource(documento);
+            Result result = new StreamResult(new File("Export.xml"));
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.transform(source, result);
+
+        } catch (ParserConfigurationException | TransformerException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        JOptionPane.showMessageDialog(this, "Exportado con exito");
+    }//GEN-LAST:event_B_Expo_XMLMouseClicked
+
+    private void B_Expor_ExcelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expor_ExcelMouseClicked
+
+        try {
+            Workbook wb = new XSSFWorkbook();
+            Sheet sheet = wb.createSheet("Prueba1");
+            Row rowCol = sheet.createRow(0);
+            for (int i = 0; i < jt_Registro.getColumnCount(); i++) {
+                Cell cell = rowCol.createCell(i);
+                cell.setCellValue(jt_Registro.getColumnName(i));
+            }
+            for (int j = 0; j < jt_Registro.getRowCount(); j++) {
+                Row row = sheet.createRow(j + 1);
+                for (int k = 0; k < jt_Registro.getColumnCount(); k++) {
+                    Cell cell = row.createCell(k);
+                    if (jt_Registro.getValueAt(j, k) != null) {
+                        cell.setCellValue(jt_Registro.getValueAt(j, k).toString());
+                    }
+                }
+            }
+            FileOutputStream out = new FileOutputStream(new File("PruebaJ.xlsx"));
+            wb.write(out);
+            wb.close();
+            out.close();
+
+            JOptionPane.showMessageDialog(this, "Exportado con exito");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        } catch (IOException io) {
+            System.out.println(io);
+        }
+    }//GEN-LAST:event_B_Expor_ExcelMouseClicked
+
     public void generarRandRegistros(File archivo, String nombre) {
         ArbolB prueba1 = new ArbolB(3);
 
@@ -2574,6 +2743,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton B_Salir;
     private javax.swing.JButton B_Salvar_Arch;
     private javax.swing.ButtonGroup BgLlavePrimaria;
+    private javax.swing.JFrame TablaRegis_NoSeMuestra;
     private javax.swing.JButton b_introducirRegistro;
     private javax.swing.JComboBox<String> cb_tipoCampo;
     private javax.swing.JButton jButton1;
@@ -2597,6 +2767,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTP_Menus;
     private javax.swing.JTree jT_Archivos;
     private javax.swing.JButton jb_RegistrosPruebas;
@@ -2621,6 +2792,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JRadioButton jr_llaveNo;
     private javax.swing.JRadioButton jr_llaveSi;
     private javax.swing.JSpinner js_longitud;
+    private javax.swing.JTable jt_Regis_NM;
     private javax.swing.JTable jt_Registro;
     private javax.swing.JTextField jt_nombreCampo;
     private javax.swing.JTable table_ListarCampos;
