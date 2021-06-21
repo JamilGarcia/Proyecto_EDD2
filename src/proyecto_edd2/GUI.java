@@ -1929,15 +1929,13 @@ public class GUI extends javax.swing.JFrame {
         //Nombres del archivo bin para cargar el arbol
         int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
         String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
-        System.out.println(nombre_archivo_bin);
         if (verificar_introducirR) {
             int contador_listaCampos = 0, verify_primay_key = 0, valor_primaryKey = 0;
             String registro = "", key = "", porcion_registro = null;
-            boolean verificar_input;
+            boolean verificar_input = true;
 
             //Crear registro
             while (contador_listaCampos < archivo_actual.getLista_campos().size()) {
-                verificar_input = true;
                 Campo campo_temp = archivo_actual.getLista_campos().get(contador_listaCampos);//Variable temporal de Campo
                 String tipo_dato_evaluar = campo_temp.getTipo_dato();
 
@@ -1946,109 +1944,32 @@ public class GUI extends javax.swing.JFrame {
                         + campo_temp.getNombre_Campo() + "\nTipo de Dato: " + campo_temp.getTipo_dato()
                         + "\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: " + campo_temp.isEsLlavePrimaria());
                 
-            
+               verificar_input = validarEntradaRegistro(porcion_registro, campo_temp);
                 
-                //Validaciones
-                //1. Verificacion que la entrada no este vacia
-                if (porcion_registro == null) {
-                    verificar_input = false;
-                    break;
-                } else {
-                    //2.Verificacion no puede poner el delimitador  '|' en el dato
-                    if (porcion_registro.contains("|")) {
-                        JOptionPane.showMessageDialog(jP_menuArchivo, "No es permitido utilizar el caracter '|' en este programa.");
-                        verificar_input = false;
-                    }
-                    //3.Verificacion que ingrese el tipo de dato correcto    
-                    if (tipo_dato_evaluar.equals("int")) {
+               //Si no es llave primaria y no lleno a la longitud requerida, llenar con espacios en blanco 
+               if (!campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
+                    porcion_registro = fixLength(porcion_registro, campo_temp.getLongitud());
+               }
 
-                        try {
-                            Integer.parseInt(porcion_registro);
-                            valor_primaryKey = Integer.parseInt(porcion_registro);
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, debe ser un int.");
-                            verificar_input = false;
-                        }
-
-                    } else if (tipo_dato_evaluar.equals("char")) {
-                        if (porcion_registro.length() > 1) {
-                            JOptionPane.showMessageDialog(jP_menuArchivo, "Un dato char solo recibe un valor de entrada.");
-                            verificar_input = false;
-                        }
-
-                    } else if (tipo_dato_evaluar.equals("double")) {
-                        try {
-                            Double.parseDouble(porcion_registro);
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, debe ser un double");
-                            verificar_input = false;
-                        }
-
-                    } else if (tipo_dato_evaluar.equals("String")) {
-                        if (campo_temp.isEsLlavePrimaria()) {
-                            try {
-                                Integer.parseInt(porcion_registro);
-                                valor_primaryKey = Integer.parseInt(porcion_registro);
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, la llave primaria debe ser un numero");
-                                verificar_input = false;
-                            }
+               //Verificar que no se repite la llave primaria 
+               if (campo_temp.isEsLlavePrimaria()) {
+                    valor_primaryKey = Integer.parseInt(porcion_registro);
+                    ArbolB btree_verificar = cargarArbol(nombre_archivo_bin);
+                    if (btree_verificar == null) {
+                       //No existe el arbol, seria la primera insercion, no busca
+                    } else {
+                        Llave verify_key = btree_verificar.buscarLlave(btree_verificar.getRaiz(), valor_primaryKey);
+                        if (verify_key == null) {
+                            //No la encontro puede continuar
                         } else {
-                            //El dato ingresado no puede estar en null / blanco
-                            if (porcion_registro.equals("")) {
-                                JOptionPane.showMessageDialog(jP_menuArchivo, "Debe ingresar alguno dato.");
-                                verificar_input = false;
-                                System.out.println("Hola");
-                            }
-                        }
-                    }
-
-                    //4.Verificacion que llene  longitud si es llave primaria
-                    if (campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
-                        JOptionPane.showMessageDialog(jP_menuArchivo, "El dato para el campo primario debe ser de la longitud requerida");
-                        verificar_input = false;
-                    }
-
-                    //5. Todos los datos deben seguir la longitud del campo requerida
-                    if (porcion_registro.length() > campo_temp.getLongitud()) {
-                        JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado es mayor a la longitud requerida del campo.\n"
-                                + "Debe volver a ingresar el dato.");
-                        verificar_input = false;
-                    }
-
-                    //6. Si no es llave primaria y no lleno a la longitud requerida, llenar con espacios en blanco 
-                    if (!campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
-//                        for (int i = porcion_registro.length(); i < campo_temp.getLongitud(); i++) {
-//                            porcion_registro += " ";
-//                        }
-//                        System.out.println(porcion_registro.length());
-                        
-                          porcion_registro = fixLength(porcion_registro, campo_temp.getLongitud());
-                    }
-
-                    //7.Verificar que no se repite la llave primaria 
-                    if (campo_temp.isEsLlavePrimaria()) {
-
-                        ArbolB btree_verificar = cargarArbol(nombre_archivo_bin);
-                        
-                        if (btree_verificar == null) {
-                            //No existe el arbol, seria la primera insercion, no busca
-                            
-                        } else {
-                            //Exsite el arbol y algun registro
-                            Llave verify_key = btree_verificar.buscarLlave(btree_verificar.getRaiz(), valor_primaryKey);
-                            if (verify_key == null) {
-                                //No la encontro puede continuar
-                            } else {
-                                //Encontro la llave primaria
-                                verificar_input = false;
-                                JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado para la llave primaria no es valido.\n"
+                            //Encontro la llave primaria
+                            verificar_input = false;
+                            JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado para la llave primaria no es valido.\n"
                                         + "Se encontro que ya existe el valor dentro de los registros.");
-                            }
                         }
                     }
-
                 }
+                
                 //Verificar que campo donde llave primaria es unica
                 if (verificar_input) {
                     //Paso todas las validaciones
@@ -2090,7 +2011,6 @@ public class GUI extends javax.swing.JFrame {
                         ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
                         
                         if(btree_cargado == null){
-                            System.out.println("XD");
                         }
                         
                         btree_cargado.insert(nueva_llave);
@@ -2237,6 +2157,7 @@ public class GUI extends javax.swing.JFrame {
                     + "\nLongitud[" +campo_primario.getLongitud() +"]");
             validar_entrada = validarEntradaRegistro(registro_mod, campo_primario);
         }
+        
         
         if(validar_entrada && registro_mod != null){  
             valor_registro = Integer.parseInt(registro_mod);
@@ -2442,12 +2363,6 @@ public class GUI extends javax.swing.JFrame {
                             RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
                             raf.seek(key.getOffset() + 1);
                             raf.writeChar('*');
-                            //String registro = raf.readLine();
-                            //System.out.println(raf.getFilePointer());
-                            //String registro_eliminado = "*" + registro.substring(1) + "\n";
-
-                            //Mover el seek al inicio de la linea
-                            //raf.writeChars(registro_eliminado);
                             raf.close();
                         } catch (FileNotFoundException ex) {
 
@@ -2893,6 +2808,8 @@ public class GUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(jP_menuArchivo, "La longitud del registro a buscar no es la requerida.");
                 temp = false;
             } 
+            
+            
         }
         return temp;
         
