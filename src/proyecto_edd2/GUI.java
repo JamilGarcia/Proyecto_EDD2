@@ -2218,11 +2218,150 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Buscar_RegisMouseClicked
 
     private void B_Modi_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Modi_RegisMouseClicked
-        // TODO add your handling code here:
-        if (jt_Registro.getSelectedRow() != -1) {
-            jd_modificarRegistro.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "No selecciono un campo en la tabla");
+        //Metoddo para modificar un registro
+        //Preguntar mediante que llave va buscar
+        String registro_mod = null;
+        boolean validar_entrada = false;
+        int valor_registro = 0;
+        Campo campo_primario = null;
+            //Buscar el campo primario
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                if (archivo_actual.getLista_campos().get(i).isEsLlavePrimaria()) {
+                    campo_primario = archivo_actual.getLista_campos().get(i);
+                    break;
+                }
+        }   
+        
+        while(!validar_entrada){
+            registro_mod = JOptionPane.showInputDialog(jP_menuArchivo,"Inserte el registro a modificar: "
+                    + "\nLongitud[" +campo_primario.getLongitud() +"]");
+            validar_entrada = validarEntradaRegistro(registro_mod, campo_primario);
+        }
+        
+        if(validar_entrada && registro_mod != null){  
+            valor_registro = Integer.parseInt(registro_mod);
+            //Buscar Registro en arbol y cargar arbol
+            int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+            String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+            ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
+            
+            if(btree_cargado == null){
+               //do nothing
+            } else {
+                Llave llave_mod = btree_cargado.buscarLlave(btree_cargado.getRaiz(),valor_registro);
+                
+                if(llave_mod == null){
+                    JOptionPane.showMessageDialog(jP_menuArchivo,"No se encontro el registro ingresado.");
+                } else {
+                    
+                    try {
+                        //Se encontro el registro
+                        //Presentar campos y que el usuario eliga uno
+                        RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
+                        raf.seek(llave_mod.getOffset());
+                        
+                        String registro_mostrar = raf.readLine(); 
+                        registro_mostrar = registro_mostrar.replace('\0', ' ');//Quitar caracteres null
+                        registro_mostrar = registro_mostrar.replaceAll("\\s+", "");
+                        
+                        //Conesguir nombre de Strings
+                        String nombre_campos = "";
+                        for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                            nombre_campos += "[" + i + "]" + archivo_actual.getLista_campos().get(i).getNombre_Campo() + "\n";                
+                        }
+                        String opcion_Campo = "";
+                        int opcion = 0;
+                        boolean validar = false;
+                        while(!validar){
+                            validar = true;
+                            opcion_Campo = JOptionPane.showInputDialog(jP_menuArchivo,"Registro:" +registro_mostrar +"\nCampos:\n"
+                                + nombre_campos + "Elegir campo:");
+                            if(opcion_Campo == null){
+                                //do nothing
+                                validar = false;
+                                break;
+                            } else {
+                                //1. Validación inserción en blanco
+                                if(opcion_Campo.equals("")){
+                                    JOptionPane.showMessageDialog(jP_menuArchivo,"Debe seleccionar una opcion.");
+                                    validar = false;
+                                }
+                                //2. Validación ingresar un numero
+                                try {
+                                    opcion = Integer.parseInt(opcion_Campo);
+                                    
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(jP_menuArchivo,"Dato ingresado invalido.");
+                                    validar = false;
+                                }
+                                
+                                //3. Validacion de no salirse del tamaño de la cantidad de campos
+                                if(opcion > archivo_actual.getLista_campos().size() - 1 || opcion < 0){
+                                    JOptionPane.showMessageDialog(jP_menuArchivo,"Selecciono una opcion invalida.");
+                                    validar = false;
+                                }
+                                //Validacion de caracteres a leer 
+                                
+                                //4. 
+                                if(opcion == 0){
+                                    JOptionPane.showMessageDialog(jP_menuArchivo,"No se puede modificar la llave primaria.");
+                                    validar = false;
+                                }
+                            }
+                        }
+                        
+                        if(validar && !opcion_Campo.equals("")){
+                            //Obtener campo elegido
+                            Campo campo_temp = archivo_actual.getLista_campos().get(opcion);
+                            //Obtener seccion de registro a modificar
+                            //Empezar en 1 el contador para saltarnos la llave primaria
+                            int contador = 1, pos_mod = 0;
+                            String nombre_comparar = archivo_actual.getLista_campos().get(contador).getNombre_Campo(), 
+                                   nombre_campo_mod = campo_temp.getNombre_Campo();
+                            String  str_seccion = registro_mostrar, seccion = "";
+                            
+                            do{
+                                pos_mod += archivo_actual.getLista_campos().get(contador - 1).getLongitud() + 1;
+                                
+                                nombre_comparar = archivo_actual.getLista_campos().get(contador).getNombre_Campo(); 
+                                //Final de seccion de registro
+                                int final_dato = str_seccion.indexOf('|') + 1;
+                                str_seccion = str_seccion.substring(final_dato);
+                                final_dato = str_seccion.indexOf('|') + 1;
+                                seccion = str_seccion.substring(0 ,final_dato - 1); //Obtener seccion de dato
+                                contador++;
+                            }while(!nombre_comparar.equals(nombre_campo_mod));
+                                
+                            //Mostar Registro del campo seleccionado:
+                            String dato_mod = null;
+                            boolean validar_entrada_mod = false;
+                                
+                            while(!validar_entrada_mod){
+                                dato_mod = JOptionPane.showInputDialog(jP_menuArchivo,"Campo: "+ campo_temp.getNombre_Campo() 
+                                        + "\nDato: " + seccion + "\nTipo de Dato:" + campo_temp.getTipo_dato()
+                                        +"\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: No\nIngresar modificacion de dato:");
+                                //Llamar a metodo de validar entrada
+                                validar_entrada_mod = validarEntradaRegistro(dato_mod, campo_temp);
+                                dato_mod = fixLength(dato_mod, campo_temp.getLongitud());
+                            }
+                                
+                            if(validar_entrada_mod && dato_mod != null){
+                                pos_mod = pos_mod * 2;//Multiplicar x2 para encontrar bien la posicion ya que guardamos como chars todo
+                                //Sustituir valor en registro
+                                long posicion_dato = llave_mod.getOffset()  + (long)pos_mod;
+                                raf.seek(posicion_dato);
+                                raf.writeChars(dato_mod);   
+                                JOptionPane.showMessageDialog(jP_menuArchivo,"Dato anterior: " + seccion + "Dato nuevo:" + dato_mod
+                                        + "¡Se modifico el registro exitosamente!"); 
+                            }    
+                        }   
+                    raf.close();
+                    } catch (FileNotFoundException ex) {
+                       
+                    } catch (IOException ex) {  
+                    } 
+                }//
+            }
         }
     }//GEN-LAST:event_B_Modi_RegisMouseClicked
 
@@ -2685,6 +2824,78 @@ public class GUI extends javax.swing.JFrame {
         }
 
         return registro;
+    }
+    
+    public boolean validarEntradaRegistro(String entrada, Campo campo_temp){
+        boolean temp = true;
+        //Este metodo es para validacion de datos que no son la llave primaria
+        //1. Validar que no retorne null
+        
+        if(entrada == null){
+            temp = true;
+        } else {
+            //2. Validar que no deje dato en blanco
+            if(entrada.equals("")){
+                JOptionPane.showMessageDialog(jP_menuArchivo,"No puede dejar en blanco la informacion.");
+                temp = false;
+            }
+            
+            //3.Verificacion no puede poner el delimitador  '|' en el dato
+            if (entrada.contains("|")) {
+                JOptionPane.showMessageDialog(jP_menuArchivo, "No es permitido utilizar el caracter '|' en este programa.");
+                temp = false;
+            }
+            //4.Verificacion que ingrese el tipo de dato correcto    
+            if (campo_temp.getTipo_dato().equals("int")) {
+                try {
+                    Integer.parseInt(entrada);
+                    //valor_primaryKey = Integer.parseInt(entrada);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, debe ser un int.");
+                        temp = false;
+                    }
+
+            } else if (campo_temp.getTipo_dato().equals("char")) {
+                if (entrada.length() > 1) {
+                    JOptionPane.showMessageDialog(jP_menuArchivo, "Un dato char solo recibe un valor de entrada.");
+                    temp = false;
+                }
+
+            } else if (campo_temp.getTipo_dato().equals("double")) {
+                try {
+                    Double.parseDouble(entrada);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, debe ser un double");
+                        temp = false;
+                    }
+
+            } else if (campo_temp.getTipo_dato().equals("String")) {
+                if (campo_temp.isEsLlavePrimaria()) {
+                    try {
+                        Integer.parseInt(entrada);
+                        //valor_primaryKey = Integer.parseInt(porcion_registro);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(jP_menuArchivo, "El tipo de dato ingresado es incorrecto, la llave primaria debe ser un numero");
+                            temp = false;
+                        }
+                } else {/*do nothing*/
+                }
+           }
+            //5. Validar longitud de campo
+           if (entrada.length() > campo_temp.getLongitud()) {
+                JOptionPane.showMessageDialog(jP_menuArchivo, "El dato ingresado es mayor a la longitud requerida del campo.\n"
+                                + "Debe volver a ingresar el dato.");
+                temp = false;
+            }
+           
+            //6. Revisar que llene el espacio si el campo es llave_primaria
+            if (entrada.length() != campo_temp.getLongitud() && campo_temp.isEsLlavePrimaria()) {
+                JOptionPane.showMessageDialog(jP_menuArchivo, "La longitud del registro a buscar no es la requerida.");
+                temp = false;
+            } 
+        }
+        return temp;
+        
     }
 
     /**
