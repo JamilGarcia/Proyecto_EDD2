@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package proyecto_edd2;
 
 import java.awt.event.ActionEvent;
@@ -28,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -84,7 +81,11 @@ public class GUI extends javax.swing.JFrame {
             Archivo archivo_temp = new Archivo(file.getAbsolutePath());
             Lista_Archivos.add(archivo_temp);
             Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).setNombre_archivo(file.getName());//Asignar los nombres de archivo
-        }
+            //Validara activación de boton generarArchivo
+            if(Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("PersonFile.txt")){
+                jb_RegistrosPruebas.setEnabled(false);
+            }    
+        }   
     }
 
     /**
@@ -601,15 +602,14 @@ public class GUI extends javax.swing.JFrame {
             jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_menuArchivoLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jb_RegistrosPruebas, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(497, Short.MAX_VALUE))
+                .addGroup(jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(B_Salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Nuevo_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Abrir_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Salvar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(B_Cerrar_Arch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jb_RegistrosPruebas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(448, Short.MAX_VALUE))
         );
         jP_menuArchivoLayout.setVerticalGroup(
             jP_menuArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -626,7 +626,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jb_RegistrosPruebas)
                 .addGap(33, 33, 33)
                 .addComponent(B_Salir)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         jTP_Menus.addTab("Archivo", jP_menuArchivo);
@@ -1115,7 +1115,7 @@ public class GUI extends javax.swing.JFrame {
                                 B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                             } else {
                                 //Solo se guarda el archivo ya existente
-                                escribirArchivo();
+                                escribirArchivo(archivo_actual);
                                 JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                             }
                         } else {
@@ -1175,7 +1175,7 @@ public class GUI extends javax.swing.JFrame {
                         //Primera ves que se guarda un nuevo archivo
                         B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                     } else {//Ya existia el archivo
-                        escribirArchivo();
+                        escribirArchivo(archivo_actual);
                         JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                         JOptionPane.showMessageDialog(jd_abrirArchivo, "!El archivo: " + archivo_actual.getNombre_archivo() + " se ha cerrado correctamente!");
                     }
@@ -1298,6 +1298,9 @@ public class GUI extends javax.swing.JFrame {
                 archivo_actual.getLista_campos().add(campo);
                 flag++;
             }
+            
+            //Recrear AvailList si es necesario
+            recreacion_AvailList(archivo_actual);
         }
     }//GEN-LAST:event_jb_abrirArchivoActionPerformed
 
@@ -1323,7 +1326,7 @@ public class GUI extends javax.swing.JFrame {
                     B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                 } else {
                     //El archivo ya se ha guardado previamente
-                    escribirArchivo();
+                    escribirArchivo(archivo_actual);
                 }
             } else {
                 //Selecciono NO
@@ -1449,7 +1452,7 @@ public class GUI extends javax.swing.JFrame {
                 //Guardar si se ha confirmado por medio de las validaciones
                 if (confirm_save == true) {
                     //Escribir el archivo
-                    escribirArchivo();
+                    escribirArchivo(archivo_actual);
                     JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo se ha guardado exitosamente!");
                     archivo_actual.setGuardado(true);
                     jl_nombre_archivo.setText(archivo_actual.getNombre_archivo());
@@ -1482,7 +1485,7 @@ public class GUI extends javax.swing.JFrame {
                         B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                     } else {
                         //Solo se guarda el archivo ya existente
-                        escribirArchivo();
+                        escribirArchivo(archivo_actual);
                         JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                     }
 
@@ -1529,7 +1532,7 @@ public class GUI extends javax.swing.JFrame {
                     //El archivo no es nuevo
                     JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                     JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo: " + archivo_actual.getNombre_archivo() + " se ha cerrado correctamente!");
-                    escribirArchivo();
+                    escribirArchivo(archivo_actual);
                     archivo_actual = null;
                 }
                 confirmar_salir = true;
@@ -1891,7 +1894,7 @@ public class GUI extends javax.swing.JFrame {
                         B_Salvar_ArchActionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
                     } else {
                         //Solo se guarda el archivo ya existente
-                        escribirArchivo();
+                        escribirArchivo(archivo_actual);
                         JOptionPane.showMessageDialog(jP_menuArchivo, "!El archivo " + archivo_actual.getNombre_archivo() + " se ha guardado exitosamente!");
                     }
 
@@ -1955,16 +1958,19 @@ public class GUI extends javax.swing.JFrame {
                 porcion_registro = JOptionPane.showInputDialog(jP_menuArchivo, "Entrada para el campo: "
                         + campo_temp.getNombre_Campo() + "\nTipo de Dato: " + campo_temp.getTipo_dato()
                         + "\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: " + campo_temp.isEsLlavePrimaria());
+                if(porcion_registro == null){
+                    break;
+                }
 
                 verificar_input = validarEntradaRegistro(porcion_registro, campo_temp);
-
+                
                 //Si no es llave primaria y no lleno a la longitud requerida, llenar con espacios en blanco 
                 if (!campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
                     porcion_registro = fixLength(porcion_registro, campo_temp.getLongitud());
                 }
 
                 //Verificar que no se repite la llave primaria 
-                if (campo_temp.isEsLlavePrimaria()) {
+                if (campo_temp.isEsLlavePrimaria() && porcion_registro != null) {
                     valor_primaryKey = Integer.parseInt(porcion_registro);
                     ArbolB btree_verificar = cargarArbol(nombre_archivo_bin);
                     if (btree_verificar == null) {
@@ -1983,7 +1989,7 @@ public class GUI extends javax.swing.JFrame {
                 }
 
                 //Verificar que campo donde llave primaria es unica
-                if (verificar_input) {
+                if (verificar_input && porcion_registro != null) {
                     //Paso todas las validaciones
                     registro += porcion_registro;
                     registro += "|";
@@ -1995,7 +2001,10 @@ public class GUI extends javax.swing.JFrame {
                         verify_primay_key = 1;
                     }
                 }
+                
+                
             }
+            
             //Si logro recorrer los campos correctamente el archivo se puede recorrer 
             registro += "\n";
             if (contador_listaCampos == archivo_actual.getLista_campos().size()) {
@@ -2136,7 +2145,7 @@ public class GUI extends javax.swing.JFrame {
                         registro_mostrar = registro_mostrar.replaceAll("\\s+", "");
                         JOptionPane.showMessageDialog(jP_menuArchivo, "Se encontro el registro exitosamente.\n"
                                 + registro_mostrar);
-
+                        System.out.println(llave_buscada.getOffset() + "Primer Registro");
                         raf_buscar.close();
                     } catch (FileNotFoundException ex) {
 
@@ -2356,9 +2365,8 @@ public class GUI extends javax.swing.JFrame {
             }
 
             if (flag == true && contador == 0) {
-
                 int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-                String nombre_archivo_bin = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+                String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
                 //Cargar archivo
                 ArbolB btree_cargado_elim = cargarArbol(nombre_archivo_bin);
                 Llave key = btree_cargado_elim.buscarLlave(btree_cargado_elim.raiz, llave);
@@ -2372,7 +2380,8 @@ public class GUI extends javax.swing.JFrame {
                     if (isRemoved == true) {
                         try {
                             RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
-                            raf.seek(key.getOffset() + 1);
+                            raf.seek(key.getOffset());
+                            //System.out.println(raf.getFilePointer());
                             raf.writeChar('*');
                             raf.close();
                         } catch (FileNotFoundException ex) {
@@ -2381,9 +2390,17 @@ public class GUI extends javax.swing.JFrame {
 
                         }
                     }
-                    //implementacion availist, agregar un nuevo objeto llave
+                    
+                    //Escribir en el arbol el delete
+                    escribirArbol(btree_cargado_elim, nombre_archivo_bin);
+                    //implementacion availist
+                    archivo_actual.getAvail_list().add(key.getOffset());
+                    
+                    //Modificar la cabeza
+                    //Actualizar numero de registros
                     int update_num_Records = actualizar_numRegistros(2);
-                    //escribirArbol(btree_cargado_elim, nombre_archivo_bin);
+                    escribirArchivo(archivo_actual);
+                    
                     JOptionPane.showMessageDialog(this, "Se elimino la llave del archivo de registros!");
                 }
             }
@@ -2408,13 +2425,12 @@ public class GUI extends javax.swing.JFrame {
 
     private void jb_RegistrosPruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_RegistrosPruebasMouseClicked
 
+    if(jb_RegistrosPruebas.isEnabled()){    
         Archivo nuevo_archivo;
         ArrayList<Integer> cityIds;
-
         for (int i = 0; i < 2; i++) {
 
             if (i == 0) {
-
                 nuevo_archivo = new Archivo("./PersonFile.txt");
                 nuevo_archivo.setNombre_archivo("PersonFile.txt");
                 Lista_Archivos.add(nuevo_archivo);
@@ -2424,8 +2440,8 @@ public class GUI extends javax.swing.JFrame {
                 //generarRandRegistros(archivo2);
             }
         }
-
         JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
+    }
     }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
 
     private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
@@ -2470,7 +2486,6 @@ public class GUI extends javax.swing.JFrame {
                 NombreCampo.appendChild(isKey);
 
                 documento.getDocumentElement().appendChild(Campos);
-
             }
 
             Source source = new DOMSource(documento);
@@ -2854,14 +2869,11 @@ public class GUI extends javax.swing.JFrame {
 
                 String a = Integer.toString(age);
                 String c = Integer.toString(ciudad);
-
+                raf.seek(raf.getFilePointer());
                 cityids.add(ciudad);
-
                 raf.writeChars(id + "|" + fixLength(names.get(randNum), 20)
                         + "|" + fixLength(a, 3) + "|"
                         + fixLength(c, 2) + "| \n");
-                
-                 System.out.println(i);
 
             }
 
@@ -2869,15 +2881,11 @@ public class GUI extends javax.swing.JFrame {
 
             int instancia_punto2 = archivo.getNombre_archivo().indexOf('.');
             String nombre_archivo_bin2 = "./" + archivo.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
-            System.out.println(nombre_archivo_bin2);
-           
 
             escribirArbol(arbol, nombre_archivo_bin2);
 
         } catch (Exception e) {
-
         }
-
         return cityids;
     }
 
@@ -2917,11 +2925,25 @@ public class GUI extends javax.swing.JFrame {
                 //escritura de la ultima fecha de modificacion/apertura
                 Date d = new Date();
                 raf.writeChars(d.toString() + "\n");
-
-                raf.writeChars(("Numero de Registros:0\n"));
-
                 //TODO escritura de la cantidad de registros
+                int num_registros = -1;
+                num_registros = actualizar_numRegistros(1);
+                if(num_registros == -1){
+                    raf.writeChars(("Numero de Registros:0\n"));
+                } else {
+                    raf.writeChars(("Numero de Registros:" + num_registros + "\n"));
+                }
                 //TODO escribir la punta de reconstruccion availlist
+                
+                if(archivo.getAvail_list().isEmpty()){
+                   raf.writeChars("Cabeza de AvailList:null\n\n" );
+                } else if(archivo.getAvail_list().size() == 1){
+                    raf.writeChars("Cabeza de AvailList:" + archivo.getAvail_list().get(0) + " \n\n");
+                } else {
+                    //do nothing
+                }
+                
+                
             }
 
             raf.close();
@@ -3064,6 +3086,56 @@ public class GUI extends javax.swing.JFrame {
         }
         return temp;
 
+    }
+    
+    public void recreacion_AvailList(Archivo archivo){
+
+        //Revisar existe la cabeza del availList        
+        RandomAccessFile raf;
+        try {
+            raf = new RandomAccessFile(archivo.getArchivo(), "rw");
+            raf.seek(raf.getFilePointer());//Empezar en 0
+            int lineas_recorrer = Character.getNumericValue(raf.readChar()) + 3;
+            
+            //Obtener linea de metadata para leer el valor si hay
+            long inicio_busqueda = 0;
+            String metadata = "";
+            for (int i = 0; i <= lineas_recorrer ; i++) {
+              metadata = raf.readLine();
+              inicio_busqueda = raf.getFilePointer();
+            }
+            raf.readLine();
+            raf.seek(raf.getFilePointer());
+            //Obtener string sin espacios
+            metadata = metadata.replace('\0', ' ');//Quitar caracteres null
+            metadata = metadata.replaceAll("\\s+", "");
+            
+            metadata = metadata.substring(18);
+            if(metadata.equals("null")){
+                //No hay cabeza del availList
+            } else {
+                //Existe una cabeza del availList, buscar en el archivo registros eliminado
+                long record_size = 0;
+                for (int i = 0; i < archivo.getLista_campos().size(); i++) {
+                    record_size += (long)archivo.getLista_campos().get(i).getLongitud() + 1;
+                }
+                record_size = (record_size * 2) + 4;// Multiplicar x2 por el write chars
+                //Revisar hasta el final del archivo
+                
+                while(inicio_busqueda < raf.length()){
+                    if(raf.readChar() == '*'){
+                        long posicion = raf.getFilePointer();
+                        archivo.getAvail_list().add(posicion);   
+                    }
+                    inicio_busqueda += record_size;
+                    raf.seek(raf.getFilePointer() +  record_size);
+                    
+                }
+                
+                
+            }
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -3275,7 +3347,9 @@ public class GUI extends javax.swing.JFrame {
             }
 
         } catch (FileNotFoundException ex) {
-        } catch (IOException ex) {
+            return -1;
+        } catch (Exception ex) {
+            return -1;
         }
 
         return temp;
@@ -3322,60 +3396,4 @@ public class GUI extends javax.swing.JFrame {
         return btree_temp;
 
     }
-
-    public void escribirArchivo() {
-        archivo_actual.setGuardado(true);
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        //Aplicar el nuevo nombre dado  
-
-        try {
-            fw = new FileWriter(archivo_actual.getArchivo(), false);
-            bw = new BufferedWriter(fw);
-
-            //Escribir la definicion de los campos y registros
-            //Escritura de los campos en metadata
-            String nombre, tipo, longitud, esllave;
-            if (archivo_actual.getLista_campos().isEmpty()) {
-                //do nothing 
-            } else {
-
-                //imprimir el numero de campos del archivo para su correcta lectura
-                bw.write(archivo_actual.getLista_campos().size() + "\n");
-
-                for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
-                    Campo temp = archivo_actual.getLista_campos().get(i);
-                    nombre = temp.getNombre_Campo();
-                    tipo = temp.getTipo_dato();
-                    longitud = Integer.toString(temp.getLongitud());
-                    if (temp.isEsLlavePrimaria()) {
-                        esllave = "true";
-                    } else {
-                        esllave = "false";
-                    }
-
-                    bw.write("{Nombre:" + nombre + ",Tipo:" + tipo
-                            + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
-                    bw.write("\n");
-                }
-
-                //escritura de la ultima fecha de modificacion/apertura
-                Date d = new Date();
-                bw.write(d.toString() + "\n");
-                bw.write(("Numero de Registros:0\n"));
-                //TODO escritura de la cantidad de registros
-
-                //TODO escribir la punta de reconstruccion availlist
-            }
-            bw.flush();
-        } catch (Exception ex) {
-
-        } finally {
-            try {
-                bw.close();
-                fw.close();
-            } catch (IOException e) {
-            }
-        }
-    }//Fin metodo escribir archivo
 }

@@ -1,8 +1,0 @@
-5
-{Nombre:Cedula,Tipo:String,Longitud:8,EsLlave:true}
-{Nombre:Nombre,Tipo:String,Longitud:10,EsLlave:false}
-{Nombre:Edad,Tipo:int,Longitud:2,EsLlave:false}
-{Nombre:Apellido,Tipo:String,Longitud:10,EsLlave:false}
-{Nombre:Nacionalidad,Tipo:String,Longitud:12,EsLlave:false}
-Sat Jun 19 13:48:14 CST 2021
-Numero de Registros:0
