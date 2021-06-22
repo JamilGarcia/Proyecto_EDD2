@@ -1244,6 +1244,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Crear Indice"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="B_Crear_ArchMouseClicked"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="B_ReIndex_Arch">
                       <Properties>

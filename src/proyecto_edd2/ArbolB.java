@@ -1,6 +1,7 @@
 package proyecto_edd2;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class ArbolB implements Serializable {
 
@@ -80,10 +81,10 @@ public class ArbolB implements Serializable {
     public void insert_nonFull(Nodo x, Llave llave_env) {
         //int i = x.getNumero_llaves();//Contador con el valor de numero de llaves
         int i = 0;
-        
+
         if (x.isLeaf) {
-            
-            i = x.getNumero_llaves(); 
+
+            i = x.getNumero_llaves();
             //ciclo while que realiza corrimiento de llaves de derecha a izquierda
             //de acuerdo al valor de la llave a insertar
             while (i >= 1 && llave_env.getLlave() < x.getLlaves()[i - 1].getLlave()) {
@@ -105,13 +106,12 @@ public class ArbolB implements Serializable {
 //                System.out.println(x.getHijos().length);
 //                contador_hijo++;
 //            }
-
-            for (i = x.getNumero_llaves()-1; i >= 0 && llave_env.getLlave()< x.getLlaves()[i].getLlave(); i--) {
+            for (i = x.getNumero_llaves() - 1; i >= 0 && llave_env.getLlave() < x.getLlaves()[i].getLlave(); i--) {
                 //ciclo que mueve a i
             }
-            
+
             i++;
-            
+
             //Evalua si el nodo esta lleno para aplicar split
             if (x.getHijos()[i].getNumero_llaves() == (2 * T - 1)) {
                 split(x, i, x.hijos[i]);
@@ -150,7 +150,7 @@ public class ArbolB implements Serializable {
 
         //ciclo for que realiza corrimientos de llaves izquierda a derecha
         //de acuerdo al numero de llaves en el nodo x
-        for (int j = x.getNumero_llaves(); j >= (i+1); j--) {
+        for (int j = x.getNumero_llaves(); j >= (i + 1); j--) {
             x.hijos[j + 1] = x.hijos[j];
         }
 
@@ -159,7 +159,7 @@ public class ArbolB implements Serializable {
 
         //ciclo for que realiza corrimiento de llaves de izquierda a derecha
         //de acuerdo al numero de llaves en x
-        for (int j = x.getNumero_llaves()-1; j >= i; j--) {
+        for (int j = x.getNumero_llaves() - 1; j >= i; j--) {
             x.llaves[(j + 1)] = x.llaves[j];
         }
 
@@ -446,6 +446,32 @@ public class ArbolB implements Serializable {
         } else {
             //caso recursivo que evaluara las llaves del hijo del nodo actual
             return searchDeleteNode(x.getHijos()[contador], llave);
+        }
+    }
+
+    public void getRegistersOffsets(ArrayList<Long> offsets, Nodo x) {
+
+        if (x.isLeaf) {
+
+            for (int i = 0; i < x.getNumero_llaves(); i++) {
+
+                offsets.add(x.getLlaves()[i].offset);
+
+            }
+
+        } else {
+            for (int i = 0; i < x.getNumero_llaves(); i++) {
+
+                offsets.add(x.llaves[i].offset);
+
+            }
+
+            for (int i = 0; i < x.getHijos().length; i++) {
+
+                if (x.hijos[i] != null) {
+                    getRegistersOffsets(offsets, x.hijos[i]);
+                }
+            }
         }
     }
 
