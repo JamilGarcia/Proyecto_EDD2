@@ -3093,12 +3093,57 @@ public class GUI extends javax.swing.JFrame {
     }
     
     public void recreacion_AvailList(Archivo archivo){
+        
+        
+        
+        /*RandomAccessFile raf1;
+        try {
+            raf1 = new RandomAccessFile(archivo.getArchivo(), "rw");
+            int lineas_recorrer1 = Character.getNumericValue(raf1.readChar()) + 3;
+            raf1.seek(0);
+            long inicio_busqueda1 = 0;
+            for (int i = 0; i <= lineas_recorrer1 ; i++) {
+                raf1.readLine();
+                inicio_busqueda1 = raf1.getFilePointer();
+                
+            }
+            raf1.readLine();
+            inicio_busqueda1 = raf1.getFilePointer();
+            
+
+            
+            //conseguir el tamaño del registro
+            long record_size = 0;
+            for (int i = 0; i < archivo.getLista_campos().size(); i++) {
+                record_size += (long)archivo.getLista_campos().get(i).getLongitud() + 1;
+            }
+            record_size = (record_size * 2) + 4;
+            
+            
+            long final_listar = (record_size * 5 )+ inicio_busqueda1;
+            
+            //if(raf.readChar() == '*') {}
+            
+            String registro = "";
+            while(inicio_busqueda1 < raf1.length()){
+                registro = raf1.readLine();
+                registro= registro.replace('\0', ' ');//Quitar caracteres null
+                registro = registro.replaceAll("\\s+", "");
+                //System.out.println(registro);
+                //Obtener cada seccion, 
+                inicio_busqueda1 += record_size;
+                raf1.seek(inicio_busqueda1);
+                
+            } 
+        } catch (Exception e) {
+        }
+        */
 
         //Revisar existe la cabeza del availList        
         RandomAccessFile raf;
         try {
             raf = new RandomAccessFile(archivo.getArchivo(), "rw");
-            raf.seek(raf.getFilePointer());//Empezar en 0
+            raf.seek(0);//Empezar en 0
             int lineas_recorrer = Character.getNumericValue(raf.readChar()) + 3;
             
             //Obtener linea de metadata para leer el valor si hay
@@ -3128,6 +3173,7 @@ public class GUI extends javax.swing.JFrame {
                 record_size = (record_size * 2) + 4;// Multiplicar x2 por el write chars
                 //Revisar hasta el final del archivo
                 long inicio_registro = raf.getFilePointer();//Inicio de Registro
+
                 inicio_busqueda = Long.valueOf(metadata);//Cabeza de Metadata
                 long cabeza_metadata = inicio_busqueda;
                 
@@ -3149,13 +3195,10 @@ public class GUI extends javax.swing.JFrame {
                     if(raf.readChar() == '*'){
                         long posicion = raf.getFilePointer();
                         archivo.getAvail_list().add(posicion);   
-                        System.out.println("Hola");
                     }
                     inicio_registro += record_size;
                    raf.seek(inicio_registro);
                 }
-                
-                System.out.println("Tamaño:" + archivo.getAvail_list().size());
                 
             }
         } catch (Exception e) {
