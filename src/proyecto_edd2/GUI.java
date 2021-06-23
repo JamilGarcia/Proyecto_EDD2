@@ -1,4 +1,3 @@
-
 package proyecto_edd2;
 
 import java.awt.event.ActionEvent;
@@ -82,10 +81,10 @@ public class GUI extends javax.swing.JFrame {
             Lista_Archivos.add(archivo_temp);
             Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).setNombre_archivo(file.getName());//Asignar los nombres de archivo
             //Validara activación de boton generarArchivo
-            if(Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("PersonFile.txt")){
+            if (Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("PersonFile.txt")) {
                 jb_RegistrosPruebas.setEnabled(false);
-            }    
-        }   
+            }
+        }
     }
 
     /**
@@ -1210,7 +1209,6 @@ public class GUI extends javax.swing.JFrame {
             jl_nombre_archivo.setVisible(true);
             jd_abrirArchivo.dispose();
 
-            
             //Leer campos y agregarlos a la lista de campos del archivo
             Scanner sc;
             ArrayList<String> buffer = new ArrayList();
@@ -1221,7 +1219,7 @@ public class GUI extends javax.swing.JFrame {
                 var1 = sc.next();
                 var1 = var1.replace('\0', ' ');//Quitar caracteres null
                 var1 = var1.replaceAll("\\s+", "");
-                
+
                 sizeCampos = Integer.parseInt(var1);
 
                 for (int i = 0; i < sizeCampos; i++) {
@@ -1287,9 +1285,7 @@ public class GUI extends javax.swing.JFrame {
                 archivo_actual.getLista_campos().add(campo);
                 flag++;
             }
-            
-            
-            
+
             //Verificar numero de registros para habilitar opciones de campos
             int verificar_registro = actualizar_numRegistros(1);
             if (verificar_registro == 0) {
@@ -1961,12 +1957,12 @@ public class GUI extends javax.swing.JFrame {
                 porcion_registro = JOptionPane.showInputDialog(jP_menuArchivo, "Entrada para el campo: "
                         + campo_temp.getNombre_Campo() + "\nTipo de Dato: " + campo_temp.getTipo_dato()
                         + "\nLongitud: " + campo_temp.getLongitud() + "\nEs Llave Primaria: " + campo_temp.isEsLlavePrimaria());
-                if(porcion_registro == null){
+                if (porcion_registro == null) {
                     break;
                 }
 
                 verificar_input = validarEntradaRegistro(porcion_registro, campo_temp);
-                
+
                 //Si no es llave primaria y no lleno a la longitud requerida, llenar con espacios en blanco 
                 if (!campo_temp.isEsLlavePrimaria() && porcion_registro.length() < campo_temp.getLongitud()) {
                     porcion_registro = fixLength(porcion_registro, campo_temp.getLongitud());
@@ -2004,10 +2000,9 @@ public class GUI extends javax.swing.JFrame {
                         verify_primay_key = 1;
                     }
                 }
-                
-                
+
             }
-            
+
             //Si logro recorrer los campos correctamente el archivo se puede recorrer 
             registro += "\n";
             if (contador_listaCampos == archivo_actual.getLista_campos().size()) {
@@ -2393,15 +2388,14 @@ public class GUI extends javax.swing.JFrame {
 
                         }
                     }
-                    
+
                     //Escribir en el arbol el delete
                     escribirArbol(btree_cargado_elim, nombre_archivo_bin);
                     //implementacion availist
                     archivo_actual.getAvail_list().add(key.getOffset());
-                    
+
                     //Modificar la cabeza
                     //Actualizar numero de registros
-                    
                     int num_registros = actualizar_numRegistros(1);
                     int update_num_Records = actualizar_numRegistros(2);
                     escribirArchivo(archivo_actual);
@@ -2430,27 +2424,26 @@ public class GUI extends javax.swing.JFrame {
 
     private void jb_RegistrosPruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_RegistrosPruebasMouseClicked
 
-    if(jb_RegistrosPruebas.isEnabled()){    
-        Archivo nuevo_archivo;
-        ArrayList<Integer> cityIds;
-        for (int i = 0; i < 2; i++) {
+        if (jb_RegistrosPruebas.isEnabled()) {
+            Archivo nuevo_archivo;
+            ArrayList<Integer> cityIds;
+            for (int i = 0; i < 2; i++) {
 
-            if (i == 0) {
-                nuevo_archivo = new Archivo("./PersonFile.txt");
-                nuevo_archivo.setNombre_archivo("PersonFile.txt");
-                Lista_Archivos.add(nuevo_archivo);
-                cityIds = generarCityFile(nuevo_archivo);
-            } else {
-                nuevo_archivo = new Archivo("./CityFile.txt");
-                //generarRandRegistros(archivo2);
+                if (i == 0) {
+                    nuevo_archivo = new Archivo("./PersonFile.txt");
+                    nuevo_archivo.setNombre_archivo("PersonFile.txt");
+                    Lista_Archivos.add(nuevo_archivo);
+                    cityIds = generarCityFile(nuevo_archivo);
+                } else {
+                    nuevo_archivo = new Archivo("./CityFile.txt");
+                    //generarRandRegistros(archivo2);
+                }
             }
+            JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
         }
-        JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
-    }
     }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
 
     private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
-
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -2467,9 +2460,7 @@ public class GUI extends javax.swing.JFrame {
                 String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
                 String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
                 String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
-                //System.out.println("Entra");
-                //Object[] obj = {c.getNombre_Campo(), c.getTipo_dato(), Integer.toString(c.getLongitud()), c.isEsLlavePrimaria()};
-
+               
                 Element NombreCampo = documento.createElement("NombreDelCampo");
                 Text txtNombre = documento.createTextNode(NC);
                 NombreCampo.appendChild(txtNombre);
@@ -2507,21 +2498,96 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Expo_XMLMouseClicked
 
     private void B_Expor_ExcelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expor_ExcelMouseClicked
+        String[] columns = new String[archivo_actual.getLista_campos().size()];
+
+        for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+            columns[i] = archivo_actual.getLista_campos().get(i).getNombre_Campo();
+        }
+
+        jt_Regis_NM.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                columns
+        ));
+
+        DefaultTableModel model = (DefaultTableModel) jt_Regis_NM.getModel();
+
+        RandomAccessFile raf1;
+        try {
+            raf1 = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
+            int lineas_recorrer1 = Character.getNumericValue(raf1.readChar()) + 3;
+            raf1.seek(0);
+            long inicio_busqueda1 = 0;
+            for (int i = 0; i <= lineas_recorrer1; i++) {
+                raf1.readLine();
+                inicio_busqueda1 = raf1.getFilePointer();
+            }
+            raf1.readLine();
+            inicio_busqueda1 = raf1.getFilePointer();
+
+            //conseguir el tamaño del registro
+            long record_size = 0;
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                record_size += (long) archivo_actual.getLista_campos().get(i).getLongitud() + 1;
+            }
+            record_size = (record_size * 2) + 4;
+
+            //long final_listar = (record_size * 5 )+ inicio_busqueda1;
+            //if( == '*') {}
+            String registro = "";
+            while (inicio_busqueda1 < raf1.length()) {
+                registro = raf1.readLine();
+                registro = registro.replace('\0', ' ');//Quitar caracteres null
+                registro = registro.replaceAll("\\s+", "");
+                //System.out.println(registro);
+                Object[] row = new Object[archivo_actual.getLista_campos().size()];
+                int cont = 0;
+                String str_seccion = registro, seccion = "";
+
+                while (cont < archivo_actual.getLista_campos().size()) {
+                    int final_dato = str_seccion.indexOf('|') + 1;
+                    if (registro.charAt(0) == '*') {
+
+                    } else {
+                        if (cont == 0) {
+                            seccion = str_seccion.substring(0, final_dato - 1);
+                            row[cont] = seccion;
+                        } else {
+                            str_seccion = str_seccion.substring(final_dato);
+                            final_dato = str_seccion.indexOf('|') + 1;
+                            seccion = str_seccion.substring(0, final_dato - 1);
+                            row[cont] = seccion;
+                        }
+
+                    }
+                    cont++;
+                }
+                if (!seccion.equals("")) {
+                    model.addRow(row);
+                }
+                //Obtener cada seccion, 
+                inicio_busqueda1 += record_size;
+                raf1.seek(inicio_busqueda1);
+
+            }
+        } catch (Exception e) {
+        }
+
+        jt_Regis_NM.setModel(model);
 
         try {
             Workbook wb = new XSSFWorkbook();
             Sheet sheet = wb.createSheet("Prueba1");
             Row rowCol = sheet.createRow(0);
-            for (int i = 0; i < jt_Registro.getColumnCount(); i++) {
+            for (int i = 0; i < jt_Regis_NM.getColumnCount(); i++) {
                 Cell cell = rowCol.createCell(i);
-                cell.setCellValue(jt_Registro.getColumnName(i));
+                cell.setCellValue(jt_Regis_NM.getColumnName(i));
             }
-            for (int j = 0; j < jt_Registro.getRowCount(); j++) {
+            for (int j = 0; j < jt_Regis_NM.getRowCount(); j++) {
                 Row row = sheet.createRow(j + 1);
-                for (int k = 0; k < jt_Registro.getColumnCount(); k++) {
+                for (int k = 0; k < jt_Regis_NM.getColumnCount(); k++) {
                     Cell cell = row.createCell(k);
-                    if (jt_Registro.getValueAt(j, k) != null) {
-                        cell.setCellValue(jt_Registro.getValueAt(j, k).toString());
+                    if (jt_Regis_NM.getValueAt(j, k) != null) {
+                        cell.setCellValue(jt_Regis_NM.getValueAt(j, k).toString());
                     }
                 }
             }
@@ -2533,9 +2599,9 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Exportado con exito");
 
         } catch (FileNotFoundException e) {
-            System.out.println(e);
+            //System.out.println(e);
         } catch (IOException io) {
-            System.out.println(io);
+            //System.out.println(io);
         }
     }//GEN-LAST:event_B_Expor_ExcelMouseClicked
 
@@ -2865,10 +2931,10 @@ public class GUI extends javax.swing.JFrame {
                     }
                     ciudad = 0 + r.nextInt(99);
                 }
-                
+
                 long pointer = raf.getFilePointer();
                 llave = new Llave(pointer, id);
-                
+
                 arbol.insert(llave);
                 int age = 1 + r.nextInt(115);
 
@@ -2899,55 +2965,54 @@ public class GUI extends javax.swing.JFrame {
 
         try {
             raf = new RandomAccessFile(archivo.getArchivo(), "rw");
-            
 
             //Escritura de los campos en metadata
             String nombre, tipo, longitud, esllave;
             if (archivo.getLista_campos().isEmpty()) {
                 //do nothing 
             } else {
-                
+
                 raf.seek(0);
-                    //imprimir el numero de campos del archivo para su correcta lectura
-                    raf.writeChars(archivo.getLista_campos().size() + "\n");
+                //imprimir el numero de campos del archivo para su correcta lectura
+                raf.writeChars(archivo.getLista_campos().size() + "\n");
 
-                    for (int i = 0; i < archivo.getLista_campos().size(); i++) {
-                        Campo temp = archivo.getLista_campos().get(i);
-                        nombre = temp.getNombre_Campo();
-                        tipo = temp.getTipo_dato();
-                        longitud = Integer.toString(temp.getLongitud());
-                        if (temp.isEsLlavePrimaria()) {
-                            esllave = "true";
-                        } else {
-                            esllave = "false";
-                        }
+                for (int i = 0; i < archivo.getLista_campos().size(); i++) {
+                    Campo temp = archivo.getLista_campos().get(i);
+                    nombre = temp.getNombre_Campo();
+                    tipo = temp.getTipo_dato();
+                    longitud = Integer.toString(temp.getLongitud());
+                    if (temp.isEsLlavePrimaria()) {
+                        esllave = "true";
+                    } else {
+                        esllave = "false";
+                    }
 
-                        raf.writeChars("{Nombre:" + nombre + ",Tipo:" + tipo
+                    raf.writeChars("{Nombre:" + nombre + ",Tipo:" + tipo
                             + ",Longitud:" + longitud + ",EsLlave:" + esllave + "}");
-                        raf.writeChars("\n");
-                    }
+                    raf.writeChars("\n");
+                }
 
-                    //escritura de la ultima fecha de modificacion/apertura
-                    Date d = new Date();
-                    raf.writeChars(d.toString() + "\n");
-                    //TODO escritura de la cantidad de registros
-                    int num_registros = -1;
-                    num_registros = actualizar_numRegistros(1);
-                    if(num_registros == -1){
-                        raf.writeChars(("Numero de Registros:100\n"));
-                    } else {
-                        raf.writeChars(("Numero de Registros:" + num_registros + "\n"));
-                    }
-                    //TODO escribir la punta de reconstruccion availlist
-                
-                    if(archivo.getAvail_list().isEmpty()){
-                        raf.writeChars("Cabeza de AvailList:null\n\n" );
-                    } else if(archivo.getAvail_list().size() == 1){
-                        raf.writeChars("Cabeza de AvailList:" + archivo.getAvail_list().get(0) + " \n\n");
-                    } else {
+                //escritura de la ultima fecha de modificacion/apertura
+                Date d = new Date();
+                raf.writeChars(d.toString() + "\n");
+                //TODO escritura de la cantidad de registros
+                int num_registros = -1;
+                num_registros = actualizar_numRegistros(1);
+                if (num_registros == -1) {
+                    raf.writeChars(("Numero de Registros:100\n"));
+                } else {
+                    raf.writeChars(("Numero de Registros:" + num_registros + "\n"));
+                }
+                //TODO escribir la punta de reconstruccion availlist
+
+                if (archivo.getAvail_list().isEmpty()) {
+                    raf.writeChars("Cabeza de AvailList:null\n\n");
+                } else if (archivo.getAvail_list().size() == 1) {
+                    raf.writeChars("Cabeza de AvailList:" + archivo.getAvail_list().get(0) + " \n\n");
+                } else {
                     //do nothing
-                    }
-                
+                }
+
             }
 
             raf.close();
@@ -3091,53 +3156,8 @@ public class GUI extends javax.swing.JFrame {
         return temp;
 
     }
-    
-    public void recreacion_AvailList(Archivo archivo){
-        
-        
-        
-        /*RandomAccessFile raf1;
-        try {
-            raf1 = new RandomAccessFile(archivo.getArchivo(), "rw");
-            int lineas_recorrer1 = Character.getNumericValue(raf1.readChar()) + 3;
-            raf1.seek(0);
-            long inicio_busqueda1 = 0;
-            for (int i = 0; i <= lineas_recorrer1 ; i++) {
-                raf1.readLine();
-                inicio_busqueda1 = raf1.getFilePointer();
-                
-            }
-            raf1.readLine();
-            inicio_busqueda1 = raf1.getFilePointer();
-            
 
-            
-            //conseguir el tamaño del registro
-            long record_size = 0;
-            for (int i = 0; i < archivo.getLista_campos().size(); i++) {
-                record_size += (long)archivo.getLista_campos().get(i).getLongitud() + 1;
-            }
-            record_size = (record_size * 2) + 4;
-            
-            
-            long final_listar = (record_size * 5 )+ inicio_busqueda1;
-            
-            //if(raf.readChar() == '*') {}
-            
-            String registro = "";
-            while(inicio_busqueda1 < raf1.length()){
-                registro = raf1.readLine();
-                registro= registro.replace('\0', ' ');//Quitar caracteres null
-                registro = registro.replaceAll("\\s+", "");
-                //System.out.println(registro);
-                //Obtener cada seccion, 
-                inicio_busqueda1 += record_size;
-                raf1.seek(inicio_busqueda1);
-                
-            } 
-        } catch (Exception e) {
-        }
-        */
+    public void recreacion_AvailList(Archivo archivo) {
 
         //Revisar existe la cabeza del availList        
         RandomAccessFile raf;
@@ -3145,30 +3165,29 @@ public class GUI extends javax.swing.JFrame {
             raf = new RandomAccessFile(archivo.getArchivo(), "rw");
             raf.seek(0);//Empezar en 0
             int lineas_recorrer = Character.getNumericValue(raf.readChar()) + 3;
-            
+
             //Obtener linea de metadata para leer el valor si hay
             long inicio_busqueda = 0;
             String metadata = "";
-            for (int i = 0; i <= lineas_recorrer ; i++) {
-              metadata = raf.readLine();
-              inicio_busqueda = raf.getFilePointer();
+            for (int i = 0; i <= lineas_recorrer; i++) {
+                metadata = raf.readLine();
+                inicio_busqueda = raf.getFilePointer();
             }
             raf.readLine();
             raf.seek(raf.getFilePointer());
             //Obtener string sin espacios
             metadata = metadata.replace('\0', ' ');//Quitar caracteres null
             metadata = metadata.replaceAll("\\s+", "");
-            
+
             metadata = metadata.substring(18);
-            if(metadata.equals("null")){
+            if (metadata.equals("null")) {
                 //No hay cabeza del availList
             } else {
-                
-                
+
                 //Existe una cabeza del availList, buscar en el archivo registros eliminado
                 long record_size = 0;
                 for (int i = 0; i < archivo.getLista_campos().size(); i++) {
-                    record_size += (long)archivo.getLista_campos().get(i).getLongitud() + 1;
+                    record_size += (long) archivo.getLista_campos().get(i).getLongitud() + 1;
                 }
                 record_size = (record_size * 2) + 4;// Multiplicar x2 por el write chars
                 //Revisar hasta el final del archivo
@@ -3176,30 +3195,30 @@ public class GUI extends javax.swing.JFrame {
 
                 inicio_busqueda = Long.valueOf(metadata);//Cabeza de Metadata
                 long cabeza_metadata = inicio_busqueda;
-                
+
                 //Posicionar el seek en la el primer slot eliminado
                 raf.seek(inicio_busqueda);
-                while(inicio_busqueda < raf.length()){
-                    if(raf.readChar() == '*'){
+                while (inicio_busqueda < raf.length()) {
+                    if (raf.readChar() == '*') {
                         long posicion = raf.getFilePointer();
-                        archivo.getAvail_list().add(posicion);   
+                        archivo.getAvail_list().add(posicion);
                     }
                     inicio_busqueda += record_size;
-                    raf.seek(inicio_busqueda);  
+                    raf.seek(inicio_busqueda);
                 }
-                
+
                 //Recorrer el inicio hasta la cabeza por si existen slots disponibles antes de la cabeza
                 raf.seek(inicio_registro);
-                
-                while(inicio_registro < cabeza_metadata){
-                    if(raf.readChar() == '*'){
+
+                while (inicio_registro < cabeza_metadata) {
+                    if (raf.readChar() == '*') {
                         long posicion = raf.getFilePointer();
-                        archivo.getAvail_list().add(posicion);   
+                        archivo.getAvail_list().add(posicion);
                     }
                     inicio_registro += record_size;
-                   raf.seek(inicio_registro);
+                    raf.seek(inicio_registro);
                 }
-                
+
             }
         } catch (Exception e) {
         }
@@ -3355,7 +3374,7 @@ public class GUI extends javax.swing.JFrame {
         }
         table_ListarCampos.setModel(model);
     }
-    
+
     public int actualizar_numRegistros(int opcion) {
         int temp = -1;
         try {
@@ -3367,7 +3386,7 @@ public class GUI extends javax.swing.JFrame {
             long posicion_line = 0;
             raf.seek(0);
             while (i <= num_lineas) {
-                posicion_line= raf.getFilePointer();
+                posicion_line = raf.getFilePointer();
                 linea_overwrite = raf.readLine();
 
                 linea_overwrite = linea_overwrite.replace('\0', ' ');//Quitar caracteres null
@@ -3378,7 +3397,7 @@ public class GUI extends javax.swing.JFrame {
 
                     //Substring para obtener el numero de registros
                     String str_numero = linea_overwrite.substring(posicion_num + 1);
-                    
+
                     //Cuando el numero de registros esta entre [0 ,9]
                     if (str_numero.length() == 1) {
                         num_registro = Integer.parseInt(String.valueOf(str_numero.charAt(0)));
@@ -3408,10 +3427,9 @@ public class GUI extends javax.swing.JFrame {
                             raf.close();
                             break;
                     }
-                } 
-                i++;   
+                }
+                i++;
             }
-
 
         } catch (FileNotFoundException ex) {
         } catch (Exception ex) {
@@ -3421,7 +3439,6 @@ public class GUI extends javax.swing.JFrame {
         return temp;
 
     }
-
 
     public void escribirArbol(ArbolB btree, String nombre_archivo_bin) {
 
