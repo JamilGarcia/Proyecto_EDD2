@@ -903,6 +903,11 @@ public class GUI extends javax.swing.JFrame {
         });
 
         B_ReIndex_Arch.setText("Re Indexar Archivos");
+        B_ReIndex_Arch.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                B_ReIndex_ArchMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -2425,22 +2430,73 @@ public class GUI extends javax.swing.JFrame {
     private void jb_RegistrosPruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_RegistrosPruebasMouseClicked
 
         if (jb_RegistrosPruebas.isEnabled()) {
-            Archivo nuevo_archivo;
-            ArrayList<Integer> cityIds;
-            for (int i = 0; i < 2; i++) {
+            String var = "";
+            int opcion = 0;
 
-                if (i == 0) {
-                    nuevo_archivo = new Archivo("./PersonFile.txt");
-                    nuevo_archivo.setNombre_archivo("PersonFile.txt");
-                    Lista_Archivos.add(nuevo_archivo);
-                    cityIds = generarCityFile(nuevo_archivo);
-                } else {
-                    nuevo_archivo = new Archivo("./CityFile.txt");
-                    //generarRandRegistros(archivo2);
+            while (opcion > 2 || opcion < 1) {
+
+                var = JOptionPane.showInputDialog(this, "Elija la opcion de generar: \n1) City y Person File \n2) Archivos Personalizados");
+
+                try {
+                    opcion = Integer.parseInt(var);
+                } catch (NumberFormatException e) {
+
                 }
             }
-            JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
+
+            switch (opcion) {
+
+                case 1: {
+
+                    Archivo nuevo_archivo;
+                    ArrayList<Integer> cityIds = new ArrayList();
+
+                    for (int i = 0; i < 2; i++) {
+
+                        if (i == 0) {
+
+                            nuevo_archivo = new Archivo("./PersonFile.txt");
+                            nuevo_archivo.setNombre_archivo("PersonFile.txt");
+                            Lista_Archivos.add(nuevo_archivo);
+                            cityIds = generarPersonFile(nuevo_archivo);
+                        } else {
+                            nuevo_archivo = new Archivo("./CityFile.txt");
+                            nuevo_archivo.setNombre_archivo("CityFile.txt");
+                            Lista_Archivos.add(nuevo_archivo);
+                            generarCityFile(nuevo_archivo, cityIds);
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Los archivos han sido creados exitosamente!");
+                    break;
+
+                }
+                case 2: {
+
+                    int size = 0;
+                    String var1 = "";
+
+                    while (size <= 0) {
+
+                        var1 = JOptionPane.showInputDialog(this, "Ingrese la cantidad de registros a elaborar:");
+
+                        try {
+                            size = Integer.parseInt(var1);
+
+                        } catch (NumberFormatException e) {
+
+                        }
+                    }
+
+                    generarPersonalizados(size);
+                    JOptionPane.showMessageDialog(this, "Los archivo personalizado sido creados exitosamente!");
+                    break;
+                }
+            }
+
         }
+
+
     }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
 
     private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
@@ -2460,7 +2516,7 @@ public class GUI extends javax.swing.JFrame {
                 String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
                 String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
                 String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
-               
+
                 Element NombreCampo = documento.createElement("NombreDelCampo");
                 Text txtNombre = documento.createTextNode(NC);
                 NombreCampo.appendChild(txtNombre);
@@ -2610,117 +2666,181 @@ public class GUI extends javax.swing.JFrame {
         boolean salir = false;
         int campoIndex = -1;
 
-        while (flag) {
-            String nombre_campo;
-            nombre_campo = JOptionPane.showInputDialog(this, "Escriba el nombre del campo para crear un arbol para indexar");
+        int instancia_punto3 = archivo_actual.getNombre_archivo().indexOf('.');
+        String nombre_archivo_bin3 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto3) + "secundario" + ".bin";
 
-            if (nombre_campo == null) {
-                JOptionPane.showMessageDialog(this, "Se saldra de esta opcion");
-                flag = false;
-                salir = true;
+        File archivo = new File(nombre_archivo_bin3);
 
-            } else if (nombre_campo.isEmpty()) {
+        if (!archivo.exists()) {
 
-                JOptionPane.showMessageDialog(this, "No ingreso el nombre de un campo!");
+            while (flag) {
+                String nombre_campo;
+                nombre_campo = JOptionPane.showInputDialog(this, "Escriba el nombre del campo para crear un arbol para indexar");
 
-            } else if (nombre_campo.equalsIgnoreCase("Edad")) {
+                if (nombre_campo == null) {
+                    JOptionPane.showMessageDialog(this, "Se saldra de esta opcion");
+                    flag = false;
+                    salir = true;
 
-                JOptionPane.showMessageDialog(this, "La edad no es un campo valido para indexar!");
+                } else if (nombre_campo.isEmpty()) {
 
-            } else {
-                boolean found = false;
-                boolean esPrimaria = false;
-                //busqueda del campo en el array de campos
-                for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
-                    Campo temp = archivo_actual.getLista_campos().get(i);
+                    JOptionPane.showMessageDialog(this, "No ingreso el nombre de un campo!");
 
-                    if (nombre_campo.equals(temp.getNombre_Campo())) {
+                } else if (nombre_campo.equalsIgnoreCase("Edad")) {
 
-                        if (temp.isEsLlavePrimaria() == true) {
-                            esPrimaria = true;
+                    JOptionPane.showMessageDialog(this, "La edad no es un campo valido para indexar!");
 
-                        } else {
-                            found = true;
-                            campoIndex = i;
+                } else {
+                    boolean found = false;
+                    boolean esPrimaria = false;
+                    //busqueda del campo en el array de campos
+                    for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                        Campo temp = archivo_actual.getLista_campos().get(i);
+
+                        if (nombre_campo.equals(temp.getNombre_Campo())) {
+
+                            if (temp.isEsLlavePrimaria() == true) {
+                                esPrimaria = true;
+
+                            } else {
+                                found = true;
+                                campoIndex = i;
+                            }
                         }
+
                     }
 
+                    if (found) {
+
+                        flag = false;
+
+                    } else if (esPrimaria) {
+                        JOptionPane.showMessageDialog(this, "El campo ingresado es llave primaria!");
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El campo ingresado no existe en el archivo");
+                    }
                 }
 
-                if (found) {
+            }
 
-                    flag = false;
+            if (!salir) {
 
-                } else if (esPrimaria) {
-                    JOptionPane.showMessageDialog(this, "El campo ingresado es llave primaria!");
+                ArbolB arbolSecundario = new ArbolB(3);
 
+                //arraylist que guardar todos los offsets en la busqueda de offsets del primer arbol
+                ArrayList<Object> offsets = new ArrayList();
+
+                int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+                String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
+
+                ArbolB arbolPrimario = cargarArbol(nombre_archivo_bin);
+
+                arbolPrimario.getRegistersOffsets(offsets, arbolPrimario.getRaiz(), 0);
+
+                RandomAccessFile raf;
+
+                verifyArrayList(offsets);
+
+                boolean termino = false;
+                boolean noEsNumerico = false;
+
+                try {
+                    raf = new RandomAccessFile(archivo_actual.archivo, "rw");
+
+                    raf.seek((long) offsets.get(0) + 1);
+
+                    String prueba = raf.readLine();
+
+                    int valor = getLlaveSecundaria(prueba, campoIndex);
+
+                    if (valor == -1) {
+
+                        noEsNumerico = true;
+
+                    } else {
+                        termino = generarArbolSecundario(offsets, raf, campoIndex, arbolSecundario);
+
+                    }
+
+                } catch (IOException e) {
+
+                }
+
+                if (termino) {
+
+                    int instancia_punto2 = archivo_actual.getNombre_archivo().indexOf('.');
+                    String nombre_archivo_bin2 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + "secundario" + ".bin";
+
+                    escribirArbol(arbolSecundario, nombre_archivo_bin2);
+
+                    JOptionPane.showMessageDialog(this, "El arbol secundario ha sido creado exitosamente!");
+                } else if (noEsNumerico) {
+                    JOptionPane.showMessageDialog(this, "El campo ingresado a indexar no es numerica");
                 } else {
-                    JOptionPane.showMessageDialog(this, "El campo ingresado no existe en el archivo");
+                    JOptionPane.showMessageDialog(this, "Una llave se repitio, se cancela el proceso");
                 }
             }
 
+        } else {
+            JOptionPane.showMessageDialog(this, "El archivo ya existe, use el metodo de reindexar!");
         }
+    }//GEN-LAST:event_B_Crear_ArchMouseClicked
 
-        if (!salir) {
+    private void B_ReIndex_ArchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_ReIndex_ArchMouseClicked
+        int instancia_punto2 = archivo_actual.getNombre_archivo().indexOf('.');
+        String nombre_archivo_bin2 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + "secundario" + ".bin";
+        File archivo = new File(nombre_archivo_bin2);
 
-            ArbolB arbolSecundario = new ArbolB(3);
+        int instancia = archivo_actual.getNombre_archivo().indexOf('.');
+        String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
 
-            //arraylist que guardar todos los offsets en la busqueda de offsets del primer arbol
-            ArrayList<Long> offsets = new ArrayList();
+        if (!archivo.exists()) {
+            JOptionPane.showMessageDialog(this, "Use el metodo de Indexar para generar el arbol secundario!");
+        } else {
 
-            int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-            String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
-
-            ArbolB arbolPrimario = cargarArbol(nombre_archivo_bin);
-
-            if (arbolPrimario == null) {
-                System.out.println("Maldito arbol");
-            }
-
-            arbolPrimario.getRegistersOffsets(offsets, arbolPrimario.getRaiz());
-
-            System.out.println(offsets.size());
+            ArbolB arbol = cargarArbol(nombre_archivo_bin2);
+            ArbolB arbol1 = cargarArbol(nombre_archivo_bin);
 
             RandomAccessFile raf;
+            int campo_index = 0;
 
-            boolean canParse = true;
-            boolean termino = false;
+            int llave = arbol.retornarUnaLlave();
+
+            String var = Integer.toString(llave);
+
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                Campo temp = archivo_actual.getLista_campos().get(i);
+
+                if (temp.getLongitud() == var.length()) {
+                    campo_index = temp.getLongitud();
+                }
+            }
+
+            ArrayList<Object> offsets = new ArrayList();
+            arbol1.getRegistersOffsets(offsets, arbol.getRaiz(), 0);
+
+            boolean flag = false;
+            ArbolB arbolNuevo = new ArbolB(3);
 
             try {
-                raf = new RandomAccessFile(archivo_actual.archivo, "rw");
 
-                raf.seek(offsets.get(0));
+                raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
 
-                String prueba = raf.readLine();
-
-                int valor = getLlaveSecundaria(prueba, campoIndex);
-
-                if (valor == -1) {
-                    canParse = false;
-
-                } else {
-
-                    termino = crearArbolIndexar(offsets, campoIndex, arbolSecundario, raf, 0);
-                }
+                flag = generarArbolSecundario(offsets, raf, campo_index, arbolNuevo);
 
             } catch (IOException e) {
 
             }
 
-            if (termino) {
+            if (flag) {
 
-                int instancia_punto2 = archivo_actual.getNombre_archivo().indexOf('.');
-                String nombre_archivo_bin2 = "./ " + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + "secundario" + ".bin";
+                escribirArbol(arbolNuevo, nombre_archivo_bin2);
 
-                escribirArbol(arbolSecundario, nombre_archivo_bin2);
-
-                JOptionPane.showMessageDialog(this, "El arbol secundario ha sido creado exitosamente!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Una llave secundaria se repitio, se cancelo el proceso");
+                JOptionPane.showMessageDialog(this, "El arbol secundario ha sido actualizado exitosamente!");
             }
-
         }
-    }//GEN-LAST:event_B_Crear_ArchMouseClicked
+    }//GEN-LAST:event_B_ReIndex_ArchMouseClicked
 
     public boolean crearArbolIndexar(ArrayList<Long> offsets, int campo_index, ArbolB arbolSecundario, RandomAccessFile raf, int i) {
 
@@ -2766,6 +2886,19 @@ public class GUI extends javax.swing.JFrame {
 
     }
 
+    public void verifyArrayList(ArrayList<Object> offsets) {
+
+        for (int i = 0; i < offsets.size(); i++) {
+
+            for (int j = i + 1; j < offsets.size(); j++) {
+
+                if (offsets.get(i).equals(offsets.get(j))) {
+                    System.out.println(offsets.get(i) + "== " + offsets.get(j));
+                }
+            }
+        }
+    }
+
     public int getLlaveSecundaria(String registro, int campo_index) {
 
         registro = registro.replace('\0', ' ');
@@ -2801,18 +2934,68 @@ public class GUI extends javax.swing.JFrame {
 
     }
 
-    public ArrayList<Integer> generarCityFile(Archivo archivo) {
-        ArbolB arbol = new ArbolB(3);
-        ArrayList<Integer> cityids = new ArrayList();
+    public boolean generarArbolSecundario(ArrayList<Object> offsets, RandomAccessFile raf, int campo_index, ArbolB segundo_arbol) {
 
-        //crear campos
-        archivo.getLista_campos().add(new Campo("PersonId", "int", 6));
+        Llave llave;
+
+        boolean termino = false;
+        int i;
+
+        for (i = 0; i < offsets.size(); i++) {
+
+            try {
+                long pointer = (long) (offsets.get(i));
+
+                raf.seek((long) (offsets.get(i)) + 1);
+
+                String registro = raf.readLine();
+
+                int llave_secundaria = getLlaveSecundaria(registro, campo_index);
+
+                llave = segundo_arbol.buscarLlave(segundo_arbol.getRaiz(), llave_secundaria);
+
+                if (llave == null) {
+
+                    llave = new Llave(pointer, llave_secundaria);
+                    segundo_arbol.insert(llave);
+
+                } else {
+                    System.out.println(llave.getLlave() + " ," + llave_secundaria);
+
+                    break;
+                }
+
+            } catch (IOException e) {
+
+            }
+
+        }
+
+        System.out.println(i);
+
+        if (i == offsets.size()) {
+            termino = true;
+        }
+
+        return termino;
+    }
+
+    public void generarPersonalizados(int size) {
+
+        Archivo archivo = new Archivo("./FilePersonalizado.txt");
+        archivo.setNombre_archivo("FilePersonalizado.txt");
+        Lista_Archivos.add(archivo);
+        ArbolB arbol = new ArbolB(3);
+
+        archivo.getLista_campos().add(new Campo("Id", "int", 8));
         archivo.getLista_campos().get(0).setEsLlavePrimaria(true);
-        archivo.getLista_campos().add(new Campo("PersonName", "String", 20));
+        archivo.getLista_campos().add(new Campo("Nombre", "String", 15));
         archivo.getLista_campos().get(1).setEsLlavePrimaria(false);
-        archivo.getLista_campos().add(new Campo("PersonAge", "int", 3));
+        archivo.getLista_campos().add(new Campo("Apellido", "String", 20));
         archivo.getLista_campos().get(2).setEsLlavePrimaria(false);
-        archivo.getLista_campos().add(new Campo("CityId", "int", 2));
+        archivo.getLista_campos().add(new Campo("Telefono", "int", 9));
+        archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
+        archivo.getLista_campos().add(new Campo("Ciudad", "String", 20));
         archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
 
         escribirArchivo(archivo);
@@ -2854,6 +3037,304 @@ public class GUI extends javax.swing.JFrame {
         ArrayList<String> surenames = new ArrayList();
         surenames.addAll(Arrays.asList(apellidos));
 
+        //generador de identificaciones
+        ArrayList<String> id = new ArrayList();
+        id.add("8");
+        id.add("1");
+        id.add("2");
+        id.add("3");
+        id.add("4");
+        id.add("5");
+        id.add("6");
+        id.add("7");
+
+        //generador de numeros de telefono
+        ArrayList<String> tel = new ArrayList();
+        tel.add("1");
+        tel.add("2");
+        tel.add("3");
+        tel.add("4");
+        tel.add("5");
+        tel.add("6");
+        tel.add("7");
+        tel.add("8");
+        tel.add("9");
+
+        //ciudades donde viven
+        String[] ciudades = {"New York", "Chicago", "Los Angeles", "Houston",
+            "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Austin", "Forthworth",
+            "Jacksonville", "Columbus", "Charlotte", "Indianapolis", "San Francisco",
+            "Seattle", "Denver", "Washington", "Boston", "El Paso", "Nashville",
+            "Detroit", "Las Vegas", "Oklahoma City", "Portland", "Memphis", "Louisville",
+            "Milwaukee", "Baltimore", "Albuquerque", "Tucson", "Fresno", "Mesa", "Sacramento",
+            "Atlanta", "Kansas City", "Colorado Springs", "Omaha", "Raleigh", "Miami",
+            "Long Beach", "Minneapolis", "Oakland", "Tampa", "Tulsa", "Arlington", "Wichita",
+            "New Orleans", "Bakersfield", "Cleveland", "Anaheim", "Honolulu",
+            "Santa Ana", "Riverside", "Henderson", "Lexington", "Stockton", "Saint Paul",
+            "Cincinnati", "Pittsburg", "Copan", "Tegucigalpa", "Fairbanks", "Palmer",
+            "Homer", "Haines", "Cordova", "Batesville", "Benton", "Conway", "Newport",
+            "Alameda", "Belmont", "Carlsbad", "Fairfield", "Fermont", "Redlands",
+            "Salinas", "Victorville", "Sterling", "Derby", "Enfield", "Manchester",
+            "Milford", "Norwalk", "Orange", "WestPort", "Windham", "Clearwater", "Hollywood",
+            "Homestead", "Sanford", "Sebring", "Augusta", "Dalton", "Marietta",
+            "Roma", "Waycross", "Boise", "Rexburg"};
+
+        ArrayList<String> cities = new ArrayList();
+        cities.addAll(Arrays.asList(ciudades));
+        System.out.println(cities.size());
+
+        int randNum;
+        int randCity;
+        int numTel = 0;
+        int numId = 0;
+        Random r = new Random();
+
+        ArrayList<Integer> telephone = new ArrayList();
+        ArrayList<Integer> ids = new ArrayList();
+
+        RandomAccessFile raf = null;
+
+        try {
+            raf = new RandomAccessFile(archivo.getArchivo(), "rw");
+            raf.seek(raf.length());
+
+            //ciclo que crea los registros
+            for (int i = 0; i < size; i++) {
+                randNum = 0 + r.nextInt(99);
+                randCity = 0 + r.nextInt(99);
+
+                Collections.shuffle(id);
+                Collections.shuffle(tel);
+                Collections.shuffle(names);
+                Collections.shuffle(surenames);
+
+                String var = "";
+                //ciclo que brinda el numero de telefono 
+                for (int j = 0; j < tel.size(); j++) {
+                    var += tel.get(j);
+                }
+                numTel = Integer.parseInt(var);
+                var = "";
+
+                for (int k = 0; k < id.size(); k++) {
+                    var += id.get(k);
+                }
+                numId = Integer.parseInt(var);
+
+                //verify telephone
+                boolean flag = true;
+
+                while (flag) {
+
+                    int contador = 0;
+                    for (int j = 0; j < telephone.size(); j++) {
+
+                        if (numTel == telephone.get(j)) {
+                            contador++;
+                            break;
+                        }
+                    }
+
+                    if (contador == 0) {
+                        flag = false;
+                    } else {
+                        var = "";
+                        Collections.shuffle(tel);
+
+                        //ciclo que brinda el numero de telefono 
+                        for (int j = 0; j < tel.size(); j++) {
+                            var += tel.get(j);
+                        }
+
+                        numTel = Integer.parseInt(var);
+                    }
+                }
+
+                //verify Id
+                flag = true;
+                while (flag) {
+
+                    int contador = 0;
+                    for (int j = 0; j < ids.size(); j++) {
+
+                        if (numId == ids.get(j)) {
+                            contador++;
+                            break;
+                        }
+                    }
+
+                    if (contador == 0) {
+                        flag = false;
+                    } else {
+                        var = "";
+                        Collections.shuffle(id);
+
+                        //ciclo que brinda el numero de telefono 
+                        for (int j = 0; j < id.size(); j++) {
+                            var += id.get(j);
+                        }
+
+                        numId = Integer.parseInt(var);
+                    }
+                }
+
+                long pointer = raf.getFilePointer();
+                Llave llave = new Llave(pointer, numId);
+
+                arbol.insert(llave);
+
+                String n = Integer.toString(numId);
+                String t = Integer.toString(numTel);
+
+                raf.writeChars(n + "|" + fixLength(names.get(randNum), 15) + "|"
+                        + fixLength(surenames.get(randNum), 20) + "|" + t + "|"
+                        + fixLength(cities.get(randCity), 20) + "| \n");
+
+                ids.add(numId);
+                telephone.add(numTel);
+
+            }
+
+            raf.close();
+
+        } catch (IOException e) {
+
+        }
+
+        int instancia_punto2 = archivo.getNombre_archivo().indexOf('.');
+        String nombre_archivo_bin2 = "./" + archivo.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
+
+        escribirArbol(arbol, nombre_archivo_bin2);
+
+    }
+
+    public void generarCityFile(Archivo archivo, ArrayList<Integer> cityIds) {
+        //ciudades donde viven
+        String[] ciudades = {"New York", "Chicago", "Los Angeles", "Houston",
+            "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Austin", "Forthworth",
+            "Jacksonville", "Columbus", "Charlotte", "Indianapolis", "San Francisco",
+            "Seattle", "Denver", "Washington", "Boston", "El Paso", "Nashville",
+            "Detroit", "Las Vegas", "Oklahoma City", "Portland", "Memphis", "Louisville",
+            "Milwaukee", "Baltimore", "Albuquerque", "Tucson", "Fresno", "Mesa", "Sacramento",
+            "Atlanta", "Kansas City", "Colorado Springs", "Omaha", "Raleigh", "Miami",
+            "Long Beach", "Minneapolis", "Oakland", "Tampa", "Tulsa", "Arlington", "Wichita",
+            "New Orleans", "Bakersfield", "Cleveland", "Anaheim", "Honolulu",
+            "Santa Ana", "Riverside", "Henderson", "Lexington", "Stockton", "Saint Paul",
+            "Cincinnati", "Pittsburg", "Copan", "Tegucigalpa", "Fairbanks", "Palmer",
+            "Homer", "Haines", "Cordova", "Batesville", "Benton", "Conway", "Newport",
+            "Alameda", "Belmont", "Carlsbad", "Fairfield", "Fermont", "Redlands",
+            "Salinas", "Victorville", "Sterling", "Derby", "Enfield", "Manchester",
+            "Milford", "Norwalk", "Orange", "WestPort", "Windham", "Clearwater", "Hollywood",
+            "Homestead", "Sanford", "Sebring", "Augusta", "Dalton", "Marietta",
+            "Roma", "Waycross", "Boise", "Rexburg"};
+
+        ArrayList<String> cities = new ArrayList();
+        cities.addAll(Arrays.asList(ciudades));
+
+        ArbolB arbol = new ArbolB(3);
+
+        archivo.getLista_campos().add(new Campo("CityId", "int", 2));
+        archivo.getLista_campos().get(0).setEsLlavePrimaria(true);
+        archivo.getLista_campos().add(new Campo("CityName", "String", 30));
+        archivo.getLista_campos().get(1).setEsLlavePrimaria(false);
+
+        escribirArchivo(archivo);
+
+        Collections.shuffle(cities);
+
+        RandomAccessFile raf;
+        Llave llave;
+        try {
+            raf = new RandomAccessFile(archivo.getArchivo(), "rw");
+            raf.seek(raf.length());
+
+            for (int i = 0; i < 100; i++) {
+
+                long pointer = raf.getFilePointer();
+
+                llave = new Llave(pointer, cityIds.get(i));
+
+                arbol.insert(llave);
+
+                String var = Integer.toString(cityIds.get(i));
+
+                raf.writeChars(fixLength(var, 2) + "|" + fixLength(cities.get(i), 30) + "| \n");
+
+            }
+
+            raf.close();
+
+            int instancia_punto2 = archivo.getNombre_archivo().indexOf('.');
+            String nombre_archivo_bin2 = "./" + archivo.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
+
+            escribirArbol(arbol, nombre_archivo_bin2);
+
+        } catch (IOException e) {
+
+        }
+    }
+
+    public ArrayList<Integer> generarPersonFile(Archivo archivo) {
+        ArbolB arbol = new ArbolB(3);
+        ArrayList<Integer> cityids = new ArrayList();
+
+        //crear campos
+        archivo.getLista_campos().add(new Campo("PersonId", "int", 6));
+        archivo.getLista_campos().get(0).setEsLlavePrimaria(true);
+        archivo.getLista_campos().add(new Campo("PersonName", "String", 20));
+        archivo.getLista_campos().get(1).setEsLlavePrimaria(false);
+        archivo.getLista_campos().add(new Campo("PersonAge", "int", 3));
+        archivo.getLista_campos().get(2).setEsLlavePrimaria(false);
+        archivo.getLista_campos().add(new Campo("CityId", "int", 2));
+        archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
+
+        escribirArchivo(archivo);
+
+        String[] nombres = {"Sophia", "Liam", "Olivia", "Noah", "Riley", "Jackson",
+            "Emma", "Aiden", "Ava", "Elias", "Isabella", "Gonzalo", "Ariela", "Lucas",
+            "Beatriz", "Oliver", "Amalia", "Juan", "Mia", "Mateo", "Layla", "Marco",
+            "Zoe", "Mason", "Camila", "Carlos", "Charlotte", "Karl", "Iliana", "Ethan",
+            "Mila", "Sebastian", "Lily", "James", "Luna", "Michael", "Ana", "Benjamin",
+            "Evelyn", "Logan", "Harper", "Leo", "Liliana", "Luca", "Ela", "Alexander",
+            "Chloe", "Daniel", "Adalyn", "Josiah", "Charlie", "Henry", "Isla", "Jayce",
+            "Ellie", "Julian", "Leah", "Jack", "Nora", "Ryan", "Scarlett", "Jacob",
+            "Maya", "Asher", "Abigail", "Wyatt", "Madison", "William", "Aubrey", "Owen",
+            "Emily", "Gabriel", "Kinsley", "Miles", "Elena", "Lincoln", "Paisely", "Ezra",
+            "Madelyn", "Isaias", "Aurora", "Luke", "Peyton", "Cameron", "Nova", "Caleb",
+            "Emilia", "Isaac", "Hannah", "Carson", "Sarah", "Samuel", "Ariana", "Colton",
+            "Penny", "Maverick", "Lila", "Mathew", "Valeria", "Miguel"};
+
+        ArrayList<String> names = new ArrayList();
+
+        names.addAll(Arrays.asList(nombres));
+
+        Integer[] indicesCiudades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+            43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
+            68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93,
+            94, 95, 96, 97, 98, 99};
+
+        cityids.addAll(Arrays.asList(indicesCiudades));
+
+        String[] apellidos = {"Smith", "Hall", "Stewart", "Price", "Johnson",
+            "Allen", "Sanchez", "Bennett", "William", "Young", "Morris", "Wood",
+            "Jones", "Hernandez", "Rogers", "Barnes", "Brown", "King", "Reed", "Ross",
+            "Davis", "Wright", "Cook", "Henderson", "Miller", "Lopez", "Morgan", "Coleman",
+            "Wilson", "Hill", "Bell", "Jenkins", "Moore", "Scott", "Murphy", "Perry",
+            "Taylor", "Green", "Bailey", "Powell", "Anderson", "Rivera", "Adams", "Long",
+            "Thomas", "Baker", "Cooper", "Patterson", "Jackson", "Gonzales", "Richardson",
+            "Hughes", "White", "Nelson", "Cox", "Flores", "Harris", "Carter", "Howard",
+            "Washington", "Martin", "Mitchell", "Ward", "Butler", "Thompson", "Perez",
+            "Torres", "Simmons", "Garcia", "Roberts", "Peterson", "Foster", "Martinez",
+            "Gray", "Turner", "Rojas", "Robinson", "Philips", "Ramirez", "Bryant",
+            "Clark", "Campbell", "James", "Alexander", "Rodriguez", "Parker", "Watson",
+            "Russell", "Lewis", "Evans", "Brooks", "Griffin", "Lee", "Edwards", "Kelly",
+            "Diaz", "Walker", "Collins", "Sanders", "Hayes"};
+
+        //lista de apellidos
+        ArrayList<String> surenames = new ArrayList();
+        surenames.addAll(Arrays.asList(apellidos));
+
         Random r = new Random();
 
         ArrayList<String> ids = new ArrayList();
@@ -2865,6 +3346,7 @@ public class GUI extends javax.swing.JFrame {
         Llave llave;
 
         try {
+            Collections.shuffle(cityids);
             raf = new RandomAccessFile(archivo.getArchivo(), "rw");
             raf.seek(raf.length());
 
@@ -2898,7 +3380,7 @@ public class GUI extends javax.swing.JFrame {
                     ids.add(Integer.toString(1 + r.nextInt(9)));
                     ids.add(Integer.toString(1 + r.nextInt(9)));
                     ids.add(Integer.toString(1 + r.nextInt(9)));
-                    ids.add(Integer.toString(1 + r.nextInt(6)));
+                    ids.add(Integer.toString(1 + r.nextInt(9)));
 
                     var = "";
                     for (int j = 0; j < ids.size(); i++) {
@@ -2909,28 +3391,8 @@ public class GUI extends javax.swing.JFrame {
 
                     prueba = arbol.buscarLlave(arbol.getRaiz(), id);
                 }
-                int ciudad = 0 + r.nextInt(99);
 
-                boolean flag = true;
-
-                //validacion que no se repita el city id
-                while (flag) {
-
-                    if (cityids.isEmpty()) {
-                        flag = false;
-
-                    } else {
-
-                        for (int k = 0; k < cityids.size(); k++) {
-
-                            if (ciudad == cityids.get(k)) {
-                                flag = false;
-                                break;
-                            }
-                        }
-                    }
-                    ciudad = 0 + r.nextInt(99);
-                }
+                int ciudad;
 
                 long pointer = raf.getFilePointer();
                 llave = new Llave(pointer, id);
@@ -2939,9 +3401,8 @@ public class GUI extends javax.swing.JFrame {
                 int age = 1 + r.nextInt(115);
 
                 String a = Integer.toString(age);
-                String c = Integer.toString(ciudad);
-                raf.seek(raf.getFilePointer());
-                cityids.add(ciudad);
+                String c = Integer.toString(cityids.get(i));
+
                 raf.writeChars(id + "|" + fixLength(names.get(randNum), 20)
                         + "|" + fixLength(a, 3) + "|"
                         + fixLength(c, 2) + "| \n");
@@ -2952,10 +3413,13 @@ public class GUI extends javax.swing.JFrame {
 
             int instancia_punto2 = archivo.getNombre_archivo().indexOf('.');
             String nombre_archivo_bin2 = "./" + archivo.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
+
             escribirArbol(arbol, nombre_archivo_bin2);
 
         } catch (Exception e) {
+
         }
+
         return cityids;
     }
 
@@ -3241,13 +3705,17 @@ public class GUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

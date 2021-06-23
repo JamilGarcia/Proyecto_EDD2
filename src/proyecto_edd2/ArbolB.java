@@ -449,29 +449,32 @@ public class ArbolB implements Serializable {
         }
     }
 
-    public void getRegistersOffsets(ArrayList<Long> offsets, Nodo x) {
+    public void getRegistersOffsets(ArrayList<Object> offsets, Nodo x, int contador) {
 
-        if (x.isLeaf) {
+        int i = 0;
 
-            for (int i = 0; i < x.getNumero_llaves(); i++) {
+        for (i = 0; i < x.numero_llaves; i++) {
 
-                offsets.add(x.getLlaves()[i].offset);
-
+            if (!x.isLeaf) {
+                getRegistersOffsets(offsets, x.getHijos()[i], contador);
             }
+
+            offsets.add(x.getLlaves()[i].getOffset());
+        }
+
+        if (!x.isLeaf) {
+            getRegistersOffsets(offsets, x.getHijos()[i], contador);
+        }
+    }
+
+    public int retornarUnaLlave() {
+
+        if (raiz.getNumero_llaves() >= 1) {
+
+            return 0;
 
         } else {
-            for (int i = 0; i < x.getNumero_llaves(); i++) {
-
-                offsets.add(x.llaves[i].offset);
-
-            }
-
-            for (int i = 0; i < x.getHijos().length; i++) {
-
-                if (x.hijos[i] != null) {
-                    getRegistersOffsets(offsets, x.hijos[i]);
-                }
-            }
+            return raiz.getLlaves()[0].getLlave();
         }
     }
 
