@@ -259,12 +259,12 @@ public class ArbolB implements Serializable {
                 predecesor.llaves[predecesor.numero_llaves++] = x.llaves[indice];
 
                 for (int i = 0, j = predecesor.numero_llaves; i < sucesor.numero_llaves; i++) {
-                    predecesor.llaves[j++] = sucesor.llaves[i];
+                    predecesor.llaves[j + 1] = sucesor.llaves[i];
                     predecesor.numero_llaves++;
                 }
 
                 for (int i = 0; i < sucesor.numero_llaves + 1; i++) {
-                    predecesor.hijos[varTemporal++] = sucesor.hijos[i];
+                    predecesor.hijos[varTemporal+ 1] = sucesor.hijos[i];
                 }
 
                 x.hijos[indice] = predecesor;
