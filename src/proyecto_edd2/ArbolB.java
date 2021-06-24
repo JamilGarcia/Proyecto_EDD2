@@ -270,7 +270,7 @@ public class ArbolB implements Serializable {
                 x.hijos[indice] = predecesor;
 
                 //corrimiento de llaves
-                for (int i = 0; i < x.numero_llaves; i++) {
+                for (int i = indice; i < x.numero_llaves; i++) {
 
                     //si i es diferente que el numero que el grado menos 2
                     if (i != (2 * T - 2)) {
@@ -349,7 +349,7 @@ public class ArbolB implements Serializable {
 
                     newNode = x.hijos[indice - 1];
 
-                    x.llaves[indice - 1] = newNode.llaves[newNode.numero_llaves];
+                    x.llaves[indice - 1] = newNode.llaves[newNode.numero_llaves - 1];
 
                     Nodo hijo = newNode.hijos[newNode.numero_llaves];
                     newNode.numero_llaves--;
@@ -402,7 +402,7 @@ public class ArbolB implements Serializable {
                     for (int i = 0, j = nodoIzquierdo.numero_llaves; i < nodoDerecho.numero_llaves + 1; i++, j++) {
 
                         if (i < nodoDerecho.numero_llaves) {
-                            nodoIzquierdo.llaves[j] = nodoDerecho.llaves[j];
+                            nodoIzquierdo.llaves[j] = nodoDerecho.llaves[i];
                         }
                         nodoIzquierdo.hijos[j] = nodoDerecho.hijos[i];
                     }

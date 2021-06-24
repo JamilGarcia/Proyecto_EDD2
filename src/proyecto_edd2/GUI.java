@@ -2091,15 +2091,85 @@ public class GUI extends javax.swing.JFrame {
                     break;
                 }
             }
+            
+            int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+            String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
 
             String registro_buscar = "";
             int valor_llave = 0;
             boolean validar_entrada = false;
             int contador_true = 0;
+            File directoryPath = new File("./");
+            //List text files only
+            File[] files = directoryPath.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".bin");
+            }
+            });
+            
+            
+            String nombre_ArbolSecundario = archivo_actual.getNombre_archivo().substring(0, instancia_punto) + "_";
+            Campo llave_secundaria = null;
+            int valor_opcion = 1;
+            for (File file : files) {
+                    String s = file.getName();
+                    System.out.println(s);
+                    if(s.contains(nombre_ArbolSecundario)){
+                        nombre_ArbolSecundario =  "./" + s;
+                        break;
+                    } else {
+                        nombre_ArbolSecundario = "";
+                    }
+            }
+            
+            if(!nombre_ArbolSecundario.equals("")){
+                int underscore = nombre_ArbolSecundario.indexOf('_') + 1;
+                String str_nombre_llave2 = nombre_ArbolSecundario.substring(underscore);
+                int punto = str_nombre_llave2.indexOf('.');
+                String str_nombrecampo = str_nombre_llave2.substring(0, punto);
+            
+                for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                    if (archivo_actual.getLista_campos().get(i).getNombre_Campo().equals(str_nombrecampo)) {
+                        llave_secundaria = archivo_actual.getLista_campos().get(i);
+                    break;
+                    }
+                }
+                
+                File file = new File(nombre_ArbolSecundario);
+            
+                if(file.exists()){
+                    //Puede elegir por la llave secundaria
+                    if(llave_secundaria != null){
+                        String campo1 = campo_primario.getNombre_Campo();
+                
+                        String opcion_busqueda = JOptionPane.showInputDialog(jP_menuArchivo,"Eliga el campo por el cual indexar:"
+                            + "\n[1]" + campo1
+                            + "\n[2]"  + llave_secundaria.getNombre_Campo());
+                        valor_opcion = Integer.parseInt(opcion_busqueda);
+                        if(opcion_busqueda == null){
+                        //do nothing
+                        } 
+                    } else {
+                        valor_opcion = 1;
+                    }
+                }
+                    
+            }
+            
+            
 
-            while (!validar_entrada) {
-                registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el dato a buscar mediante el campo: " + campo_primario.getNombre_Campo()
+            while (!validar_entrada ) {
+                
+                if(valor_opcion == 1){
+                    registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el dato a buscar mediante el campo: " + campo_primario.getNombre_Campo()
                         + "\nLongitud Campo: " + campo_primario.getLongitud());
+                } else {
+                    //Buscando por la llave secundaria
+                    registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el dato a buscar mediante el campo: " + llave_secundaria.getNombre_Campo()
+                        + "\nLongitud Campo: " + llave_secundaria.getLongitud());
+                }
+                
                 //0. Validacion entrada null
                 if (registro_buscar == null) {
                     break;
@@ -2115,7 +2185,7 @@ public class GUI extends javax.swing.JFrame {
                     contador_true++;
                 }
                 //2.Validación que cumpla con la longitud
-                if (registro_buscar.length() != campo_primario.getLongitud()) {
+                if (registro_buscar.length() != campo_primario.getLongitud() && valor_opcion == 1) {
                     JOptionPane.showMessageDialog(jP_menuArchivo, "La longitud del registro a buscar no es la requerida.");
                     validar_entrada = false;
                     contador_true++;
@@ -2130,11 +2200,14 @@ public class GUI extends javax.swing.JFrame {
 
             if (validar_entrada) {
                 //Obtener nombre de archivo
-                int instancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
-                String nombre_archivo_bin = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto) + ".bin";
-
-                //Cargar archivo
-                ArbolB btree_cargado = cargarArbol(nombre_archivo_bin);
+                ArbolB btree_cargado;
+                if(valor_opcion == 2){
+                     btree_cargado = cargarArbol(nombre_ArbolSecundario);
+                } else {
+                    //Cargar archivo
+                    btree_cargado = cargarArbol(nombre_archivo_bin);
+                }
+                
 
                 Llave llave_buscada = btree_cargado.buscarLlave(btree_cargado.getRaiz(), valor_llave);
                 if (llave_buscada == null) {
@@ -2151,7 +2224,6 @@ public class GUI extends javax.swing.JFrame {
                         registro_mostrar = registro_mostrar.replaceAll("\\s+", "");
                         JOptionPane.showMessageDialog(jP_menuArchivo, "Se encontro el registro exitosamente.\n"
                                 + registro_mostrar);
-                        System.out.println(llave_buscada.getOffset() + "Primer Registro");
                         raf_buscar.close();
                     } catch (FileNotFoundException ex) {
 
@@ -2642,7 +2714,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_B_Expo_XMLMouseClicked
 
     private void B_Expor_ExcelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expor_ExcelMouseClicked
-        String[] columns = new String[archivo_actual.getLista_campos().size()];
+       String[] columns = new String[archivo_actual.getLista_campos().size()];
 
         for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
             columns[i] = archivo_actual.getLista_campos().get(i).getNombre_Campo();
@@ -2757,19 +2829,22 @@ public class GUI extends javax.swing.JFrame {
         boolean flag = true;
         boolean salir = false;
         int campoIndex = -1;
+        String nombre_campo_guardar = "";
 
         int instancia_punto3 = archivo_actual.getNombre_archivo().indexOf('.');
-        String nombre_archivo_bin3 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto3) + "secundario" + ".bin";
-
-        File archivo = new File(nombre_archivo_bin3);
-
-        if (!archivo.exists()) {
+        
+        
 
             while (flag) {
                 String nombre_campo;
                 nombre_campo = JOptionPane.showInputDialog(this, "Escriba el nombre del campo para crear un arbol para indexar");
-
-                if (nombre_campo == null) {
+                
+                
+                String nombre_archivo_bin3 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto3) + "_" +  nombre_campo  +".bin";
+                File archivo = new File(nombre_archivo_bin3);
+                
+                if(!archivo.exists()){
+                    if (nombre_campo == null) {
                     JOptionPane.showMessageDialog(this, "Se saldra de esta opcion");
                     flag = false;
                     salir = true;
@@ -2797,6 +2872,7 @@ public class GUI extends javax.swing.JFrame {
                             } else {
                                 found = true;
                                 campoIndex = i;
+                                nombre_campo_guardar = temp.getNombre_Campo();
                             }
                         }
 
@@ -2814,7 +2890,9 @@ public class GUI extends javax.swing.JFrame {
                     }
                 }
 
-            }
+            } else {
+                    JOptionPane.showMessageDialog(this, "El archivo ya existe, use el metodo de reindexar!");
+                }
 
             if (!salir) {
 
@@ -2862,7 +2940,7 @@ public class GUI extends javax.swing.JFrame {
                 if (termino) {
 
                     int instancia_punto2 = archivo_actual.getNombre_archivo().indexOf('.');
-                    String nombre_archivo_bin2 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + "secundario" + ".bin";
+                    String nombre_archivo_bin2 = "./" + archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + "_" + nombre_campo_guardar + ".bin";
 
                     escribirArbol(arbolSecundario, nombre_archivo_bin2);
 
@@ -2873,10 +2951,7 @@ public class GUI extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Una llave se repitio, se cancela el proceso");
                 }
             }
-
-        } else {
-            JOptionPane.showMessageDialog(this, "El archivo ya existe, use el metodo de reindexar!");
-        }
+            } 
     }//GEN-LAST:event_B_Crear_ArchMouseClicked
 
     private void B_ReIndex_ArchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_ReIndex_ArchMouseClicked
