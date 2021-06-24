@@ -786,24 +786,10 @@ public class GUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Campo 1", "Campo 2", "Campo 3", "Campo 4"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         jScrollPane3.setViewportView(jt_Registro);
-        if (jt_Registro.getColumnModel().getColumnCount() > 0) {
-            jt_Registro.getColumnModel().getColumn(0).setResizable(false);
-            jt_Registro.getColumnModel().getColumn(1).setResizable(false);
-            jt_Registro.getColumnModel().getColumn(2).setResizable(false);
-            jt_Registro.getColumnModel().getColumn(3).setResizable(false);
-        }
 
         javax.swing.GroupLayout jp_RegistroLayout = new javax.swing.GroupLayout(jp_Registro);
         jp_Registro.setLayout(jp_RegistroLayout);
@@ -2433,6 +2419,137 @@ public class GUI extends javax.swing.JFrame {
     private void B_Listar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Listar_RegisMouseClicked
         // TODO add your handling code here:
         jp_Registro.setVisible(true);
+        String[] columns = new String[4];
+
+        for (int i = 0; i < 4; i++) {
+            if (archivo_actual.getLista_campos().size() > i){
+                columns[i] = archivo_actual.getLista_campos().get(i).getNombre_Campo();
+            }
+        }
+
+        jt_Registro.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                columns
+        ));
+
+        DefaultTableModel model = (DefaultTableModel) jt_Registro.getModel();
+
+        RandomAccessFile raf1;
+        
+        try {
+            raf1 = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
+            int lineas_recorrer1 = Character.getNumericValue(raf1.readChar()) + 3;
+            raf1.seek(0);
+            long inicio_busqueda1 = 0;
+            for (int i = 0; i <= lineas_recorrer1; i++) {
+                raf1.readLine();
+                inicio_busqueda1 = raf1.getFilePointer();
+            }
+            raf1.readLine();
+            inicio_busqueda1 = raf1.getFilePointer();
+
+            //conseguir el tamaño del registro
+            long record_size = 0;
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                record_size += (long) archivo_actual.getLista_campos().get(i).getLongitud() + 1;
+            }
+            record_size = (record_size * 2) + 4;
+
+            //long final_listar = (record_size * 5 )+ inicio_busqueda1;
+            //if( == '*') {}
+            int contRegis = 0; 
+            String registro = "";
+            //raf1.seek(inicio_busqueda1);
+            if(!archivo_actual.getAvail_list().isEmpty()){
+                raf1.readLine();
+                record_size+= 2;
+            }
+            while (inicio_busqueda1 < raf1.length()) {
+                registro = raf1.readLine();
+                //System.out.println(registro);
+                registro = registro.replace('\0', ' ');//Quitar caracteres null
+                //System.out.println("Regis:" + registro);
+                registro = registro.replaceAll("\\s+", "");
+                //System.out.println("regis2" +registro);
+                Object[] row = new Object[archivo_actual.getLista_campos().size()];
+                int cont = 0;
+                String str_seccion = registro, seccion = "";
+                if(registro.charAt(0) == '*'){
+                    //do nothing
+                    inicio_busqueda1 += record_size;
+                    raf1.seek(inicio_busqueda1);
+                } else {
+                    //ystem.out.println(registro);
+                     while (cont < archivo_actual.getLista_campos().size()) {
+                        int final_dato = str_seccion.indexOf('|') + 1;
+                        if (cont == 0) {
+                            seccion = str_seccion.substring(0, final_dato - 1);
+                            row[cont] = seccion;
+                        } else {
+                            str_seccion = str_seccion.substring(final_dato);
+                            int _final_dato = str_seccion.indexOf('|') + 1;
+                            seccion = str_seccion.substring(0, _final_dato - 1);
+                            row[cont] = seccion;
+                        }
+                        cont++;
+                    }
+                    if (!seccion.equals("")) {
+                        model.addRow(row);
+                    }
+                    //Obtener cada seccion, 
+                    inicio_busqueda1 += record_size;
+                    raf1.seek(inicio_busqueda1);
+                }
+            /*
+            while (contRegis < 5) {
+                System.out.println(raf1.getFilePointer());
+                registro = raf1.readLine();
+                registro = registro.replace('\0', ' ');//Quitar caracteres null
+                registro = registro.replaceAll("\\s+", "");
+                //System.out.println(registro);
+                Object[] row = new Object[4];
+                int cont = 0;
+                String str_seccion = registro, seccion = "";
+                System.out.println(registro);
+                if(registro.charAt(0) == '*'){
+                    System.out.println("Si entro");
+                    //do nothing
+                    inicio_busqueda1 += record_size*2;
+                    raf1.seek(inicio_busqueda1);
+                    contRegis--;
+                } else {
+                    //ystem.out.println(registro);
+                     while (cont < archivo_actual.getLista_campos().size()) {
+                        int final_dato = str_seccion.indexOf('|') + 1;
+                        if (cont == 0) {
+                            seccion = str_seccion.substring(0, final_dato - 1);
+                            row[cont] = seccion;
+                        } else {
+                            str_seccion = str_seccion.substring(final_dato);
+                            int _final_dato = str_seccion.indexOf('|') + 1;
+                            seccion = str_seccion.substring(0, _final_dato - 1);
+                            row[cont] = seccion;
+                        }
+                        cont++;
+                    }
+            
+                    if (!seccion.equals("")) {
+                        model.addRow(row);
+                        contRegis++;
+                    }*/
+            
+                    //Obtener cada seccion, 
+                    inicio_busqueda1 += record_size;
+                    raf1.seek(inicio_busqueda1);
+            }
+
+            //}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+       jt_Registro.setModel(model);
     }//GEN-LAST:event_B_Listar_RegisMouseClicked
 
     private void cb_tipoCampoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_tipoCampoItemStateChanged
@@ -2519,56 +2636,8 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_RegistrosPruebasMouseClicked
 
     private void B_Expo_XMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Expo_XMLMouseClicked
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            DOMImplementation implementation = builder.getDOMImplementation();
-
-            Document documento = implementation.createDocument(null, "Export", null);
-            documento.setXmlVersion("1.0");
-
-            Element Campos = documento.createElement("Campos");
-
-            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
-
-                String NC = archivo_actual.getLista_campos().get(i).getNombre_Campo();
-                String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
-                String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
-                String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
-
-                Element NombreCampo = documento.createElement("NombreDelCampo");
-                Text txtNombre = documento.createTextNode(NC);
-                NombreCampo.appendChild(txtNombre);
-                Campos.appendChild(NombreCampo);
-
-                Element TipoDato = documento.createElement("TipoDeDato");
-                Text txtTDato = documento.createTextNode(TD);
-                TipoDato.appendChild(txtTDato);
-                NombreCampo.appendChild(TipoDato);
-
-                Element Longitud = documento.createElement("Longitud");
-                Text txtLong = documento.createTextNode(LG);
-                Longitud.appendChild(txtLong);
-                NombreCampo.appendChild(Longitud);
-
-                Element isKey = documento.createElement("EsLlavePrimaria");
-                Text txtisKey = documento.createTextNode(LP);
-                isKey.appendChild(txtisKey);
-                NombreCampo.appendChild(isKey);
-
-                documento.getDocumentElement().appendChild(Campos);
-            }
-
-            Source source = new DOMSource(documento);
-            Result result = new StreamResult(new File("Export.xml"));
-
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.transform(source, result);
-
-        } catch (ParserConfigurationException | TransformerException ex) {
-            System.out.println(ex.getMessage());
-        }
-
+        CrearXml();
+        CrearXSLT();
         JOptionPane.showMessageDialog(this, "Exportado con exito");
     }//GEN-LAST:event_B_Expo_XMLMouseClicked
 
@@ -2595,10 +2664,10 @@ public class GUI extends javax.swing.JFrame {
             for (int i = 0; i <= lineas_recorrer1; i++) {
                 raf1.readLine();
                 inicio_busqueda1 = raf1.getFilePointer();
-                
             }
             raf1.readLine();
             inicio_busqueda1 = raf1.getFilePointer();
+
             //conseguir el tamaño del registro
             long record_size = 0;
             for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
@@ -2613,11 +2682,12 @@ public class GUI extends javax.swing.JFrame {
                 registro = raf1.readLine();
                 registro = registro.replace('\0', ' ');//Quitar caracteres null
                 registro = registro.replaceAll("\\s+", "");
+                //System.out.println(registro);
                 Object[] row = new Object[archivo_actual.getLista_campos().size()];
                 int cont = 0;
                 String str_seccion = registro, seccion = "";
-                
-                if(registro.charAt(0) == '*'){
+
+               if(registro.charAt(0) == '*'){
                     //do nothing
                     inicio_busqueda1 += record_size;
                     raf1.seek(inicio_busqueda1);
@@ -2643,6 +2713,7 @@ public class GUI extends javax.swing.JFrame {
                     inicio_busqueda1 += record_size;
                     raf1.seek(inicio_busqueda1);
                 }
+
             }
         } catch (Exception e) {
         }
@@ -2666,7 +2737,9 @@ public class GUI extends javax.swing.JFrame {
                     }
                 }
             }
-            FileOutputStream out = new FileOutputStream(new File("PruebaJ.xlsx"));
+            int instancia_punto2 = archivo_actual.getNombre_archivo().indexOf('.');
+            String nombre_archivo2 = archivo_actual.getNombre_archivo().substring(0, instancia_punto2) + ".xlsx";
+            FileOutputStream out = new FileOutputStream(new File(nombre_archivo2));
             wb.write(out);
             wb.close();
             out.close();
@@ -2861,6 +2934,131 @@ public class GUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_B_ReIndex_ArchMouseClicked
 
+    public void CrearXml(){
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            DOMImplementation implementation = builder.getDOMImplementation();
+            int intancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+            String NombreArchivo = archivo_actual.getNombre_archivo().substring(0, intancia_punto);
+            NombreArchivo = NombreArchivo.replace('\0', ' ');//Quitar caracteres null
+            NombreArchivo = NombreArchivo.replaceAll("\\s+", "");
+
+            Document documento = implementation.createDocument(null, NombreArchivo, null);
+            documento.setXmlVersion("1.0");
+
+            Element Campos = documento.createElement("Campos");
+            
+
+            for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                Element Campo = documento.createElement("Campo");
+                String NC = archivo_actual.getLista_campos().get(i).getNombre_Campo();
+                String TD = archivo_actual.getLista_campos().get(i).getTipo_dato();
+                String LG = Integer.toString(archivo_actual.getLista_campos().get(i).getLongitud());
+                String LP = Boolean.toString(archivo_actual.getLista_campos().get(i).isEsLlavePrimaria());
+               
+                Element NombreCampo = documento.createElement("NombreDelCampo");
+                Text txtNombre = documento.createTextNode(NC);
+                NombreCampo.appendChild(txtNombre);
+
+                Element TipoDato = documento.createElement("TipoDeDato");
+                Text txtTDato = documento.createTextNode(TD);
+                TipoDato.appendChild(txtTDato);
+
+                Element Longitud = documento.createElement("Longitud");
+                Text txtLong = documento.createTextNode(LG);
+                Longitud.appendChild(txtLong);
+
+                Element isKey = documento.createElement("EsLlavePrimaria");
+                Text txtisKey = documento.createTextNode(LP);
+                isKey.appendChild(txtisKey);
+                Campo.appendChild(NombreCampo);
+                Campo.appendChild(TipoDato);
+                Campo.appendChild(Longitud);
+                Campo.appendChild(isKey);
+                Campos.appendChild(Campo);
+            }
+            
+            documento.getDocumentElement().appendChild(Campos);
+            Source source = new DOMSource(documento);
+            Result result = new StreamResult(new File(NombreArchivo + ".xml"));
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.transform(source, result);
+
+        } catch (ParserConfigurationException | TransformerException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }
+    
+    public void CrearXSLT(){
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            DOMImplementation implementation = builder.getDOMImplementation();
+            int intancia_punto = archivo_actual.getNombre_archivo().indexOf('.');
+            String NombreArchivo = archivo_actual.getNombre_archivo().substring(0, intancia_punto);
+
+            Document documento = implementation.createDocument(null, NombreArchivo, null);
+            documento.setXmlVersion("1.0");
+            
+            Element stylesh = documento.createElement("xsl:stylesheet");
+            stylesh.setAttribute("xmlns:xsl", "http://www.w3.org/1999/XSL/Transform");
+            stylesh.setAttribute("version", "1.0");
+            Element templ = documento.createElement("xsl:template");
+            templ.setAttribute("match", "/");
+            
+            Element Ehtml = documento.createElement("html");
+                Element Ehead = documento.createElement("head");
+                    Element Etitle = documento.createElement("title");
+                    Text txtTitle = documento.createTextNode(NombreArchivo);
+                    Etitle.appendChild(txtTitle);
+                    Ehead.appendChild(Etitle);
+                Element Ebody = documento.createElement("body");
+                    Element Etable = documento.createElement("table"); 
+                    Etable.setAttribute("border", "1");
+                    Element Etr1 = documento.createElement("tr");
+                    
+                    for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                        Element Eth = documento.createElement("th"); 
+                        Text txtth = documento.createTextNode(archivo_actual.getLista_campos().get(i).getNombre_Campo());
+                        Eth.appendChild(txtth); 
+                        Etr1.appendChild(Eth);
+                    }
+                    Etable.appendChild(Etr1); 
+                Element HeadData = documento.createElement("xsl:for-each");
+                HeadData.setAttribute("select", "campos/campo");
+                Element Etr2 = documento.createElement("tr"); 
+                
+                for (int i = 0; i < archivo_actual.getLista_campos().size(); i++) {
+                        Element Etd = documento.createElement("td"); 
+                        Element Value = documento.createElement("xsl:value-of");
+                        Value.setAttribute("select", archivo_actual.getLista_campos().get(i).getNombre_Campo());
+                        Text txtth = documento.createTextNode(archivo_actual.getLista_campos().get(i).getNombre_Campo());
+                        Etd.appendChild(Value); 
+                        Etr2.appendChild(Etd);
+                }
+                HeadData.appendChild(Etr2); 
+            Etable.appendChild(HeadData);
+            Ebody.appendChild(Etable);
+            Ehtml.appendChild(Ebody);
+            templ.appendChild(Ehtml);
+            stylesh.appendChild(templ);
+            
+            documento.getDocumentElement().appendChild(stylesh);
+            Source source = new DOMSource(documento);
+            Result result = new StreamResult(new File(NombreArchivo + ".xsl"));
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.transform(source, result);
+
+        } catch (ParserConfigurationException | TransformerException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }
+    
     public boolean crearArbolIndexar(ArrayList<Long> offsets, int campo_index, ArbolB arbolSecundario, RandomAccessFile raf, int i) {
 
         if (i >= offsets.size()) {
@@ -3601,7 +3799,7 @@ public class GUI extends javax.swing.JFrame {
             raf.seek(inicio_busqueda);
             
             if(archivo.getAvail_list().isEmpty()){  
-                System.out.println("Hola23");
+                //System.out.println("Hola23");
                 raf.writeChars("Cabeza de AvailList:null\n\n");
             } else {
                 raf.writeChars("Cabeza de AvailList:" +archivo_actual.getAvail_list().get(0)+"\n\n");
