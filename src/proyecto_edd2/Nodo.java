@@ -53,7 +53,7 @@ public class Nodo implements Serializable {
 
         for (int i = 0; i < llaves.length; i++) {
 
-            if (llaves[i].llave == llave.llave) {
+            if (llaves[i].llave == llave.getLlave()) {
                 return i;
             }
         }

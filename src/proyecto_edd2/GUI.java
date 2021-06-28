@@ -81,9 +81,11 @@ public class GUI extends javax.swing.JFrame {
             Lista_Archivos.add(archivo_temp);
             Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).setNombre_archivo(file.getName());//Asignar los nombres de archivo
             //Validara activación de boton generarArchivo
-            if (Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("PersonFile.txt")) {
+            if (Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("PersonFile.txt") 
+                    && Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("CityFile.txt") 
+                    &&Lista_Archivos.get(Lista_Archivos.indexOf(archivo_temp)).getNombre_archivo().equals("FilePersonalizado.txt")) {
                 jb_RegistrosPruebas.setEnabled(false);
-            }
+            } 
         }
     }
 
@@ -1278,7 +1280,7 @@ public class GUI extends javax.swing.JFrame {
             }
 
             //Verificar numero de registros para habilitar opciones de campos
-            int verificar_registro = actualizar_numRegistros(1);
+            int verificar_registro = actualizar_numRegistros(1, 0);
             if (verificar_registro == 0) {
                 B_Crear_Campo.setEnabled(true);
                 B_Mod_Campo.setEnabled(true);
@@ -2028,7 +2030,7 @@ public class GUI extends javax.swing.JFrame {
                     
                     Llave nueva_llave = new Llave(byte_offset, Integer.parseInt(key));
                     
-                    int verify_num_registro = actualizar_numRegistros(1);
+                    int verify_num_registro = actualizar_numRegistros(1, 0);
                     //Escritura en el arbol
                     if (verify_num_registro == 0) {
                         //No existe un arbol, lo crea aqui
@@ -2048,7 +2050,7 @@ public class GUI extends javax.swing.JFrame {
                 } catch (IOException ex) {
                 }
                 //Incrementar el dato de metadata (Numero de Registros)
-                actualizar_numRegistros(3);
+                actualizar_numRegistros(3, 0);
                 JOptionPane.showMessageDialog(jP_menuArchivo, "Se agrego el registro exitosamente!\n"
                         + "Se actualizo el archivo con el nuevo registro.");
                 B_Crear_Campo.setEnabled(false);
@@ -2067,7 +2069,7 @@ public class GUI extends javax.swing.JFrame {
     private void B_Buscar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Buscar_RegisMouseClicked
 
         //Revisar si existen registros
-        int num_registros = actualizar_numRegistros(1);
+        int num_registros = actualizar_numRegistros(1, 0);
         boolean validar_buscarRegistro = true;
 
         //Validar Existencia de Campos
@@ -2113,17 +2115,16 @@ public class GUI extends javax.swing.JFrame {
             Campo llave_secundaria = null;
             int valor_opcion = 1;
             for (File file : files) {
-                    String s = file.getName();
-                    System.out.println(s);
-                    if(s.contains(nombre_ArbolSecundario)){
-                        nombre_ArbolSecundario =  "./" + s;
-                        break;
-                    } else {
-                        nombre_ArbolSecundario = "";
-                    }
+                String s = file.getName();
+                if(s.contains(nombre_ArbolSecundario)){
+                    nombre_ArbolSecundario =  "./" + s;
+                    break;
+                } else {
+                    //nombre_ArbolSecundario = "";
+                }
             }
             
-            if(!nombre_ArbolSecundario.equals("")){
+            if(!nombre_ArbolSecundario.equals(archivo_actual.getNombre_archivo().substring(0, instancia_punto) + "_")){
                 int underscore = nombre_ArbolSecundario.indexOf('_') + 1;
                 String str_nombre_llave2 = nombre_ArbolSecundario.substring(underscore);
                 int punto = str_nombre_llave2.indexOf('.');
@@ -2146,10 +2147,13 @@ public class GUI extends javax.swing.JFrame {
                         String opcion_busqueda = JOptionPane.showInputDialog(jP_menuArchivo,"Eliga el campo por el cual indexar:"
                             + "\n[1]" + campo1
                             + "\n[2]"  + llave_secundaria.getNombre_Campo());
-                        valor_opcion = Integer.parseInt(opcion_busqueda);
+                        
                         if(opcion_busqueda == null){
                         //do nothing
-                        } 
+                        valor_opcion = 3;
+                        }  else {
+                            valor_opcion = Integer.parseInt(opcion_busqueda);
+                        }
                     } else {
                         valor_opcion = 1;
                     }
@@ -2159,7 +2163,7 @@ public class GUI extends javax.swing.JFrame {
             
             
 
-            while (!validar_entrada ) {
+            while (!validar_entrada && valor_opcion < 3 ) {
                 
                 if(valor_opcion == 1){
                     registro_buscar = JOptionPane.showInputDialog(jP_menuArchivo, "Ingrese el dato a buscar mediante el campo: " + campo_primario.getNombre_Campo()
@@ -2370,8 +2374,8 @@ public class GUI extends javax.swing.JFrame {
                                 long posicion_dato = llave_mod.getOffset() + (long) pos_mod;
                                 raf.seek(posicion_dato);
                                 raf.writeChars(dato_mod);
-                                JOptionPane.showMessageDialog(jP_menuArchivo, "Dato anterior: " + seccion + "Dato nuevo:" + dato_mod
-                                        + "¡Se modifico el registro exitosamente!");
+                                JOptionPane.showMessageDialog(jP_menuArchivo, "Dato anterior: " + seccion + " Dato nuevo: " + dato_mod
+                                        + " ¡Se modifico el registro exitosamente!");
                             }
                         }
                         raf.close();
@@ -2392,7 +2396,7 @@ public class GUI extends javax.swing.JFrame {
 
     private void B_Borrar_RegisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_B_Borrar_RegisMouseClicked
 
-        int verificar_num_registro = actualizar_numRegistros(1);
+        int verificar_num_registro = actualizar_numRegistros(1, 0);
         if (verificar_num_registro == 0) {
             JOptionPane.showMessageDialog(jP_menuArchivo, "No existe ningun registro.");
         } else {
@@ -2479,7 +2483,7 @@ public class GUI extends javax.swing.JFrame {
                     archivo_actual.getAvail_list().add(key.getOffset());
                     //Modificar la cabeza
                     //Actualizar numero de registros
-                    int update_num_Records = actualizar_numRegistros(2);
+                    int update_num_Records = actualizar_numRegistros(2 , 0);
                     actualizar_AvailList(archivo_actual);
                     archivo_actual.setGuardado(false);
                     JOptionPane.showMessageDialog(this, "Se elimino la llave del archivo de registros!");
@@ -2532,11 +2536,10 @@ public class GUI extends javax.swing.JFrame {
             int contRegis = 0; 
             String registro = "";
             //raf1.seek(inicio_busqueda1);
-            if(!archivo_actual.getAvail_list().isEmpty()){
-                raf1.readLine();
-                record_size+= 2;
-            }
-            while (inicio_busqueda1 < raf1.length()) {
+            //if(!archivo_actual.getAvail_list().isEmpty()){
+              //  record_size+= 2;
+            //}
+            while (contRegis < 5) {
                 registro = raf1.readLine();
                 //System.out.println(registro);
                 registro = registro.replace('\0', ' ');//Quitar caracteres null
@@ -2548,7 +2551,8 @@ public class GUI extends javax.swing.JFrame {
                 String str_seccion = registro, seccion = "";
                 if(registro.charAt(0) == '*'){
                     //do nothing
-                    inicio_busqueda1 += record_size;
+                    contRegis--;
+                    inicio_busqueda1 += record_size * 2;
                     raf1.seek(inicio_busqueda1);
                 } else {
                     //ystem.out.println(registro);
@@ -2567,6 +2571,7 @@ public class GUI extends javax.swing.JFrame {
                     }
                     if (!seccion.equals("")) {
                         model.addRow(row);
+                        contRegis++;
                     }
                     //Obtener cada seccion, 
                     inicio_busqueda1 += record_size;
@@ -2644,7 +2649,10 @@ public class GUI extends javax.swing.JFrame {
             while (opcion > 2 || opcion < 1) {
 
                 var = JOptionPane.showInputDialog(this, "Elija la opcion de generar: \n1) City y Person File \n2) Archivos Personalizados");
-
+                if(var == null){
+                    opcion = 3;
+                    break;
+                }
                 try {
                     opcion = Integer.parseInt(var);
                 } catch (NumberFormatException e) {
@@ -2699,6 +2707,9 @@ public class GUI extends javax.swing.JFrame {
                     generarPersonalizados(size);
                     JOptionPane.showMessageDialog(this, "Los archivo personalizado sido creados exitosamente!");
                     break;
+                }
+                default: {
+                    
                 }
             }
 
@@ -3289,8 +3300,11 @@ public class GUI extends javax.swing.JFrame {
         archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
         archivo.getLista_campos().add(new Campo("Ciudad", "String", 20));
         archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
-
+        
+        archivo_actual = archivo;
         escribirArchivo(archivo);
+        actualizar_numRegistros(4, size);
+        actualizar_AvailList(archivo);
 
         String[] nombres = {"Sophia", "Liam", "Olivia", "Noah", "Riley", "Jackson",
             "Emma", "Aiden", "Ava", "Elias", "Isabella", "Gonzalo", "Ariela", "Lucas",
@@ -3483,7 +3497,8 @@ public class GUI extends javax.swing.JFrame {
 
                 ids.add(numId);
                 telephone.add(numTel);
-
+                
+                
             }
 
             raf.close();
@@ -3496,6 +3511,8 @@ public class GUI extends javax.swing.JFrame {
         String nombre_archivo_bin2 = "./" + archivo.getNombre_archivo().substring(0, instancia_punto2) + ".bin";
 
         escribirArbol(arbol, nombre_archivo_bin2);
+        
+        archivo_actual = null;
 
     }
 
@@ -3530,6 +3547,7 @@ public class GUI extends javax.swing.JFrame {
         archivo.getLista_campos().get(1).setEsLlavePrimaria(false);
 
         escribirArchivo(archivo);
+        actualizar_numRegistros(4, 100);
 
         Collections.shuffle(cities);
 
@@ -3580,6 +3598,7 @@ public class GUI extends javax.swing.JFrame {
         archivo.getLista_campos().get(3).setEsLlavePrimaria(false);
 
         escribirArchivo(archivo);
+        actualizar_numRegistros(4, 100);
 
         String[] nombres = {"Sophia", "Liam", "Olivia", "Noah", "Riley", "Jackson",
             "Emma", "Aiden", "Ava", "Elias", "Isabella", "Gonzalo", "Ariela", "Lucas",
@@ -3753,9 +3772,9 @@ public class GUI extends javax.swing.JFrame {
                 raf.writeChars(d.toString() + "\n");
                 //TODO escritura de la cantidad de registros
                 int num_registros = -1;
-                num_registros = actualizar_numRegistros(1);
+                num_registros = actualizar_numRegistros(1, 0);
                 if (num_registros == -1) {
-                    raf.writeChars(("Numero de Registros:100\n"));
+                    raf.writeChars(("Numero de Registros:100 \n"));
                 } else {
                     raf.writeChars(("Numero de Registros:" + num_registros + "\n"));
                 }
@@ -3943,8 +3962,6 @@ public class GUI extends javax.swing.JFrame {
                     inicio_registro += record_size;
                     raf.seek(inicio_registro);
                 }
-                
-                System.out.println(archivo.getAvail_list().size());
 
             }
         } catch (Exception e) {
@@ -4106,13 +4123,12 @@ public class GUI extends javax.swing.JFrame {
         table_ListarCampos.setModel(model);
     }
 
-    public int actualizar_numRegistros(int opcion) {
-        int temp = -1;
+    public int actualizar_numRegistros(int opcion, int cantidad) {
+        int temp = 0;
         try {
             RandomAccessFile raf = new RandomAccessFile(archivo_actual.getArchivo(), "rw");
             int num_lineas = archivo_actual.getLista_campos().size() + 2;
             String linea_overwrite = "";
-
             int i = 0;
             long posicion_line = 0;
             raf.seek(0);
@@ -4136,7 +4152,6 @@ public class GUI extends javax.swing.JFrame {
                         //numero de registros es mayor a 9|  x > 9
                         num_registro = Integer.parseInt(linea_overwrite.substring(posicion_num + 1));
                     }
-
                     //Esta buscando el numero de registros
                     switch (opcion) {
                         case 1:
@@ -4157,7 +4172,14 @@ public class GUI extends javax.swing.JFrame {
                             raf.writeChars("Numero de Registros:" + num_registro + " \n");
                             raf.close();
                             break;
+                        case 4:
+                           temp = 0;
+                           raf.seek(posicion_line);
+                           raf.writeChars("Numero de Registros:" + cantidad + "\n");
+                           raf.close();  
+                           
                     }
+                    
                 }
                 i++;
             }
